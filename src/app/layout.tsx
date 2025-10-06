@@ -6,6 +6,9 @@ import Navbar from "@/components/navbar";
 export const metadata: Metadata = {
   title: "BiciTec",
   description: "BiciTec",
+  icons: {
+    icon: "/tec.png",
+  },
 };
 
 export default function RootLayout({
