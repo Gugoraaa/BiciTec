@@ -28,6 +28,7 @@ const ScaleControl = dynamic(
 );
 
 import type { LatLngExpression } from "leaflet";
+import type * as LeafletTypes from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 const center: LatLngExpression = [25.6515, -100.2905];
@@ -218,7 +219,7 @@ const bikeStations: BikeStation[] = [
   },
 ];
 
-const createBikeIcon = (L: any, number: number, isVisible: boolean) => {
+const createBikeIcon = (L: typeof LeafletTypes, number: number, isVisible: boolean) => {
   const station = bikeStations[number - 1];
   const isAvailable = station?.bikes > 0;
   const fillPercentage = station ? (station.bikes / station.capacity) * 100 : 0;
@@ -309,7 +310,7 @@ export default function BikeMap() {
   const [mapReady, setMapReady] = useState(false);
   const [visibleMarkers, setVisibleMarkers] = useState<number[]>([]);
   const [loadProgress, setLoadProgress] = useState(0);
-  const [L, setL] = useState<any>(null);
+  const [L, setL] = useState<typeof LeafletTypes | null>(null);
 
   useEffect(() => {
     // Dynamically import Leaflet only on client side
