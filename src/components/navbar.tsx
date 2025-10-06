@@ -1,18 +1,20 @@
-'use client'
+'use client';
 
-import { useState } from "react";
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { FaBiking, FaWrench, FaBell } from "react-icons/fa";
-import { MdOutlineLocationOn, MdOutlineFactory } from "react-icons/md";
+import { MdOutlineLocationOn, MdOutlineFactory, MdHome } from "react-icons/md";
 
 export default function Sidebar() {     
-  const [active, setActive] = useState("overview");
+  const pathname = usePathname();
+  const isActive = (path: string) => pathname === path;
 
   const menuItems = [
-    { id: "overview", label: "Overview", icon: <MdOutlineFactory size={18} /> },
-    { id: "stations", label: "Stations", icon: <MdOutlineLocationOn size={18} /> },
-    { id: "bikes", label: "Bikes", icon: <FaBiking size={18} /> },
-    { id: "maintenance", label: "Maintenance", icon: <FaWrench size={18} /> },
-    { id: "alerts", label: "Alerts", icon: <FaBell size={18} /> },
+    { id: "overview", path: "/overview", label: "Overview", icon: <MdOutlineFactory size={18} /> },
+    { id: "stations", path: "/stations", label: "Stations", icon: <MdOutlineLocationOn size={18} /> },
+    { id: "bikes", path: "/bikes", label: "Bikes", icon: <FaBiking size={18} /> },
+    { id: "maintenance", path: "/maintenance", label: "Maintenance", icon: <FaWrench size={18} /> },
+    { id: "alerts", path: "/alerts", label: "Alerts", icon: <FaBell size={18} /> },
   ];
 
   return (
@@ -25,20 +27,21 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex flex-col gap-1">
-        {menuItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => setActive(item.id)}
-            className={`flex items-center gap-3 px-4 py-2 rounded-md transition-all ${
-              active === item.id
-                ? "bg-blue-700 text-white"
-                : "hover:bg-gray-800 hover:text-white"
-            }`}
-          >
-            {item.icon}
-            <span className="text-sm">{item.label}</span>
-          </button>
-        ))}
+        <ul className="flex flex-col gap-1">
+          {menuItems.map((item) => (
+            <li key={item.id}>
+              <Link
+                href={item.path}
+                className={`flex items-center gap-3 w-full px-3 py-2 rounded-lg transition-colors ${
+                  isActive(item.path) ? 'bg-blue-600 text-white' : 'hover:bg-blue-900/50'
+                }`}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </nav>
     </aside>
   );

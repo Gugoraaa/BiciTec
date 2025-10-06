@@ -6,7 +6,7 @@ import StationCapacityCard from "@/components/StationCapacityCard";
 import LiveUtilizationChart from "@/components/LiveUtilizationChart";
 
 
-export default function DashboardLayout() {
+export default function overview() {
   return (
     <main className="min-h-screen bg-[#0f172a] p-4 md:p-6">
       <h1 className="text-2xl font-bold text-white mb-4">Overview</h1>
