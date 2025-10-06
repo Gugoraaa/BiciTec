@@ -2,8 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { FaBiking, FaWrench, FaBell } from "react-icons/fa";
-import { MdOutlineLocationOn, MdOutlineFactory, MdHome } from "react-icons/md";
+import { FaBiking, FaWrench } from "react-icons/fa";
+import { MdOutlineLocationOn, MdOutlineFactory } from "react-icons/md";
 
 export default function Sidebar() {     
   const pathname = usePathname();

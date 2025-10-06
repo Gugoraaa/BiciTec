@@ -28,23 +28,7 @@ const ScaleControl = dynamic(
 );
 
 import type { LatLngExpression } from "leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
-// Only configure default icon on client side
-if (typeof window !== 'undefined') {
-  const DefaultIcon = L.icon({
-    iconUrl: "/marker-icon.png",
-    iconRetinaUrl: "/marker-icon-2x.png",
-    shadowUrl: "/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-
-  L.Marker.prototype.options.icon = DefaultIcon;
-}
 
 const center: LatLngExpression = [25.6515, -100.2905];
 
@@ -234,7 +218,7 @@ const bikeStations: BikeStation[] = [
   },
 ];
 
-const createBikeIcon = (number: number, isVisible: boolean) => {
+const createBikeIcon = (L: any, number: number, isVisible: boolean) => {
   const station = bikeStations[number - 1];
   const isAvailable = station?.bikes > 0;
   const fillPercentage = station ? (station.bikes / station.capacity) * 100 : 0;
@@ -325,9 +309,34 @@ export default function BikeMap() {
   const [mapReady, setMapReady] = useState(false);
   const [visibleMarkers, setVisibleMarkers] = useState<number[]>([]);
   const [loadProgress, setLoadProgress] = useState(0);
+  const [L, setL] = useState<any>(null);
 
   useEffect(() => {
-    setMounted(true);
+    // Dynamically import Leaflet only on client side
+    if (typeof window !== 'undefined') {
+      import('leaflet').then((leafletModule) => {
+        const LeafletLib = leafletModule.default;
+        
+        // Configure default icon
+        const DefaultIcon = LeafletLib.icon({
+          iconUrl: "/marker-icon.png",
+          iconRetinaUrl: "/marker-icon-2x.png",
+          shadowUrl: "/marker-shadow.png",
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41],
+        });
+        
+        LeafletLib.Marker.prototype.options.icon = DefaultIcon;
+        setL(LeafletLib);
+        setMounted(true);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     
     // Animated loading progress
     const duration = 1500;
@@ -352,7 +361,7 @@ export default function BikeMap() {
     rafId = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(rafId);
-  }, []);
+  }, [mounted]);
 
   useEffect(() => {
     if (!mapReady) return;
@@ -365,7 +374,7 @@ export default function BikeMap() {
     });
   }, [mapReady]);
 
-  if (!mounted || !mapReady) {
+  if (!mounted || !mapReady || !L) {
     return (
       <div className="h-[600px] w-full rounded-lg overflow-hidden border-2 border-gray-700 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center relative">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]"></div>
@@ -423,7 +432,7 @@ export default function BikeMap() {
           <Marker
             key={station.id}
             position={station.position}
-            icon={createBikeIcon(station.id, visibleMarkers.includes(index))}
+            icon={createBikeIcon(L, station.id, visibleMarkers.includes(index))}
           >
             <Popup className="font-sans min-w-[220px]">
               <div className="space-y-2 p-1">
