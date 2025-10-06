@@ -1,6 +1,5 @@
-
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 type Status = "Operational" | "Maintenance" | "Offline";
 
@@ -46,65 +45,124 @@ export default function StationTable({
   data: StationRow[];
   title?: string;
 }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [visibleRows, setVisibleRows] = useState<number[]>([]);
+
+  useEffect(() => {
+    // Start animation after brief delay
+    const startDelay = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+
+    // Stagger row appearances
+    data.forEach((_, index) => {
+      setTimeout(() => {
+        setVisibleRows(prev => [...prev, index]);
+      }, 150 + index * 50);
+    });
+
+    return () => {
+      clearTimeout(startDelay);
+    };
+  }, [data]);
+
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-lg">
+    <div className={`w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-lg transition-all duration-700 ${
+      isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+    }`}>
       <div className="px-4 py-3 border-b border-slate-800">
-        <h3 className="text-slate-200 font-semibold">{title}</h3>
+        <h3 className={`text-slate-200 font-semibold transition-all duration-500 delay-100 ${
+          isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+        }`}>
+          {title}
+        </h3>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-900/80">
             <tr className="[&>th]:py-3 [&>th]:px-4 text-slate-400 font-medium">
-              <th className="w-40">Station</th>
-              <th>Location</th>
-              <th className="text-right">Capacity</th>
-              <th className="text-right">Bikes Docked</th>
-              <th className="text-right">Available</th>
-              <th className="w-40">Status</th>
+              <th className={`w-40 transition-all duration-500 delay-200 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              }`}>
+                Station
+              </th>
+              <th className={`transition-all duration-500 delay-300 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              }`}>
+                Location
+              </th>
+              <th className={`text-right transition-all duration-500 delay-[350ms] ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              }`}>
+                Capacity
+              </th>
+              <th className={`text-right transition-all duration-500 delay-[400ms] ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              }`}>
+                Bikes Docked
+              </th>
+              <th className={`text-right transition-all duration-500 delay-[450ms] ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              }`}>
+                Available
+              </th>
+              <th className={`w-40 transition-all duration-500 delay-500 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              }`}>
+                Status
+              </th>
             </tr>
           </thead>
 
           <tbody className="divide-y divide-slate-800">
-            {data.map((row) => (
-              <tr
-                key={row.id}
-                className="hover:bg-slate-800/40 transition-colors"
-              >
-                <td className="py-3 px-4">
-                  <div className="flex flex-col">
-                    <span className="text-slate-200 font-semibold">
-                      {row.station}
+            {data.map((row, index) => {
+              const isVisible = visibleRows.includes(index);
+              return (
+                <tr
+                  key={row.id}
+                  className={`hover:bg-slate-800/40 transition-all duration-500 ${
+                    isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+                  }`}
+                  style={{
+                    transitionDelay: `${150 + index * 50}ms`
+                  }}
+                >
+                  <td className="py-3 px-4">
+                    <div className="flex flex-col">
+                      <span className="text-slate-200 font-semibold">
+                        {row.station}
+                      </span>
+                      <span className="text-slate-500 text-xs sm:hidden">
+                        {row.location}
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 px-4 text-slate-300 hidden sm:table-cell">
+                    {row.location}
+                  </td>
+
+                  <td className="py-3 px-4 text-right text-slate-300">
+                    {row.capacity}
+                  </td>
+
+                  <td className="py-3 px-4 text-right text-slate-300">
+                    {row.docked}
+                  </td>
+
+                  <td className="py-3 px-4 text-right">
+                    <span className="text-slate-200 font-medium">
+                      {row.available}
                     </span>
-                    <span className="text-slate-500 text-xs sm:hidden">
-                      {row.location}
-                    </span>
-                  </div>
-                </td>
+                  </td>
 
-                <td className="py-3 px-4 text-slate-300 hidden sm:table-cell">
-                  {row.location}
-                </td>
-
-                <td className="py-3 px-4 text-right text-slate-300">
-                  {row.capacity}
-                </td>
-
-                <td className="py-3 px-4 text-right text-slate-300">
-                  {row.docked}
-                </td>
-
-                <td className="py-3 px-4 text-right">
-                  <span className="text-slate-200 font-medium">
-                    {row.available}
-                  </span>
-                </td>
-
-                <td className="py-3 px-4">
-                  <StatusBadge status={row.status} />
-                </td>
-              </tr>
-            ))}
+                  <td className="py-3 px-4">
+                    <StatusBadge status={row.status} />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

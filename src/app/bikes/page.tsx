@@ -1,8 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BikeCard from "@/components/BikeCard";
-
-
 
 export default function Bikes() {
   const bikes = [
@@ -15,6 +13,33 @@ export default function Bikes() {
   ];
 
   const [filter, setFilter] = useState<"All" | "Available" | "In Use" | "Maintenance">("All");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [visibleCards, setVisibleCards] = useState<string[]>([]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    
+    
+    bikes.forEach((bike, index) => {
+      setTimeout(() => {
+        setVisibleCards(prev => [...prev, bike.id]);
+      }, 200 + index * 80);
+    });
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    
+    setVisibleCards([]);
+    const filtered = filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
+    
+    filtered.forEach((bike, index) => {
+      setTimeout(() => {
+        setVisibleCards(prev => [...prev, bike.id]);
+      }, index * 80);
+    });
+  }, [filter]);
 
   const filteredBikes =
     filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
@@ -29,10 +54,19 @@ export default function Bikes() {
   return (
     <main className="min-h-screen bg-[#0f172a] text-white">
       <div className="max-w-6xl mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-6">Bikes</h1>
+        <h1 
+          className={`text-2xl font-bold mb-6 transition-all duration-700 ${
+            isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+          }`}
+        >
+          Bikes
+        </h1>
 
-        
-        <div className="flex items-center gap-3 mb-6 bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-3">
+        <div 
+          className={`flex items-center gap-3 mb-6 bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-3 transition-all duration-700 delay-100 ${
+            isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+          }`}
+        >
           <span className="text-slate-400 text-sm font-medium">Filters:</span>
           {(["All", "Available", "In Use", "Maintenance"] as const).map((s) => (
             <button
@@ -49,11 +83,22 @@ export default function Bikes() {
           ))}
         </div>
 
-        
         <div className="mt-2 grid gap-4 grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">
-          {filteredBikes.map((bike) => (
-            <BikeCard key={bike.id} {...bike} />
-          ))}
+          {filteredBikes.map((bike) => {
+            const isVisible = visibleCards.includes(bike.id);
+            return (
+              <div
+                key={bike.id}
+                className={`transition-all duration-500 ${
+                  isVisible 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-8'
+                }`}
+              >
+                <BikeCard {...bike} />
+              </div>
+            );
+          })}
         </div>
       </div>
     </main>
