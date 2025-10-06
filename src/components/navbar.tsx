@@ -14,7 +14,6 @@ export default function Sidebar() {
     { id: "stations", path: "/stations", label: "Stations", icon: <MdOutlineLocationOn size={18} /> },
     { id: "bikes", path: "/bikes", label: "Bikes", icon: <FaBiking size={18} /> },
     { id: "maintenance", path: "/maintenance", label: "Maintenance", icon: <FaWrench size={18} /> },
-    { id: "alerts", path: "/alerts", label: "Alerts", icon: <FaBell size={18} /> },
   ];
 
   return (

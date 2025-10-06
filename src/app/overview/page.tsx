@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import StatCard from "@/components/StatCard"; // ajusta el path si es distinto
+import StatCard from "@/components/StatCard"; 
 import StationCapacityCard from "@/components/StationCapacityCard";
 import LiveUtilizationChart from "@/components/LiveUtilizationChart";
 
@@ -28,7 +28,7 @@ export default function overview() {
         </div>
       </section>
 
-      {/* Main grid: Chart (8 cols) + Capacity (4 cols) */}
+    
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-8">
           <div className="rounded-2xl bg-[#0b1425] p-0 overflow-hidden">

@@ -1,18 +1,36 @@
 "use client";
 
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  ScaleControl,
-} from "react-leaflet";
-import type { LatLngExpression, IconOptions } from "leaflet";
-import L from "leaflet";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+
+const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
+  ssr: false,
+});
+
+const ScaleControl = dynamic(
+  () => import("react-leaflet").then((mod) => mod.ScaleControl),
+  { ssr: false }
+);
+
+import type { LatLngExpression } from "leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Fix for default marker icons
 const DefaultIcon = L.icon({
   iconUrl: "/marker-icon.png",
   iconRetinaUrl: "/marker-icon-2x.png",
@@ -25,10 +43,7 @@ const DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Campus center coordinates (Tec de Monterrey Campus Monterrey)
 const center: LatLngExpression = [25.6515, -100.2905];
-
-
 
 interface BikeStation {
   id: number;
@@ -38,7 +53,6 @@ interface BikeStation {
   capacity: number;
 }
 
-// Multiple bike stations around campus
 const bikeStations: BikeStation[] = [
   {
     id: 1,
@@ -76,7 +90,7 @@ const bikeStations: BikeStation[] = [
     capacity: 8,
   },
   {
-    id:7  ,
+    id: 7,
     position: [25.65116537272076, -100.28759309989297],
     name: "Estación 5 - CETEC",
     bikes: 4,
@@ -132,7 +146,7 @@ const bikeStations: BikeStation[] = [
     capacity: 8,
   },
   {
-    id: 15  ,
+    id: 15,
     position: [25.652488495634742, -100.28905718967019],
     name: "Estación 5 - CETEC",
     bikes: 4,
@@ -174,7 +188,7 @@ const bikeStations: BikeStation[] = [
     capacity: 8,
   },
   {
-    id: 21  ,
+    id: 21,
     position: [25.650618281279918, -100.28992086097858],
     name: "Estación 5 - CETEC",
     bikes: 4,
@@ -217,7 +231,6 @@ const bikeStations: BikeStation[] = [
   },
 ];
 
-// Create custom numbered markers
 const createBikeIcon = (number: number) => {
   const isAvailable = bikeStations[number - 1]?.bikes > 0;
 
@@ -248,17 +261,25 @@ const createBikeIcon = (number: number) => {
 
 export default function BikeMap() {
   const [mounted, setMounted] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const timer = setTimeout(() => setMapReady(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
   if (!mounted) {
+    return (
+      <div className="h-[600px] w-full rounded-lg overflow-hidden border-2 border-gray-700 flex items-center justify-center">
+        <div className="text-white">Loading map...</div>
+      </div>
+    );
   }
 
   return (
     <div className="h-[600px] w-full rounded-lg overflow-hidden border-2 border-gray-700">
-      {mounted && (
+      {mapReady && (
         <MapContainer
           center={center}
           zoom={17}
@@ -273,7 +294,7 @@ export default function BikeMap() {
             maxZoom={50}
           />
 
-          {/* Bike stations */}
+          
           {bikeStations.map((station) => (
             <Marker
               key={station.id}
@@ -306,7 +327,7 @@ export default function BikeMap() {
             </Marker>
           ))}
 
-          {/* Add scale control */}
+         
           <ScaleControl position="bottomleft" />
         </MapContainer>
       )}

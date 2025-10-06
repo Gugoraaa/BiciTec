@@ -1,4 +1,4 @@
-// src/components/StationTable.tsx
+
 "use client";
 import React from "react";
 
@@ -6,11 +6,11 @@ type Status = "Operational" | "Maintenance" | "Offline";
 
 export type StationRow = {
   id: string;
-  station: string;     // e.g., "Station A"
-  location: string;    // e.g., "Central Plaza"
-  capacity: number;    // total docks
-  docked: number;      // bikes docked
-  available: number;   // available bikes
+  station: string;     
+  location: string;    
+  capacity: number;    
+  docked: number;      
+  available: number;   
   status: Status;
 };
 
