@@ -137,7 +137,6 @@ export default function BikeMap() {
   const [loadProgress, setLoadProgress] = useState(0);
   const [L, setL] = useState<typeof LeafletTypes | null>(null);
   const [bikeStations, setBikeStations] = useState<BikeStation[]>([]);
-  const [isLoadingStations, setIsLoadingStations] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [visibleMarkers, setVisibleMarkers] = useState<number[]>([]);
 
@@ -146,10 +145,17 @@ export default function BikeMap() {
     let isMounted = true;
     
     const fetchStations = async () => {
-      setIsLoadingStations(true);
       setError(null);
       try {
-        const response = await api.get("/stations/getStations");
+        const response = await api.get<Array<{
+          id: number;
+          nombre: string;
+          latitud: string;
+          longitud: string;
+          bicicletas: number;
+          capacidad: number;
+        }>>("/stations/getStations");
+        
         if (!isMounted) return;
         
         if (
@@ -158,7 +164,7 @@ export default function BikeMap() {
           response.data.length > 0
         ) {
           // Transformar datos de la API al formato que espera el componente
-          const transformedStations = response.data.map((station: any) => ({
+          const transformedStations = response.data.map((station) => ({
             id: station.id,
             position: [parseFloat(station.latitud), parseFloat(station.longitud)] as [number, number],
             nombre: station.nombre,
@@ -182,9 +188,6 @@ export default function BikeMap() {
           "Error al conectar con el servidor. Por favor, intenta de nuevo más tarde."
         );
       } finally {
-        if (isMounted) {
-          setIsLoadingStations(false);
-        }
       }
     };
 

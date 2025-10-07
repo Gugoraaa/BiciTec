@@ -44,10 +44,10 @@ export default function StationTable({
   title?: string;
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [visibleRows, setVisibleRows] = useState<number[]>([]);
   const [data, setData] = useState<StationRow[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [visibleRows, setVisibleRows] = useState<number[]>([]);
 
   // Cargar datos de la API y manejar animación
   useEffect(() => {
@@ -57,12 +57,19 @@ export default function StationTable({
       setIsLoadingData(true);
       setError(null);
       try {
-        const response = await api.get("/stations/getStations");
+        const response = await api.get<Array<{
+          id: number;
+          nombre: string;
+          capacidad: number;
+          bicicletas: number;
+          status: Status;
+        }>>("/stations/getStations");
+        
         if (!isMounted) return;
         
         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
           // Transformar datos de la API
-          const transformedData: StationRow[] = response.data.map((station: any) => ({
+          const transformedData: StationRow[] = response.data.map((station) => ({
             id: String(station.id),
             station: station.nombre,
             capacity: station.capacidad,
