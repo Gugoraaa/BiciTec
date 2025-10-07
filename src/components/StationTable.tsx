@@ -1,15 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 type Status = "Operational" | "Maintenance" | "Offline";
 
 export type StationRow = {
   id: string;
-  station: string;     
-  location: string;    
-  capacity: number;    
-  docked: number;      
-  available: number;   
+  station: string;
+  capacity: number;
+  docked: number;
+  available: number;
   status: Status;
 };
 
@@ -39,38 +39,101 @@ function StatusBadge({ status }: { status: Status }) {
 }
 
 export default function StationTable({
-  data,
   title = "Stations",
 }: {
-  data: StationRow[];
   title?: string;
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [visibleRows, setVisibleRows] = useState<number[]>([]);
+  const [data, setData] = useState<StationRow[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Cargar datos de la API y manejar animación
   useEffect(() => {
-    // Start animation after brief delay
-    const startDelay = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-
-    // Stagger row appearances
-    data.forEach((_, index) => {
-      setTimeout(() => {
-        setVisibleRows(prev => [...prev, index]);
-      }, 150 + index * 50);
-    });
-
-    return () => {
-      clearTimeout(startDelay);
+    let isMounted = true;
+    
+    const fetchStations = async () => {
+      setIsLoadingData(true);
+      setError(null);
+      try {
+        const response = await api.get("/stations/getStations");
+        if (!isMounted) return;
+        
+        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+          // Transformar datos de la API
+          const transformedData: StationRow[] = response.data.map((station: any) => ({
+            id: String(station.id),
+            station: station.nombre,
+            capacity: station.capacidad,
+            docked: station.bicicletas,
+            available: station.capacidad - station.bicicletas, 
+            status: station.status as Status,
+          }));
+          
+          // Eliminar duplicados basados en ID
+          const uniqueData = Array.from(
+            new Map(transformedData.map(item => [item.id, item])).values()
+          );
+          
+          setData(uniqueData);
+          
+          // Iniciar animación después de cargar los datos
+          setTimeout(() => {
+            if (isMounted) {
+              setIsLoaded(true);
+              // Inicializar todas las filas como visibles
+              setVisibleRows(Array.from({length: uniqueData.length}, (_, i) => i));
+            }
+          }, 100);
+        } else {
+          setError("No se encontraron estaciones.");
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        console.error("Error al cargar estaciones:", err);
+        setError("Error al cargar las estaciones.");
+      } finally {
+        if (isMounted) {
+          setIsLoadingData(false);
+        }
+      }
     };
-  }, [data]);
+
+    void fetchStations();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (isLoadingData) {
+    return (
+      <div className="w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-lg p-8">
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <span className="ml-3 text-slate-400">Cargando estaciones...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full overflow-hidden rounded-2xl border border-red-800 bg-slate-900/60 shadow-lg p-8">
+        <div className="text-center text-red-400">
+          <p className="text-lg font-semibold">⚠️ Error</p>
+          <p className="mt-2">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={`w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-lg transition-all duration-700 ${
+    <div className={`w-full h-[600px] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-lg transition-all duration-700 ${
       isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
     }`}>
-      <div className="px-4 py-3 border-b border-slate-800">
+      <div className="px-4 py-3 border-b border-slate-800 flex-shrink-0">
         <h3 className={`text-slate-200 font-semibold transition-all duration-500 delay-100 ${
           isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
         }`}>
@@ -78,19 +141,14 @@ export default function StationTable({
         </h3>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900/50 hover:scrollbar-thumb-slate-600">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-900/80">
+          <thead className="bg-slate-900/80 sticky top-0 z-10">
             <tr className="[&>th]:py-3 [&>th]:px-4 text-slate-400 font-medium">
               <th className={`w-40 transition-all duration-500 delay-200 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
               }`}>
                 Station
-              </th>
-              <th className={`transition-all duration-500 delay-300 ${
-                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-              }`}>
-                Location
               </th>
               <th className={`text-right transition-all duration-500 delay-[350ms] ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
@@ -133,15 +191,11 @@ export default function StationTable({
                       <span className="text-slate-200 font-semibold">
                         {row.station}
                       </span>
-                      <span className="text-slate-500 text-xs sm:hidden">
-                        {row.location}
-                      </span>
+                      
                     </div>
                   </td>
 
-                  <td className="py-3 px-4 text-slate-300 hidden sm:table-cell">
-                    {row.location}
-                  </td>
+                  
 
                   <td className="py-3 px-4 text-right text-slate-300">
                     {row.capacity}
@@ -166,6 +220,23 @@ export default function StationTable({
           </tbody>
         </table>
       </div>
+      
+      <style jsx>{`
+        .overflow-y-auto::-webkit-scrollbar {
+          width: 8px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-track {
+          background: rgba(15, 23, 42, 0.5);
+          border-radius: 10px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+          background: rgb(51, 65, 85);
+          border-radius: 10px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+          background: rgb(71, 85, 105);
+        }
+      `}</style>
     </div>
   );
 }

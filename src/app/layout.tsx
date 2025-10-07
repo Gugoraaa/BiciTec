@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex bg-[#0f172a]">
+      <body className="flex bg-[#0f172a]" suppressHydrationWarning>
         <Navbar />
         <main className="flex-1 p-6 overflow-y-auto h-screen">
           {children}
