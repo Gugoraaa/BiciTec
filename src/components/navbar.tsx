@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { FaBiking, FaWrench } from "react-icons/fa";
+import { FaBiking, FaWrench, FaSignInAlt } from "react-icons/fa";
 import { MdOutlineLocationOn, MdOutlineFactory } from "react-icons/md";
 
 export default function Sidebar() {     
@@ -42,6 +42,17 @@ export default function Sidebar() {
           ))}
         </ul>
       </nav>
+      
+      {/* Login Button at Bottom */}
+      <div className="mt-auto px-3 py-4">
+        <Link 
+          href="/login"
+          className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition-colors hover:bg-blue-900/50"
+        >
+          <FaSignInAlt size={18} />
+          <span>Login</span>
+        </Link>
+      </div>
     </aside>
   );
 }

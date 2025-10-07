@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/navbar";
-
+import ClientLayout from "./ClientLayout";
 
 export const metadata: Metadata = {
   title: "BiciTec",
@@ -19,10 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex bg-[#0f172a]" suppressHydrationWarning>
-        <Navbar />
-        <main className="flex-1 p-6 overflow-y-auto h-screen">
-          {children}
-        </main>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
