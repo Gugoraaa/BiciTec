@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import BikeCard from "@/components/BikeCard";
 
 export default function Bikes() {
@@ -15,32 +15,46 @@ export default function Bikes() {
   const [filter, setFilter] = useState<"All" | "Available" | "In Use" | "Maintenance">("All");
   const [isLoaded, setIsLoaded] = useState(false);
   const [visibleCards, setVisibleCards] = useState<string[]>([]);
+  const isInitialMount = useRef(true);
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+
+  useEffect(() => {
+    return () => {
+      timeoutsRef.current.forEach(clearTimeout);
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
-    
-    const bikeIds = bikes.map(bike => bike.id);
-    bikeIds.forEach((id, index) => {
-      setTimeout(() => {
-        setVisibleCards(prev => [...prev, id]);
-      }, 200 + index * 80);
-    });
-
     return () => clearTimeout(timer);
-  }, [bikes]);
+  }, []);
 
   useEffect(() => {
-    // Reset visible cards when filter changes
-    setVisibleCards([]);
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+
     const filtered = filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
-    
     const bikeIds = filtered.map(bike => bike.id);
-    bikeIds.forEach((id, index) => {
-      setTimeout(() => {
-        setVisibleCards(prev => [...prev, id]);
-      }, index * 80);
-    });
-  }, [filter, bikes]);
+    
+    if (isInitialMount.current) {
+      bikeIds.forEach((id, index) => {
+        const timeout = setTimeout(() => {
+          setVisibleCards(prev => 
+            prev.includes(id) ? prev : [...prev, id]
+          );
+        }, 200 + index * 80);
+        timeoutsRef.current.push(timeout);
+      });
+      isInitialMount.current = false;
+    } else {
+      setVisibleCards(bikeIds);
+    }
+
+    return () => {
+      timeoutsRef.current.forEach(clearTimeout);
+      timeoutsRef.current = [];
+    };
+  }, [filter, JSON.stringify(bikes.map(b => b.id))]); 
 
   const filteredBikes =
     filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
