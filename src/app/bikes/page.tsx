@@ -1,17 +1,17 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import BikeCard from "@/components/BikeCard";
 import ReportModal from "@/components/bikes/ReportModal";
 import { FaPlus, FaExclamationTriangle } from "react-icons/fa";
+import { Bike, BikeStatus } from "@/types/bike";
 
 export default function Bikes() {
   const bikes = useMemo<Bike[]>(() => [
-    { id: "Bike 123", lastSeen: "2 hours ago", station: "Central", avgSpeed: 15, totalKm: 2345, health: 95, status: "Available" },
-    { id: "Bike 087", lastSeen: "10 minutes ago", station: "Library", avgSpeed: 12, totalKm: 1780, health: 82, status: "In Use" },
-    { id: "Bike 041", lastSeen: "5 hours ago", station: "Science Building", avgSpeed: 14, totalKm: 3560, health: 68, status: "Available" },
-    { id: "Bike 214", lastSeen: "1 day ago", station: "Engineering", avgSpeed: 9, totalKm: 4012, health: 45, status: "Maintenance" },
-    { id: "Bike 376", lastSeen: "30 minutes ago", station: "Arts Building", avgSpeed: 11, totalKm: 2230, health: 89, status: "Available" },
-    { id: "Bike 512", lastSeen: "3 days ago", station: "Dorms", avgSpeed: 0, totalKm: 5034, health: 52, status: "Maintenance" },
+    { id: "Bike 123", lastSeen: "2 hours ago", station: "Central", avgSpeed: 15, totalKm: 2345, status: "Available" },
+    { id: "Bike 087", lastSeen: "10 minutes ago", station: "Library", avgSpeed: 12, totalKm: 1780, status: "In Use" },
+    { id: "Bike 214", lastSeen: "1 day ago", station: "Engineering", avgSpeed: 9, totalKm: 4012, status: "Maintenance" },
+    { id: "Bike 376", lastSeen: "30 minutes ago", station: "Arts Building", avgSpeed: 11, totalKm: 2230, status: "Available" },
+    { id: "Bike 512", lastSeen: "3 days ago", station: "Dorms", avgSpeed: 0, totalKm: 5034, status: "Maintenance" },
   ], []);
 
   const [filter, setFilter] = useState<"All" | BikeStatus>("All");
