@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { FaBiking, FaWrench, FaSignInAlt } from "react-icons/fa";
 import { MdOutlineLocationOn, MdOutlineFactory } from "react-icons/md";
+import Image from 'next/image';
 
 export default function Sidebar() {     
   const pathname = usePathname();
@@ -19,9 +20,15 @@ export default function Sidebar() {
   return (
     <aside className="bg-[#0f172a] text-gray-300 w-64 h-screen flex flex-col py-6 px-3 sticky top-0">
       <div className="flex items-center gap-2 mb-8 px-3">
-        <div className="bg-blue-600 rounded-full w-6 h-6 flex items-center justify-center">
-          <span className="text-white font-bold">✓</span>
-        </div>
+        
+        <Image
+          src="/tec.png"
+          alt="tec logo"
+          width={20}
+          height={20}
+        />
+
+        
         <h1 className="text-lg font-semibold text-white">BiciTec</h1>
       </div>
 
@@ -43,7 +50,7 @@ export default function Sidebar() {
         </ul>
       </nav>
       
-      {/* Login Button at Bottom */}
+      
       <div className="mt-auto px-3 py-4">
         <Link 
           href="/login"
