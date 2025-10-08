@@ -75,7 +75,7 @@ export default function StationTable({
             capacity: station.capacidad,
             docked: station.bicicletas,
             available: station.capacidad - station.bicicletas, 
-            status: station.status as Status,
+            status: station.status,
           }));
           
           // Eliminar duplicados basados en ID

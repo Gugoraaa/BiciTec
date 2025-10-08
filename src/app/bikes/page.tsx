@@ -53,6 +53,7 @@ export default function Bikes() {
   useEffect(() => {
     setVisibleCards([]);
     const filtered = filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
+    const bikeIds = filtered.map(bike => bike.id);
     
     const timeouts = filtered.map((bike, index) => {
       return setTimeout(() => {
