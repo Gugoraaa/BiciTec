@@ -19,36 +19,37 @@ export default function Bikes() {
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
     
-    
-    bikes.forEach((bike, index) => {
+    const bikeIds = bikes.map(bike => bike.id);
+    bikeIds.forEach((id, index) => {
       setTimeout(() => {
-        setVisibleCards(prev => [...prev, bike.id]);
+        setVisibleCards(prev => [...prev, id]);
       }, 200 + index * 80);
     });
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [bikes]);
 
   useEffect(() => {
-    
+    // Reset visible cards when filter changes
     setVisibleCards([]);
     const filtered = filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
     
-    filtered.forEach((bike, index) => {
+    const bikeIds = filtered.map(bike => bike.id);
+    bikeIds.forEach((id, index) => {
       setTimeout(() => {
-        setVisibleCards(prev => [...prev, bike.id]);
+        setVisibleCards(prev => [...prev, id]);
       }, index * 80);
     });
-  }, [filter]);
+  }, [filter, bikes]);
 
   const filteredBikes =
     filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
 
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     All: "bg-slate-700/40 text-slate-300 border border-slate-600",
     Available: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
     "In Use": "bg-blue-500/10 text-blue-400 border border-blue-500/30",
-    Maintenance: "bg-amber-500/10 text-amber-400 border border-amber-500/30",
+    Maintenance: "bg-amber-500/10 text-amber-400 border border-amber-500/30"
   };
 
   return (

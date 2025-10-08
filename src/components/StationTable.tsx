@@ -62,13 +62,21 @@ export default function StationTable({
         
         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
           // Transformar datos de la API
-          const transformedData: StationRow[] = response.data.map((station: any) => ({
+          interface ApiStation {
+            id: number;
+            nombre: string;
+            capacidad: number;
+            bicicletas: number;
+            status: 'Operational' | 'Maintenance' | 'Offline';
+          }
+
+          const transformedData: StationRow[] = response.data.map((station: ApiStation) => ({
             id: String(station.id),
             station: station.nombre,
             capacity: station.capacidad,
             docked: station.bicicletas,
             available: station.capacidad - station.bicicletas, 
-            status: station.status as Status,
+            status: station.status,
           }));
           
           // Eliminar duplicados basados en ID
