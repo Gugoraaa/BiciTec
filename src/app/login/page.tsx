@@ -1,5 +1,7 @@
 'use client'
 
+import Link from "next/link";
+
 export default function LoginPage() {
     return (
       <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100 flex items-center justify-center px-4 py-10">
@@ -31,8 +33,8 @@ export default function LoginPage() {
                 // Handle login here
               }}
             >
-              <label className="block text-sm font-medium text-slate-300" htmlFor="username">
-                <span className="sr-only">Username</span>
+              <label className="block text-sm font-medium text-slate-300" htmlFor="StudentID">
+                <span className="sr-only">StudentID</span>
                 <div className="mt-1 relative">
                   <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                     <svg
@@ -46,11 +48,11 @@ export default function LoginPage() {
                     </svg>
                   </span>
                   <input
-                    id="username"
-                    name="username"
+                    id="StudentID"
+                    name="StudentID"
                     type="text"
-                    placeholder="Username"
-                    autoComplete="username"
+                    placeholder="StudentID"
+                    autoComplete="StudentID"
                     className="block w-full rounded-xl border border-white/10 bg-slate-800/70 py-3 pl-10 pr-3 text-sm placeholder-slate-400 outline-none ring-0 focus:border-sky-500/60 focus:bg-slate-800 focus:outline-none"
                     required
                   />
@@ -83,14 +85,6 @@ export default function LoginPage() {
                 </div>
               </label>
   
-              {/* Forgot Password */}
-              {/* <div className="flex items-center justify-between text-sm">
-                <div />
-                <a href="#" className="text-sky-400 hover:text-sky-300">
-                  Forgot Password?
-                </a>
-              </div> */}
-  
               <button
                 type="submit"
                 className="mt-2 w-full rounded-xl bg-sky-600 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-sky-900/30 hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 active:scale-[.99] transition"
@@ -98,6 +92,10 @@ export default function LoginPage() {
                 Login
               </button>
             </form>
+            <p className="mt-4 text-center text-sm text-slate-400">
+              Don't have an account?{" "}
+              <Link href="/register" className="text-sky-400 hover:text-sky-300">Sign up</Link>
+            </p>
   
             
           </div>

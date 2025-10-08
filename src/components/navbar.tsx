@@ -18,7 +18,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="bg-[#0f172a] text-gray-300 w-64 h-screen flex flex-col py-6 px-3 sticky top-0">
+    <aside className="bg-[#0f172a] text-gray-300 w-64 h-screen flex flex-col py-6 px-3 sticky top-0 border-r border-gray-700">
       <div className="flex items-center gap-2 mb-8 px-3">
         
         <Image
