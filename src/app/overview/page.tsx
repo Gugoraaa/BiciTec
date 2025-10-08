@@ -15,16 +15,16 @@ export default function overview() {
           <StatCard title="Total Bikes" value={250} color="text-white" />
         </div>
         <div className="p-1">
-          <StatCard title="Available" value={180} color="text-green-400" />
+          <StatCard title="Available" value={180} color="text-emerald-400" />
         </div>
         <div className="p-1">
           <StatCard title="In Use" value={50} color="text-yellow-400" />
         </div>
         <div className="p-1">
-          <StatCard title="In Maintenance" value={20} color="text-yellow-400" />
+          <StatCard title="In Maintenance" value={20} color="text-orange-400" />
         </div>
         <div className="p-1">
-          <StatCard title="Active Stations" value={15} color="text-white" />
+          <StatCard title="Active Stations" value={15} color="text-blue-300" />
         </div>
       </section>
 
