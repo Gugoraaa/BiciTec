@@ -28,7 +28,7 @@ export default function ManageModal({
         <div className="absolute inset-0 bg-black/60" onClick={onClose} />
         <div className="relative w-full max-w-md rounded-2xl bg-slate-800 p-5 ring-1 ring-slate-700">
           <h4 className="text-slate-100 font-semibold">Manage Report #{ticket.id}</h4>
-          <p className="mt-1 text-sm text-slate-400">{ticket.bike} — {ticket.title}</p>
+          <p className="mt-1 text-sm text-slate-400">{ticket.bike} — {ticket.description}</p>
   
           <label className="mt-4 block text-sm text-slate-300">Status</label>
           <select

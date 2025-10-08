@@ -22,7 +22,7 @@ export default function TicketCard({ t, onManage }: { t: Ticket; onManage: (t: T
         </div>
       </div>
       <p className="mt-2 text-sm text-slate-200">
-        {t.bike} - {t.title}
+        {t.bike} - {t.description}
       </p>
       <div className="mt-4 flex items-center justify-between text-xs text-slate-400">
         <span>{t.date}</span>
