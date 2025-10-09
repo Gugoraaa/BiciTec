@@ -4,12 +4,8 @@ import BikeCard from "@/components/BikeCard";
 import ReportModal from "@/components/bikes/ReportModal";
 import BikeTripsModal from "@/components/bikes/BikeTripsModal";
 import { FaExclamationTriangle, FaSpinner } from "react-icons/fa";
-import { Bike, BikeStatus } from "@/types/bike";
+import { Bike, BikeStatus, Trip } from "@/types/bike";
 import api from "@/lib/api";
-import { Trip } from "@/types/bike";
-  
-
-
 
 export default function Bikes() {
   const [bikes, setBikes] = useState<Bike[]>([]);

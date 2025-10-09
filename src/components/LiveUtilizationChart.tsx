@@ -1,54 +1,107 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
+import { FaSpinner } from "react-icons/fa";
+import api from "@/lib/api";
+
+interface BikeUsageData {
+  hour: string;
+  count: number;
+}
 
 export default function LiveUtilizationChart() {
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-  const bikes = hours.map((h) => {
-    const base =
-      10 +
-      40 * Math.sin(((h - 6) / 24) * Math.PI * 2) ** 2 +
-      25 * Math.max(0, Math.sin(((h - 17) / 12) * Math.PI * 2));
-    const noise = (Math.random() - 0.5) * 8;
-    return Math.max(0, Math.round(base + noise));
+  const [bikeData, setBikeData] = useState<BikeUsageData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchBikeUsage = async () => {
+      try {
+        const { data } = await api.get('/overview/bikes-used-24h');
+        setBikeData(data);
+      } catch (err) {
+        console.error('Error fetching bike usage data:', err);
+        setError('Error al cargar los datos de uso de bicicletas');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBikeUsage();
+  }, []);
+
+  // Process the API data for the chart
+  const chartData = bikeData.map(item => ({
+    hour: item.hour,
+    hourValue: item.hour, // Keep as string for display
+    sortValue: parseInt(item.hour.split(':')[0]), // For sorting
+    count: item.count
+  }));
+  
+  // Sort by hour to ensure correct order (11:00, 12:00, ..., 23:00, 00:00, 01:00, ..., 10:00)
+  chartData.sort((a, b) => {
+    // Convert hour to 24-hour number, handling the 24-hour cycle
+    const hourA = a.sortValue;
+    const hourB = b.sortValue;
+    return hourA < 11 ? hourA + 24 : hourA - (hourB < 11 ? hourB + 24 : hourB);
   });
+  
+  // Extract display values for the chart
+  const hours = chartData.map(item => item.hourValue);
+  const bikes = chartData.map(item => item.count);
+
+  if (isLoading) {
+    return (
+      <div className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg flex items-center justify-center" style={{ height: '500px' }}>
+        <div className="flex items-center gap-2 text-blue-400">
+          <FaSpinner className="animate-spin text-2xl" />
+          <span>Cargando datos de uso...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg flex items-center justify-center" style={{ height: '500px' }}>
+        <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg">
-      <h3 className="text-lg font-semibold tracking-tight mb-4">
-        Live Utilization (Last 24h)
-      </h3>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold tracking-tight">
+          Uso de bicicletas (Últimas 24h)
+        </h3>
+      </div>
 
       <div style={{ height: "400px" }}>
         <LineChart
-          xAxis={[
-            {
-              data: hours,
-              label: "Hour of Day",
-              tickInterval: (_v: number, i: number) => i % 2 === 0,
-              valueFormatter: (v: number) =>
-                `${v.toString().padStart(2, "0")}:00`,
-              scaleType: "point",
-              labelStyle: { fill: "#ffffff", fontSize: 12 },
-              tickLabelStyle: { fill: "#ffffff", fontSize: 11 },
+          xAxis={[{
+data: hours,
+            label: "Hora del día",
+            tickInterval: (value: number, index: number) => index % 2 === 0,
+            valueFormatter: (value: string) => {
+              // Value is already in 'HH:00' format from the API
+              return value;
             },
-          ]}
-          yAxis={[
-            {
-              label: "Bikes in Use",
-              labelStyle: { fill: "#ffffff", fontSize: 12 },
-              tickLabelStyle: { fill: "#ffffff", fontSize: 11 },
-            },
-          ]}
-          series={[
-            {
-              data: bikes,
-              color: "#3b82f6",
-              showMark: true,
-              area: false,
-              
-            },
-          ]}
+            scaleType: "point",
+            labelStyle: { fill: "#ffffff", fontSize: 12 },
+            tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
+          }]}
+          yAxis={[{
+            label: "Bicicletas en uso",
+            labelStyle: { fill: "#ffffff", fontSize: 12 },
+            tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
+          }]}
+          series={[{
+            data: bikes,
+            color: "#3b82f6"
+          }]}
           grid={{ vertical: false }}
           sx={{
             "& .MuiChartsAxis-line, & .MuiChartsAxis-tick": {
