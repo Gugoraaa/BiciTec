@@ -1,10 +1,10 @@
-export type BikeStatus = "Available" | "In Use" | "Maintenance";
+export type BikeStatus = "Available" | "InUse" | "Maintenance";
 
 export interface Bike {
   id: string;
   lastSeen: string;
-  station: string;
-  avgSpeed: number;
-  totalKm: number;
-  status: BikeStatus;
+  estacion: string;
+  velocidad_prom: number;
+  total_km: number;
+  estado: BikeStatus;
 }

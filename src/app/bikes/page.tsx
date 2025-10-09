@@ -2,17 +2,79 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import BikeCard from "@/components/BikeCard";
 import ReportModal from "@/components/bikes/ReportModal";
+import BikeTripsModal from "@/components/bikes/BikeTripsModal";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { Bike, BikeStatus } from "@/types/bike";
 
+type Trip = {
+  id: string;
+  startTime: string;
+  endTime: string;
+  duration: string;
+  distance: number;
+  userId: string;
+  userName: string;
+  startStation: string;
+  endStation: string;
+  status: string;
+};
+
+// Mock data for bike trips
+const mockTrips: Record<string, Trip[]> = {
+  "Bike 123": [
+    {
+      id: "TRIP-001",
+      startTime: "2023-10-01T08:00:00Z",
+      endTime: "2023-10-01T08:30:00Z",
+      duration: "30 min",
+      distance: 5.2,
+      userId: "USER-001",
+      userName: "Juan Pérez",
+      startStation: "Central",
+      endStation: "Library",
+      status: "completed"
+    },
+    {
+      id: "TRIP-002",
+      startTime: "2023-10-02T14:15:00Z",
+      endTime: "2023-10-02T14:45:00Z",
+      duration: "30 min",
+      distance: 4.8,
+      userId: "USER-002",
+      userName: "María García",
+      startStation: "Library",
+      endStation: "Engineering",
+      status: "completed"
+    }
+  ],
+  "Bike 087": [
+    {
+      id: "TRIP-003",
+      startTime: "2023-10-03T10:00:00Z",
+      endTime: "2023-10-03T10:45:00Z",
+      duration: "45 min",
+      distance: 7.3,
+      userId: "USER-003",
+      userName: "Carlos López",
+      startStation: "Arts Building",
+      endStation: "Dorms",
+      status: "completed"
+    }
+  ]
+};
+
 export default function Bikes() {
   const bikes = useMemo<Bike[]>(() => [
-    { id: "Bike 123", lastSeen: "2 hours ago", station: "Central", avgSpeed: 15, totalKm: 2345, status: "Available" },
-    { id: "Bike 087", lastSeen: "10 minutes ago", station: "Library", avgSpeed: 12, totalKm: 1780, status: "In Use" },
-    { id: "Bike 214", lastSeen: "1 day ago", station: "Engineering", avgSpeed: 9, totalKm: 4012, status: "Maintenance" },
-    { id: "Bike 376", lastSeen: "30 minutes ago", station: "Arts Building", avgSpeed: 11, totalKm: 2230, status: "Available" },
-    { id: "Bike 512", lastSeen: "3 days ago", station: "Dorms", avgSpeed: 0, totalKm: 5034, status: "Maintenance" },
+    { id: "Bike 123", lastSeen: "2 hours ago", estacion: "Central", velocidad_prom: 15, total_km: 2345, estado: "Available" },
+    { id: "Bike 087", lastSeen: "10 minutes ago", estacion: "Library", velocidad_prom: 12, total_km: 1780, estado: "InUse" },
+    { id: "Bike 214", lastSeen: "1 day ago", estacion: "Engineering", velocidad_prom: 9, total_km: 4012, estado: "Maintenance" },
+    { id: "Bike 376", lastSeen: "30 minutes ago", estacion: "Arts Building", velocidad_prom: 11, total_km: 2230, estado: "Available" },
+    { id: "Bike 512", lastSeen: "3 days ago", estacion: "Dorms", velocidad_prom: 0, total_km: 5034, estado: "Maintenance" },
   ], []);
+  
+  const [selectedBikeId, setSelectedBikeId] = useState<string | null>(null);
+  const [isTripsModalOpen, setIsTripsModalOpen] = useState(false);
+  const [bikeTrips, setBikeTrips] = useState<Trip[]>([]);
   
   const [filter, setFilter] = useState<"All" | BikeStatus>("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,7 +111,7 @@ export default function Bikes() {
   // Efecto para filtrar bicicletas
   useEffect(() => {
     setVisibleCards([]);
-    const filtered = filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
+    const filtered = filter === "All" ? bikes : bikes.filter((b) => b.estado === filter);
     // Get bike IDs for filtered bikes
     const bikeIds = filtered.map(bike => bike.id);
     console.log('Filtered bike IDs:', bikeIds);
@@ -74,7 +136,7 @@ export default function Bikes() {
   const filteredBikes = useMemo(() => {
     return bikes.filter(bike => {
       const matchesSearch = bike.id.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesFilter = filter === "All" || bike.status === filter;
+      const matchesFilter = filter === "All" || bike.estado === filter;
       return matchesSearch && matchesFilter;
     });
   }, [bikes, filter, searchQuery]);
@@ -90,6 +152,13 @@ export default function Bikes() {
     // Here you would typically make an API call to submit the report
     console.log(`Report submitted for ${bikeId}: ${description}`);
     // You can add a toast notification here
+  };
+
+  const handleViewTrips = (bikeId: string) => {
+    setSelectedBikeId(bikeId);
+    // In a real app, you would fetch the trips for this bike from an API
+    setBikeTrips(mockTrips[bikeId] || []);
+    setIsTripsModalOpen(true);
   };
 
   return (
@@ -137,7 +206,7 @@ export default function Bikes() {
               isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
-            {(['All', 'Available', 'In Use', 'Maintenance'] as const).map((s) => (
+            {(['All', 'Available', 'InUse', 'Maintenance'] as const).map((s) => (
               <button
                 key={s}
                 onClick={() => setFilter(s)}
@@ -168,7 +237,10 @@ export default function Bikes() {
                       : 'opacity-0 translate-y-8'
                   }`}
                 >
-                  <BikeCard {...bike} />
+                  <BikeCard 
+                    {...bike} 
+                    onViewTrips={handleViewTrips}
+                  />
                 </div>
               );
             })}
@@ -182,6 +254,13 @@ export default function Bikes() {
         onClose={() => setIsReportModalOpen(false)}
         bikes={bikes}
         onSubmit={handleReportSubmit}
+      />
+
+      <BikeTripsModal
+        isOpen={isTripsModalOpen}
+        onClose={() => setIsTripsModalOpen(false)}
+        bikeId={selectedBikeId || ''}
+        trips={bikeTrips}
       />
     </main>
   );
