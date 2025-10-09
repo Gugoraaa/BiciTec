@@ -6,11 +6,11 @@ type Status = "Operational" | "Maintenance" | "Offline";
 
 export type StationRow = {
   id: string;
-  station: string;
-  capacity: number;
-  docked: number;
+  nombre: string;
+  capacidad_max: number;
+  bicicletas: number;
   available: number;
-  status: Status;
+  estado: Status;
 };
 
 const statusStyles: Record<Status, { dot: string; pill: string }> = {
@@ -28,12 +28,15 @@ const statusStyles: Record<Status, { dot: string; pill: string }> = {
   },
 };
 
-function StatusBadge({ status }: { status: Status }) {
-  const s = statusStyles[status];
+function StatusBadge({ status }: { status?: Status }) {
+  // Default to 'Offline' if status is undefined or not in statusStyles
+  const safeStatus = status && status in statusStyles ? status : 'Offline';
+  const s = statusStyles[safeStatus];
+  
   return (
     <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${s.pill}`}>
       <span className={`h-2.5 w-2.5 rounded-full ${s.dot}`} />
-      {status}
+      {safeStatus}
     </span>
   );
 }
@@ -60,22 +63,24 @@ export default function StationTable({
         const response = await api.get<Array<{
           id: number;
           nombre: string;
-          capacidad: number;
+          capacidad_max: number;
           bicicletas: number;
-          status: Status;
+          estado: Status;
         }>>("/stations/getStations");
-        
+          
         if (!isMounted) return;
         
         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
           // Transformar datos de la API
           const transformedData: StationRow[] = response.data.map((station) => ({
             id: String(station.id),
-            station: station.nombre,
-            capacity: station.capacidad,
-            docked: station.bicicletas,
-            available: station.capacidad - station.bicicletas, 
-            status: station.status,
+            nombre: station.nombre,
+            capacidad_max: station.capacidad_max,
+            bicicletas: station.bicicletas,
+            available: (typeof station.capacidad_max === 'number' && typeof station.bicicletas === 'number') 
+              ? Math.max(0, station.capacidad_max - station.bicicletas) 
+              : 0,
+            estado: station.estado,
           }));
           
           // Eliminar duplicados basados en ID
@@ -196,7 +201,7 @@ export default function StationTable({
                   <td className="py-3 px-4">
                     <div className="flex flex-col">
                       <span className="text-slate-200 font-semibold">
-                        {row.station}
+                        {row.nombre}
                       </span>
                       
                     </div>
@@ -205,21 +210,21 @@ export default function StationTable({
                   
 
                   <td className="py-3 px-4 text-right text-slate-300">
-                    {row.capacity}
+                    {row.capacidad_max} 
                   </td>
 
                   <td className="py-3 px-4 text-right text-slate-300">
-                    {row.docked}
+                    {row.bicicletas}
                   </td>
 
                   <td className="py-3 px-4 text-right">
                     <span className="text-slate-200 font-medium">
-                      {row.available}
+                      {typeof row.available === 'number' ? Math.max(0, row.available) : 0}
                     </span>
                   </td>
 
                   <td className="py-3 px-4">
-                    <StatusBadge status={row.status} />
+                    <StatusBadge status={row.estado} />
                   </td>
                 </tr>
               );
