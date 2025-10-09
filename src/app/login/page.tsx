@@ -1,9 +1,9 @@
 'use client'
 
 import Link from "next/link";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import api from '@/lib/api';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const [matricula, setMatricula] = useState('');
@@ -11,6 +11,15 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { user, login, isLoading: authLoading } = useAuth();
+
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (!authLoading && user) {
+      const returnUrl = new URLSearchParams(window.location.search).get('returnUrl') || '/bikes';
+      router.push(returnUrl);
+    }
+  }, [authLoading, user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,21 +27,24 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const { data } = await api.post('/auth/login', { matricula, password });
-
-      // Guardar el token y los datos del usuario
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
-      // Redirigir al dashboard o página principal
-      router.push('/bikes');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al iniciar sesión');
+      await login(matricula, password);
+      // La redirección se manejará en el efecto cuando user cambie
+    } catch (err: unknown) {
+      const errorMessage = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Error al iniciar sesión';
+      setError(errorMessage);
       console.error('Login error:', err);
-    } finally {
       setIsLoading(false);
     }
   };
+
+  // Mostrar pantalla de carga mientras se verifica la autenticación
+  if (authLoading) {
+    return (
+      <div className="min-h-screen w-full bg-slate-900 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100 flex flex-col items-center justify-center px-4 py-10">

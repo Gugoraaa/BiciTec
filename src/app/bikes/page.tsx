@@ -13,16 +13,15 @@ export default function Bikes() {
     { id: "Bike 376", lastSeen: "30 minutes ago", station: "Arts Building", avgSpeed: 11, totalKm: 2230, status: "Available" },
     { id: "Bike 512", lastSeen: "3 days ago", station: "Dorms", avgSpeed: 0, totalKm: 5034, status: "Maintenance" },
   ], []);
-
+  
   const [filter, setFilter] = useState<"All" | BikeStatus>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [visibleCards, setVisibleCards] = useState<string[]>([]);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  // Using ref to track initial mount
-  const isInitialMount = useRef(true); // This is used elsewhere in the code
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
 
+  // Limpiar timeouts al desmontar
   useEffect(() => {
     return () => {
       timeoutsRef.current.forEach(clearTimeout);
@@ -30,6 +29,7 @@ export default function Bikes() {
     };
   }, []);
 
+  // Efecto para la animación de carga inicial
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
     
@@ -39,12 +39,14 @@ export default function Bikes() {
       }, 200 + index * 80);
     });
 
+    // Limpiar timeouts
     return () => {
       clearTimeout(timer);
       timeouts.forEach(clearTimeout);
     };
   }, [bikes]);
 
+  // Efecto para filtrar bicicletas
   useEffect(() => {
     setVisibleCards([]);
     const filtered = filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
