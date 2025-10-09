@@ -1,23 +1,14 @@
 "use client";
-
-interface BikeCardProps {
-  id: string;
-  lastSeen: string;
-  station: string;
-  avgSpeed: number;
-  totalKm: number;
-  health: number;
-  status: string;
-}
+import { Bike } from "@/types/bike";
 
 export default function BikeCard({
   id,
   lastSeen,
   station,
   avgSpeed,
-  totalKm,
+  totalKm,  
   status,
-}: BikeCardProps) {
+}: Bike) {
   const statusColors: Record<string, string> = {
     Available: "bg-emerald-500/10 text-emerald-400 border border-emerald-600/30",
     "In Use": "bg-blue-500/10 text-blue-400 border border-blue-600/30",

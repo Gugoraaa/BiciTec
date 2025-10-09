@@ -10,11 +10,12 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const isLoginPage = pathname === '/login';
+  const isRegisterPage = pathname === '/register';
 
   return (
     <>
-      {!isLoginPage && <Navbar />}
-      <main className={isLoginPage ? 'w-full' : 'flex-1 p-6 overflow-y-auto h-screen'}>
+      {!isLoginPage && !isRegisterPage && <Navbar />}
+      <main className={isLoginPage || isRegisterPage ? 'w-full' : 'flex-1 p-6 overflow-y-auto h-screen'}>
         {children}
       </main>
     </>

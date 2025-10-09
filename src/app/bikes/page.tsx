@@ -1,39 +1,34 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import BikeCard from "@/components/BikeCard";
-
-type BikeStatus = "Available" | "In Use" | "Maintenance";
-
-interface Bike {
-  id: string;
-  lastSeen: string;
-  station: string;
-  avgSpeed: number;
-  totalKm: number;
-  health: number;
-  status: BikeStatus;
-}
+import ReportModal from "@/components/bikes/ReportModal";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { Bike, BikeStatus } from "@/types/bike";
 
 export default function Bikes() {
   const bikes = useMemo<Bike[]>(() => [
-    { id: "Bike 123", lastSeen: "2 hours ago", station: "Central", avgSpeed: 15, totalKm: 2345, health: 95, status: "Available" },
-    { id: "Bike 087", lastSeen: "10 minutes ago", station: "Library", avgSpeed: 12, totalKm: 1780, health: 82, status: "In Use" },
-    { id: "Bike 041", lastSeen: "5 hours ago", station: "Science Building", avgSpeed: 14, totalKm: 3560, health: 68, status: "Available" },
-    { id: "Bike 214", lastSeen: "1 day ago", station: "Engineering", avgSpeed: 9, totalKm: 4012, health: 45, status: "Maintenance" },
-    { id: "Bike 376", lastSeen: "30 minutes ago", station: "Arts Building", avgSpeed: 11, totalKm: 2230, health: 89, status: "Available" },
-    { id: "Bike 512", lastSeen: "3 days ago", station: "Dorms", avgSpeed: 0, totalKm: 5034, health: 52, status: "Maintenance" },
+    { id: "Bike 123", lastSeen: "2 hours ago", station: "Central", avgSpeed: 15, totalKm: 2345, status: "Available" },
+    { id: "Bike 087", lastSeen: "10 minutes ago", station: "Library", avgSpeed: 12, totalKm: 1780, status: "In Use" },
+    { id: "Bike 214", lastSeen: "1 day ago", station: "Engineering", avgSpeed: 9, totalKm: 4012, status: "Maintenance" },
+    { id: "Bike 376", lastSeen: "30 minutes ago", station: "Arts Building", avgSpeed: 11, totalKm: 2230, status: "Available" },
+    { id: "Bike 512", lastSeen: "3 days ago", station: "Dorms", avgSpeed: 0, totalKm: 5034, status: "Maintenance" },
   ], []);
 
   const [filter, setFilter] = useState<"All" | BikeStatus>("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [visibleCards, setVisibleCards] = useState<string[]>([]);
-  
-  const statusColors = {
-    All: "bg-slate-700/40 text-slate-300 border border-slate-600",
-    Available: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
-    "In Use": "bg-blue-500/10 text-blue-400 border border-blue-500/30",
-    Maintenance: "bg-amber-500/10 text-amber-400 border border-amber-500/30",
-  };
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  // Using ref to track initial mount
+  const isInitialMount = useRef(true); // This is used elsewhere in the code
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+
+  useEffect(() => {
+    return () => {
+      timeoutsRef.current.forEach(clearTimeout);
+      timeoutsRef.current = [];
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
@@ -53,7 +48,9 @@ export default function Bikes() {
   useEffect(() => {
     setVisibleCards([]);
     const filtered = filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
+    // Get bike IDs for filtered bikes
     const bikeIds = filtered.map(bike => bike.id);
+    console.log('Filtered bike IDs:', bikeIds);
     
     const timeouts = filtered.map((bike, index) => {
       return setTimeout(() => {
@@ -72,58 +69,118 @@ export default function Bikes() {
     };
   }, [filter, bikes]);
 
-  const filteredBikes = filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
+  const filteredBikes = useMemo(() => {
+    return bikes.filter(bike => {
+      const matchesSearch = bike.id.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesFilter = filter === "All" || bike.status === filter;
+      return matchesSearch && matchesFilter;
+    });
+  }, [bikes, filter, searchQuery]);
+
+  const statusColors: Record<string, string> = {
+    All: "bg-slate-700/40 text-slate-300 border border-slate-600",
+    Available: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
+    "In Use": "bg-blue-500/10 text-blue-400 border border-blue-500/30",
+    Maintenance: "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+  };
+
+  const handleReportSubmit = (bikeId: string, description: string) => {
+    // Here you would typically make an API call to submit the report
+    console.log(`Report submitted for ${bikeId}: ${description}`);
+    // You can add a toast notification here
+  };
 
   return (
     <main className="min-h-screen bg-[#0f172a] text-white">
       <div className="max-w-6xl mx-auto p-6">
-        <h1 
-          className={`text-2xl font-bold mb-6 transition-all duration-700 ${
-            isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-          }`}
-        >
-          Bikes
-        </h1>
-
-        <div 
-          className={`flex items-center gap-3 mb-6 bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-3 transition-all duration-700 delay-100 ${
-            isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
-          }`}
-        >
-          <span className="text-slate-400 text-sm font-medium">Filters:</span>
-          {(["All", "Available", "In Use", "Maintenance"] as const).map((s) => (
-            <button
-              key={s}
-              onClick={() => setFilter(s)}
-              className={`px-3 py-1 text-sm font-medium rounded-full transition-all ${
-                filter === s
-                  ? `${statusColors[s]} ring-1 ring-offset-0`
-                  : "bg-slate-800/50 text-slate-400 border border-slate-700 hover:bg-slate-700/50"
-              }`}
-            >
-              {s}
-            </button>
-          ))}
+        <div className="flex justify-between items-center mb-6">
+          <h1 
+            className={`text-2xl font-bold transition-all duration-700 ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+            }`}
+          >
+            Bikes
+          </h1>
+          <button
+            onClick={() => setIsReportModalOpen(true)}
+            className={`flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+          >
+            <FaExclamationTriangle />
+            <span>Report Issue</span>
+          </button>
         </div>
 
-        <div className="mt-2 grid gap-4 grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">
-          {filteredBikes.map((bike) => {
-            const isVisible = visibleCards.includes(bike.id);
-            return (
-              <div
-                key={bike.id}
-                className={`transition-all duration-500 ${
-                  isVisible 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-8'
+        <div className="flex flex-col gap-4 mb-6">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Search bikes..."
+              className={`w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ${
+                isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+              }`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div 
+            className={`flex items-center gap-3 bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-3 transition-all duration-700 delay-100 ${
+              isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+            }`}
+          >
+            {(['All', 'Available', 'In Use', 'Maintenance'] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => setFilter(s)}
+                className={`px-3 py-1 text-sm font-medium rounded-full transition-all ${
+                  filter === s
+                    ? statusColors[s]
+                    : "bg-slate-800/50 text-slate-400 border border-slate-700 hover:bg-slate-700/50"
                 }`}
               >
-                <BikeCard {...bike} />
-              </div>
-            );
-          })}
-        </div>
+                {s}
+              </button>
+            ))}
+          </div>
+        {filteredBikes.length === 0 ? (
+          <div className="text-center py-8 text-slate-400">
+            No bikes found matching your search.
+          </div>
+        ) : (
+          <div className="mt-2 grid gap-4 grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">
+            {filteredBikes.map((bike) => {
+              const isVisible = visibleCards.includes(bike.id);
+              return (
+                <div
+                  key={bike.id}
+                  className={`transition-all duration-500 ${
+                    isVisible 
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 translate-y-8'
+                  }`}
+                >
+                  <BikeCard {...bike} />
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
+      </div>
+
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        bikes={bikes}
+        onSubmit={handleReportSubmit}
+      />
     </main>
   );
 }
