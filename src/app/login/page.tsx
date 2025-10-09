@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { user, login, isAdmin, isLoading: authLoading } = useAuth();
+  const { user, login, isLoading: authLoading } = useAuth();
 
   // Redirigir si ya está autenticado
   useEffect(() => {
@@ -29,8 +29,8 @@ export default function LoginPage() {
     try {
       await login(matricula, password);
       // La redirección se manejará en el efecto cuando user cambie
-    } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || 'Error al iniciar sesión';
+    } catch (err: unknown) {
+      const errorMessage = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Error al iniciar sesión';
       setError(errorMessage);
       console.error('Login error:', err);
       setIsLoading(false);
