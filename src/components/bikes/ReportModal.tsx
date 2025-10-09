@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { FaTimes, FaCheck } from 'react-icons/fa';
 
 export default function ReportModal({ 
@@ -67,7 +67,7 @@ export default function ReportModal({
               <FaCheck className="h-8 w-8 text-green-400" />
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">Report Submitted!</h3>
-            <p className="text-slate-300">Thank you for your report. We'll look into it soon.</p>
+            <p className="text-slate-300">Thank you for your report. We&apos;ll look into it soon.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

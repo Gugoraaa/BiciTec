@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import BikeCard from "@/components/BikeCard";
 import ReportModal from "@/components/bikes/ReportModal";
-import { FaPlus, FaExclamationTriangle } from "react-icons/fa";
+import { FaExclamationTriangle } from "react-icons/fa";
 import { Bike, BikeStatus } from "@/types/bike";
 
 export default function Bikes() {
@@ -19,7 +19,8 @@ export default function Bikes() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [visibleCards, setVisibleCards] = useState<string[]>([]);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const isInitialMount = useRef(true);
+  // Using ref to track initial mount
+  const isInitialMount = useRef(true); // This is used elsewhere in the code
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
@@ -47,7 +48,9 @@ export default function Bikes() {
   useEffect(() => {
     setVisibleCards([]);
     const filtered = filter === "All" ? bikes : bikes.filter((b) => b.status === filter);
+    // Get bike IDs for filtered bikes
     const bikeIds = filtered.map(bike => bike.id);
+    console.log('Filtered bike IDs:', bikeIds);
     
     const timeouts = filtered.map((bike, index) => {
       return setTimeout(() => {
