@@ -8,6 +8,7 @@ import StatusFilter from "@/components/maintenance/StatusFilter";
 import StatusColumn from "@/components/maintenance/StatusColumn";
 import ViewToggle from "@/components/maintenance/ViewToggle";
 import TicketsTable from "@/components/maintenance/TicketsTable";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 const SEED: Ticket[] = [
   // --- OPEN ---
@@ -257,7 +258,7 @@ const SEED: Ticket[] = [
   },
 ];
 
-export default function BikeMaintenanceDashboard() {
+function BikeMaintenanceDashboard() {
   const [filter, setFilter] = useState<Status | "All">("All");
   const [view, setView] = useState<"cards" | "table">("cards");
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -358,5 +359,13 @@ export default function BikeMaintenanceDashboard() {
         onDelete={onDelete}
       />
     </div>
+  );
+}
+
+export default function MaintenancePage() {
+  return (
+    <ProtectedRoute requiredRole="admin">
+      <BikeMaintenanceDashboard />
+    </ProtectedRoute>
   );
 }
