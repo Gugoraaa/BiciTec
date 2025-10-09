@@ -1,17 +1,5 @@
-import { useState, useEffect } from 'react';
-
-type Trip = {
-  id: string;
-  startTime: string;
-  endTime: string;
-  duration: string;
-  distance: number;
-  userId: string;
-  userName: string;
-  startStation: string;
-  endStation: string;
-  status: string;
-};
+import { useState, useEffect } from "react";
+import { Trip } from "@/types/bike";
 
 type BikeTripsModalProps = {
   isOpen: boolean;
@@ -20,12 +8,16 @@ type BikeTripsModalProps = {
   trips: Trip[];
 };
 
-export default function BikeTripsModal({ isOpen, onClose, bikeId, trips }: BikeTripsModalProps) {
+export default function BikeTripsModal({
+  isOpen,
+  onClose,
+  bikeId,
+  trips,
+}: BikeTripsModalProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      
       const timer = setTimeout(() => setIsVisible(true), 10);
       return () => clearTimeout(timer);
     } else {
@@ -37,13 +29,18 @@ export default function BikeTripsModal({ isOpen, onClose, bikeId, trips }: BikeT
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="fixed inset-0 bg-black/50 transition-opacity" onClick={onClose}></div>
-      
-      <div 
-        className={`fixed inset-0 flex items-center justify-center p-4 transition-opacity ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-        style={{ transition: 'opacity 300ms ease-in-out' }}
+      <div
+        className="fixed inset-0 bg-black/50 transition-opacity"
+        onClick={onClose}
+      ></div>
+
+      <div
+        className={`fixed inset-0 flex items-center justify-center p-4 transition-opacity ${
+          isVisible ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ transition: "opacity 300ms ease-in-out" }}
       >
-        <div 
+        <div
           className="relative w-full max-w-5xl bg-slate-800 rounded-lg shadow-xl overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
@@ -71,19 +68,13 @@ export default function BikeTripsModal({ isOpen, onClose, bikeId, trips }: BikeT
                     User
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Start
+                    Date
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    End
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Duration
+                    Duration (MINS)
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Distance (km)
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Status
                   </th>
                 </tr>
               </thead>
@@ -95,36 +86,33 @@ export default function BikeTripsModal({ isOpen, onClose, bikeId, trips }: BikeT
                         {trip.id}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
-                        {trip.userName || 'N/A'}
+                        {trip.usuario || "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
-                        {new Date(trip.startTime).toLocaleString()}
+                        {new Date(trip.fecha).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                        {trip.tiempo || "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
-                        {trip.endTime ? new Date(trip.endTime).toLocaleString() : 'In Progress'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
-                        {trip.duration || 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
-                        {trip.distance?.toFixed(2) || '0.00'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          trip.status === 'completed' 
-                            ? 'bg-green-100 text-green-800' 
-                            : trip.status === 'in_progress'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {trip.status === 'completed' ? 'Completed' : trip.status === 'in_progress' ? 'In Progress' : 'Pending'}
-                        </span>
+                        {trip.distancia?.toFixed(2) || "0.00"}
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="px-6 py-4 text-center text-sm text-slate-400">
+                    <td
+                      colSpan={7}
+                      className="px-6 py-4 text-center text-sm text-slate-400"
+                    >
                       No trips recorded for this bike.
                     </td>
                   </tr>

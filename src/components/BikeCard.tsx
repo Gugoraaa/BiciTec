@@ -10,7 +10,7 @@ export default function BikeCard({
   id,
   lastSeen,
   estacion,
-  velocidad_prom,
+  vel_prom,
   total_km,
   estado,
   onViewTrips
@@ -40,7 +40,7 @@ export default function BikeCard({
 
       <div className="flex flex-col justify-between space-y-3 mt-4">
         <div>
-          <h2 className="text-lg font-semibold text-white">{id}</h2>
+          <h2 className="text-lg font-semibold text-white">Bike {id}</h2>
           <p className="text-sm text-slate-400">Last seen: {lastSeen}</p>
         </div>
 
@@ -51,7 +51,7 @@ export default function BikeCard({
           </div>
           <div className="text-right">
             <span className="block text-slate-500 text-xs">Avg. Speed</span>
-            <span className="font-medium">{velocidad_prom} km/h</span>
+            <span className="font-medium">{vel_prom} km/h</span>
           </div>
           <div>
             <span className="block text-slate-500 text-xs">Total Km</span>
