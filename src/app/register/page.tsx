@@ -12,11 +12,27 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [matriculaError, setMatriculaError] = useState('');
   const router = useRouter();
+
+  const validateMatricula = (mat: string) => {
+    if (mat.length !== 9) {
+      setMatriculaError('La matrícula debe tener exactamente 9 caracteres');
+      return false;
+    }
+    setMatriculaError('');
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setMatriculaError('');
+    
+    if (!validateMatricula(matricula)) {
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -79,12 +95,23 @@ export default function RegisterPage() {
                   id="matricula"
                   name="matricula"
                   type="text"
-                  placeholder="Matrícula"
+                  placeholder="Matrícula (9 caracteres)"
                   value={matricula}
-                  onChange={(e) => setMatricula(e.target.value)}
-                  className="block w-full rounded-xl border border-white/10 bg-slate-800/70 py-3 pl-10 pr-3 text-sm placeholder-slate-400 outline-none ring-0 focus:border-sky-500/60 focus:bg-slate-800"
+                  onChange={(e) => {
+                    setMatricula(e.target.value);
+                    if (e.target.value.length === 9) {
+                      setMatriculaError('');
+                    }
+                  }}
+                  maxLength={9}
+                  className={`block w-full rounded-xl border ${
+                    matriculaError ? 'border-red-500' : 'border-white/10'
+                  } bg-slate-800/70 py-3 pl-10 pr-3 text-sm placeholder-slate-400 outline-none ring-0 focus:border-sky-500/60 focus:bg-slate-800`}
                   required
                 />
+                {matriculaError && (
+                  <p className="mt-1 text-xs text-red-400">{matriculaError}</p>
+                )}
               </div>
             </label>
 
