@@ -2,21 +2,50 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import api from '@/lib/api';
 
 export default function RegisterPage() {
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [matricula, setMatricula] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      await api.post('/auth/register', { 
+        nombre: nombre.trim(),
+        apellido: apellido.trim(),
+        matricula,
+        password 
+      });
+
+      router.push('/login');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al registrar el usuario');
+      console.error('Registration error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        
         <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-slate-800/80 ring-1 ring-white/10 shadow-lg">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
             className="h-7 w-7 text-slate-200"
-            aria-hidden
+            aria-hidden="true"
           >
             <path d="M12 4a8 8 0 1 1-6.32 12.9l-.86 2.58a1 1 0 0 1-1.9-.62l1.78-5.33A8 8 0 0 1 12 4Z" />
           </svg>
@@ -25,21 +54,16 @@ export default function RegisterPage() {
         
         <div className="text-center">
           <h1 className="text-3xl font-semibold tracking-tight">BiciTec</h1>
-          <p className="mt-1 text-sm text-slate-400">Join the smart bike revolution on campus.</p>
+          <p className="mt-1 text-sm text-slate-400">Únete a la revolución de las bicicletas inteligentes en el campus.</p>
         </div>
 
         
         <div className="mt-6 rounded-2xl bg-slate-900/60 p-6 shadow-xl ring-1 ring-white/10 backdrop-blur">
-          <h2 className="text-xl font-semibold mb-4">Create your account</h2>
+          <h2 className="text-xl font-semibold mb-4">Crear cuenta</h2>
 
           <form
             className="space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setLoading(true);
-              // TODO: handle register
-              setTimeout(() => setLoading(false), 800);
-            }}
+            onSubmit={handleSubmit}
           >
             
             <label className="block text-sm font-medium text-slate-300" htmlFor="studentId">
@@ -52,11 +76,12 @@ export default function RegisterPage() {
                   </svg>
                 </span>
                 <input
-                  id="studentID"
-                  name="studentID"
+                  id="matricula"
+                  name="matricula"
                   type="text"
-                  placeholder="StudentID"
-                  autoComplete="username"
+                  placeholder="Matrícula"
+                  value={matricula}
+                  onChange={(e) => setMatricula(e.target.value)}
                   className="block w-full rounded-xl border border-white/10 bg-slate-800/70 py-3 pl-10 pr-3 text-sm placeholder-slate-400 outline-none ring-0 focus:border-sky-500/60 focus:bg-slate-800"
                   required
                 />
@@ -74,11 +99,12 @@ export default function RegisterPage() {
                   </svg>
                 </span>
                 <input
-                  id="firstName"
-                  name="firstName"
+                  id="nombre"
+                  name="nombre"
                   type="text"
-                  placeholder="First Name"
-                  autoComplete="given-name"
+                  placeholder="Nombre"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
                   className="block w-full rounded-xl border border-white/10 bg-slate-800/70 py-3 pl-10 pr-3 text-sm placeholder-slate-400 outline-none ring-0 focus:border-sky-500/60 focus:bg-slate-800"
                   required
                 />
@@ -96,11 +122,12 @@ export default function RegisterPage() {
                   </svg>
                 </span>
                 <input
-                  id="lastName"
-                  name="lastName"
+                  id="apellido"
+                  name="apellido"
                   type="text"
-                  placeholder="Last Name"
-                  autoComplete="family-name"
+                  placeholder="Apellido"
+                  value={apellido}
+                  onChange={(e) => setApellido(e.target.value)}
                   className="block w-full rounded-xl border border-white/10 bg-slate-800/70 py-3 pl-10 pr-3 text-sm placeholder-slate-400 outline-none ring-0 focus:border-sky-500/60 focus:bg-slate-800"
                   required
                 />
@@ -121,7 +148,9 @@ export default function RegisterPage() {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Password"
+                  placeholder="Contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   autoComplete="new-password"
                   className="block w-full rounded-xl border border-white/10 bg-slate-800/70 py-3 pl-10 pr-3 text-sm placeholder-slate-400 outline-none ring-0 focus:border-sky-500/60 focus:bg-slate-800"
                   required
@@ -134,13 +163,18 @@ export default function RegisterPage() {
               disabled={loading}
               className="mt-2 w-full rounded-xl bg-sky-600 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-sky-900/30 hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 active:scale-[.99] transition disabled:opacity-60"
             >
-              {loading ? 'Registering…' : 'Register'}
+              {loading ? 'Registrando...' : 'Registrarse'}
             </button>
           </form>
 
+          {error && (
+            <div className="mt-4 p-3 text-sm text-red-400 bg-red-900/30 rounded-lg">
+              {error}
+            </div>
+          )}
           <p className="mt-4 text-center text-sm text-slate-400">
-            Already have an account?{" "}
-            <Link href="/login" className="text-sky-400 hover:text-sky-300">Sign in</Link>
+            ¿Ya tienes una cuenta?{" "}
+            <Link href="/login" className="text-sky-400 hover:text-sky-300">Iniciar sesión</Link>
           </p>
         </div>
       </div>
