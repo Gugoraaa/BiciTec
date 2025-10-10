@@ -1,5 +1,6 @@
-'use client'
-import { useEffect, useState } from 'react';
+'use client';
+
+import { useEffect, useState, useCallback } from 'react';
 import api from '@/lib/api';
 import { FaExclamationCircle } from 'react-icons/fa';
 
@@ -18,19 +19,53 @@ export default function StationCapacityCard() {
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    const fetchStationData = async () => {
-      try {
-        const response = await api.get('/overview/stationPercent');
-        setStations(response.data);
-      } catch (err) {
-        console.error('Error fetching station data:', err);
-        setError('Failed to load station data');
-      } finally {
-        setIsLoading(false);
+  const fetchStationData = useCallback(async () => {
+    try {
+      console.log('Fetching station data...');
+      const response = await api.get('/overview/stationPercent');
+      
+      console.log('API Response:', response);
+      
+      if (!response?.data) {
+        throw new Error('No data received from server');
       }
-    };
+      
+      // Handle different possible response formats
+      let stationsData = response.data;
+      
+      // If data is an object with a data property, use that
+      if (stationsData && typeof stationsData === 'object' && !Array.isArray(stationsData) && 'data' in stationsData) {
+        stationsData = stationsData.data;
+      }
+      
+      // If still not an array, try to convert it
+      if (!Array.isArray(stationsData)) {
+        if (typeof stationsData === 'object' && stationsData !== null) {
+          // If it's a single station object, convert to array
+          stationsData = [stationsData];
+        } else {
+          console.error('Unexpected data format:', stationsData);
+          throw new Error('Invalid data format received: Expected an array of stations');
+        }
+      }
+      
+      console.log('Processed stations data:', stationsData);
+      setStations(stationsData);
+      setError(null);
+    } catch (err) {
+      console.error('Error in fetchStationData:', {
+        error: err,
+        message: err instanceof Error ? err.message : 'Unknown error',
+        stack: err instanceof Error ? err.stack : undefined
+      });
+      setError(`Failed to load station data: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      setStations([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
+  useEffect(() => {
     fetchStationData();
 
     // Animation setup
@@ -57,7 +92,7 @@ export default function StationCapacityCard() {
     return () => {
       cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [fetchStationData]);
 
   if (isLoading) {
     return (
