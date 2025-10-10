@@ -31,24 +31,25 @@ export default function LiveUtilizationChart() {
   }, []);
 
   // Process the API data for the chart
-  const chartData = bikeData.map(item => ({
-    hour: item.hour,
-    hourValue: item.hour, // Keep as string for display
-    sortValue: parseInt(item.hour.split(':')[0]), // For sorting
-    count: item.count
-  }));
+  const chartData = Array.isArray(bikeData) 
+    ? bikeData.map(item => ({
+        hour: item?.hour || '00:00',
+        hourValue: item?.hour || '00:00', // Keep as string for display
+        sortValue: parseInt((item?.hour || '00:00').split(':')[0]), // For sorting
+        count: typeof item?.count === 'number' ? item.count : 0
+      }))
+    : [];
   
   // Sort by hour to ensure correct order (11:00, 12:00, ..., 23:00, 00:00, 01:00, ..., 10:00)
-  chartData.sort((a, b) => {
+  const sortedChartData = [...chartData].sort((a, b) => {
     // Convert hour to 24-hour number, handling the 24-hour cycle
     const hourA = a.sortValue;
     const hourB = b.sortValue;
-    return hourA < 11 ? hourA + 24 : hourA - (hourB < 11 ? hourB + 24 : hourB);
+    return (hourA < 11 ? hourA + 24 : hourA) - (hourB < 11 ? hourB + 24 : hourB);
   });
   
-  // Extract display values for the chart
-  const hours = chartData.map(item => item.hourValue);
-  const bikes = chartData.map(item => item.count);
+  const hours = sortedChartData.map(item => item.hourValue);
+  const bikes = sortedChartData.map(item => item.count);
 
   if (isLoading) {
     return (
