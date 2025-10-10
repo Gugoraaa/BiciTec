@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import Navbar from "@/components/navbar";
 import { AuthProvider } from '@/contexts/AuthContext';
+import '@/lib/passive-events'; // Import passive events configuration
 
 export default function ClientLayout({
   children,
