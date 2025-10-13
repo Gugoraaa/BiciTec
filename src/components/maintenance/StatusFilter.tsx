@@ -8,7 +8,7 @@ export default function StatusFilter({
     active: Status | "All";
     onChange: (value: Status | "All") => void;
   }) {
-    const options: Array<Status | "All"> = ["All", "Open", "In Progress", "Done"];
+    const options: Array<Status | "All"> = ["All", "Open", "InProgress", "Done"];
     return (
       <div className="inline-flex items-center gap-2 rounded-xl bg-slate-800/50 p-1 ring-1 ring-slate-700">
         {options.map((opt) => (
