@@ -109,10 +109,27 @@ export default function Bikes() {
     Maintenance: "bg-amber-500/10 text-amber-400 border border-amber-500/30",
   };
 
-  const handleReportSubmit = (bikeId: string, description: string) => {
-    // Here you would typically make an API call to submit the report
-    console.log(`Report submitted for ${bikeId}: ${description}`);
-    // You can add a toast notification here
+  const handleReportSubmit = async (bikeId: string, description: string) => {
+    try {
+      const userData = localStorage.getItem('user');
+      if (!userData) {
+        throw new Error('User not authenticated');
+      }
+      
+      const user = JSON.parse(userData);
+      const userId = user.id; 
+      
+      await api.post('/reports/createReport', {
+        id_usuario: userId,
+        id_bici: parseInt(bikeId, 10),
+        descripcion: description
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      throw error;
+    }
   };
 
   const [isLoadingTrips, setIsLoadingTrips] = useState(false);
