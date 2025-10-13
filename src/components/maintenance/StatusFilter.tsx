@@ -12,7 +12,7 @@ export default function StatusFilter({ active, onChange }: StatusFilterProps) {
   
   const getStatusText = (status: string) => {
     if (status === "All") return t("All");
-    return t(status as any);
+    return t(status as "Open" | "InProgress" | "Done");
   };
 
   return (

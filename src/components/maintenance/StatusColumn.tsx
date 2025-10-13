@@ -1,5 +1,5 @@
 import React from "react";
-import type { Status, Ticket } from "@/types/maintenance";  
+import type { Ticket } from "@/types/maintenance";  
 import TicketCard from "./TicketCard";
 import SkeletonCard from "./SkeletonCard";
 
