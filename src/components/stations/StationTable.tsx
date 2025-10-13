@@ -115,7 +115,7 @@ export default function StationTable() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [t]);
 
   if (isLoadingData) {
     return (
