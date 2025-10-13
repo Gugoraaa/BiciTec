@@ -8,4 +8,5 @@ export interface Report {
     fecha_entrega: Date | null;
     created_at: Date;
     updated_at: Date;
+    prioridad: 'High' | 'Medium' | 'Low';
 }

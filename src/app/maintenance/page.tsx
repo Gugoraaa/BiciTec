@@ -19,22 +19,22 @@ const mapApiResponseToTickets = (reports: Report[]): Ticket[] => {
       case 'Open':
       case 'InProgress':
       case 'Done':
-        status = report.estado === 'InProgress' ? 'In Progress' : report.estado;
+        status = report.estado === 'InProgress' ? 'InProgress' : report.estado;
         break;
       default:
         status = 'Open';
     }
 
     // Set priority based on status
-    const priority = status === 'Open' ? 'High' : status === 'In Progress' ? 'Medium' : 'Low';
+    
 
     return {
       id: report.id,
       bike: `Bike ${report.id_bici || 'N/A'}`,
       description: report.descripcion || 'No description provided',
       date: report.fecha_reporte ? new Date(report.fecha_reporte).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-      priority,
-      status
+      priority: report.prioridad,
+      status: report.estado,
     };
   });
 };
@@ -77,7 +77,7 @@ function BikeMaintenanceDashboard() {
   const grouped = useMemo(() => {
     const by: Record<Status, Ticket[]> = {
       Open: [],
-      "In Progress": [],
+      InProgress: [],
       Done: [],
     };
     tickets.forEach((t) => by[t.status].push(t));
@@ -85,7 +85,7 @@ function BikeMaintenanceDashboard() {
   }, [tickets]);
 
   const visibleColumns: Array<Status> = useMemo(() => {
-    if (filter === "All") return ["Open", "In Progress", "Done"];
+    if (filter === "All") return ["Open", "InProgress", "Done"];
     return [filter];
   }, [filter]);
 
@@ -94,31 +94,25 @@ function BikeMaintenanceDashboard() {
     return tickets.filter((t) => t.status === filter);
   }, [tickets, filter]);
 
-  const onSave = async (id: number, newStatus: Status) => {
+  const onSave = async (id: number, newStatus: Status, newPriority: 'High' | 'Medium' | 'Low') => {
     try {
-      // Update the local state optimistically
       setTickets((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, status: newStatus } : t))
+        prev.map((t) => (t.id === id ? { ...t, status: newStatus, priority: newPriority } : t))
       );
-
-      // Update the status on the server
-      await api.put(`/reports/${id}`, { status: newStatus });
+      await api.patch(`/reports/${id}/status`, { status: newStatus });
+      await api.patch(`/reports/${id}/priority`, { priority: newPriority });
     } catch (error) {
-      console.error('Error updating report status:', error);
-      // Optionally, you could add a toast notification here to inform the user of the error
+      console.error('Error updating report:', error);
     }
   };
 
   const onDelete = async (id: number) => {
     try {
-      // Optimistically remove the ticket from the UI
       setTickets((prev) => prev.filter((t) => t.id !== id));
       
-      // Delete the report from the server
-      await api.delete(`/reports/${id}`);
+      await api.delete(`/reports/deleteReport/${id}`);
     } catch (error) {
       console.error('Error deleting report:', error);
-      // Optionally, you could add a toast notification here to inform the user of the error
     }
   };
 
