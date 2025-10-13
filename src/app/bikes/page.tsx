@@ -10,10 +10,22 @@ import { useTranslations } from "next-intl";
 
 export default function Bikes() {
   const [bikes, setBikes] = useState<Bike[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedBikeId, setSelectedBikeId] = useState<string | null>(null);
   const t = useTranslations("BikesPage");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState<BikeStatus | "All">("All");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
+  const [bikeTrips, setBikeTrips] = useState<Trip[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isTripsModalOpen, setIsTripsModalOpen] = useState(false);
+  const [visibleCards, setVisibleCards] = useState<string[]>([]);
+  const [isLoadingTrips, setIsLoadingTrips] = useState(false);
+  const [tripsError, setTripsError] = useState<string | null>(null);
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+
   useEffect(() => {
     const fetchBikes = async () => {
       try {
@@ -30,15 +42,6 @@ export default function Bikes() {
 
     fetchBikes();
   }, []);
-  const [isTripsModalOpen, setIsTripsModalOpen] = useState(false);
-  const [bikeTrips, setBikeTrips] = useState<Trip[]>([]);
-
-  const [filter, setFilter] = useState<"All" | BikeStatus>("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<string[]>([]);
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
     return () => {
@@ -126,9 +129,6 @@ export default function Bikes() {
       throw error;
     }
   };
-
-  const [isLoadingTrips, setIsLoadingTrips] = useState(false);
-  const [tripsError, setTripsError] = useState<string | null>(null);
 
   const handleViewTrips = async (bikeId: string) => {
     try {
