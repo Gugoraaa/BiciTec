@@ -103,8 +103,9 @@ export default function BikeMap() {
         } else {
           setError("No se encontraron estaciones disponibles.");
         }
-      } catch (err) {
+      } catch (error) {
         if (!isMounted) return;
+        console.error('Error fetching stations:', error);
         setError(
           "Error al conectar con el servidor. Por favor, intenta de nuevo más tarde."
         );

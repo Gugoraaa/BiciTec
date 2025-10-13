@@ -102,16 +102,17 @@ function BikeMaintenanceDashboard() {
       );
       await api.patch(`/reports/${id}/status`, { status: newStatus });
       await api.patch(`/reports/${id}/priority`, { priority: newPriority });
-    } catch (error) {
+    } catch (err) {
+      console.error('Error updating ticket:', err);
     }
   };
 
   const onDelete = async (id: number) => {
     try {
       setTickets((prev) => prev.filter((t) => t.id !== id));
-      
       await api.delete(`/reports/deleteReport/${id}`);
-    } catch (error) {
+    } catch (err) {
+      console.error('Error deleting ticket:', err);
     }
   };
 

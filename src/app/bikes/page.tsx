@@ -15,7 +15,6 @@ export default function Bikes() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<BikeStatus | "All">("All");
   const [isLoaded, setIsLoaded] = useState(false);
-  const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
   const [bikeTrips, setBikeTrips] = useState<Trip[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +23,10 @@ export default function Bikes() {
   const [visibleCards, setVisibleCards] = useState<string[]>([]);
   const [isLoadingTrips, setIsLoadingTrips] = useState(false);
   const [tripsError, setTripsError] = useState<string | null>(null);
+  const selectedBike = useMemo(() => 
+    selectedBikeId ? bikes.find(b => b.id === selectedBikeId) || null : null, 
+    [selectedBikeId, bikes]
+  );
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
@@ -134,12 +137,12 @@ export default function Bikes() {
     try {
       setIsLoadingTrips(true);
       setTripsError(null);
-      setSelectedBikeId(bikeId);
 
       const response = await api.get(`/bikes/${bikeId}/logs`);
       setBikeTrips(response.data || []);
       setIsTripsModalOpen(true);
-    } catch (err) {
+    } catch (error) {
+      console.error("Error fetching trips:", error);
       setTripsError(t("trips.error"));
     } finally {
       setIsLoadingTrips(false);
@@ -228,10 +231,10 @@ export default function Bikes() {
                 : "opacity-0 -translate-x-8"
             }`}
           >
-            {["All", "Available", "InUse", "Maintenance"].map((s) => (
+            {(["All", "Available", "InUse", "Maintenance"] as const).map((s) => (
               <button
                 key={s}
-                onClick={() => setFilter(s as any)}
+                onClick={() => setFilter(s as BikeStatus | "All")}
                 className={`px-3 py-1 text-sm font-medium rounded-full transition-all ${
                   filter === s
                     ? statusColors[s as keyof typeof statusColors] ||
