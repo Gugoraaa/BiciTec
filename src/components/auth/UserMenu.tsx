@@ -3,12 +3,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslations } from 'next-intl';
 
 export default function UserMenu() {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const t = useTranslations("Sidebar");
 
   // Cerrar el menú al hacer clic fuera de él
   useEffect(() => {
@@ -86,7 +88,7 @@ export default function UserMenu() {
                   d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" 
                 />
               </svg>
-              Cerrar sesión
+              {t("auth.logout")}
             </button>
           </div>
         </div>

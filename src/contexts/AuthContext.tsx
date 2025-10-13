@@ -28,33 +28,60 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(false);
-    }
+    const loadUser = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setIsLoading(false);
+          return;
+        }
+
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        
+        const { data } = await api.get('/auth/me');
+        
+        const user = {
+          id: data.user.id,
+          matricula: data.user.matricula,
+          nombre: data.user.nombre,
+          apellido: data.user.apellido,
+          role: data.user.rol
+      };
+        
+        setUser(user);
+      } catch (error) {
+        console.error('Error loading user:', error);
+        localStorage.removeItem('token');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadUser();
   }, []);
 
   const login = async (matricula: string, password: string) => {
-    const { data } = await api.post('/auth/login', { matricula, password });
-    localStorage.setItem('token', data.token);
-    
-    
-    const userRole = (data.user.rol || 'user').toLowerCase();
-    
-    
-    const user = {
-      id: data.user.id,
-      matricula: data.user.matricula,
-      nombre: data.user.nombre,
-      apellido: data.user.apellido,
-      role: userRole
-    };
-    
-    console.log('Usuario creado con rol:', user.role);
-    setUser(user);
-    return user;
+    try {
+      const { data } = await api.post('/auth/login', { matricula, password });
+      localStorage.setItem('token', data.token);
+      
+      api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+      
+      const userRole = (data.user.rol || 'user').toLowerCase();
+      const user = {
+        id: data.user.id,
+        matricula: data.user.matricula,
+        nombre: data.user.nombre,
+        apellido: data.user.apellido,
+        role: userRole
+      };
+      
+      setUser(user);
+      return user;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
   };
 
   const logout = () => {

@@ -60,10 +60,10 @@ export default function RegisterPage() {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="h-7 w-7 text-slate-200"
-            aria-hidden="true"
+            className="h-5 w-5"
+            aria-hidden
           >
-            <path d="M12 4a8 8 0 1 1-6.32 12.9l-.86 2.58a1 1 0 0 1-1.9-.62l1.78-5.33A8 8 0 0 1 12 4Z" />
+            <path d="M7 10V8a5 5 0 0 1 10 0v2h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Zm2 0h6V8a3 3 0 0 0-6 0Zm3 4a1.5 1.5 0 0 0-1.5 1.5V17a1.5 1.5 0 0 0 3 0v-1.5A1.5 1.5 0 0 0 12 14Z" />
           </svg>
         </div>
 

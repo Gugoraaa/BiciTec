@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import api from '@/lib/api';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { useTranslations } from 'next-intl';
 
 interface StationData {
   id_estacion: number;
@@ -18,13 +19,11 @@ export default function StationCapacityCard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const t = useTranslations("StationCapacityCard"); 
 
   const fetchStationData = useCallback(async () => {
     try {
-      console.log('Fetching station data...');
       const response = await api.get('/overview/stationPercent');
-      
-      console.log('API Response:', response);
       
       if (!response?.data) {
         throw new Error('No data received from server');
@@ -44,20 +43,13 @@ export default function StationCapacityCard() {
           // If it's a single station object, convert to array
           stationsData = [stationsData];
         } else {
-          console.error('Unexpected data format:', stationsData);
           throw new Error('Invalid data format received: Expected an array of stations');
         }
       }
       
-      console.log('Processed stations data:', stationsData);
       setStations(stationsData);
       setError(null);
     } catch (err) {
-      console.error('Error in fetchStationData:', {
-        error: err,
-        message: err instanceof Error ? err.message : 'Unknown error',
-        stack: err instanceof Error ? err.stack : undefined
-      });
       setError(`Failed to load station data: ${err instanceof Error ? err.message : 'Unknown error'}`);
       setStations([]);
     } finally {
@@ -97,7 +89,7 @@ export default function StationCapacityCard() {
   if (isLoading) {
     return (
       <div className="bg-[#0b1425] rounded-2xl p-6 h-full flex items-center justify-center">
-        <div className="text-blue-400">Loading station data...</div>
+        <div className="text-blue-400">{t("loading")}</div>
       </div>
     );
   }
@@ -105,14 +97,14 @@ export default function StationCapacityCard() {
   if (error) {
     return (
       <div className="bg-[#0b1425] rounded-2xl p-6 h-full flex items-center justify-center">
-        <div className="text-red-400">{error}</div>
+        <div className="text-red-400">{t("error")}</div>
       </div>
     );
   }
 
   return (
     <div className="bg-[#0b1425] rounded-2xl p-6 h-full flex flex-col">
-      <h3 className="text-lg font-medium text-white mb-4">Station Capacity</h3>
+      <h3 className="text-lg font-medium text-white mb-4">{t("title")}</h3>
       <div className="overflow-y-auto pr-2" style={{ maxHeight: '400px' }}>
         <div className="space-y-4">
         {stations.length === 0 ? (

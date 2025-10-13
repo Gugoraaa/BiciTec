@@ -6,8 +6,9 @@ import api from "@/lib/api";
 import type { LatLngExpression } from "leaflet";
 import type * as LeafletTypes from "leaflet";
 import "leaflet/dist/leaflet.css";
-import {BikeStation} from "@/types/bike";
-import {bikeIcon} from "./BikeIcon";
+import { BikeStation } from "@/types/bike";
+import { bikeIcon } from "./BikeIcon";
+import { useTranslations } from "next-intl";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -34,10 +35,6 @@ const ScaleControl = dynamic(
 
 const center: LatLngExpression = [25.6515, -100.2905];
 
-
-
-
-
 export default function BikeMap() {
   const [mounted, setMounted] = useState(false);
   const [mapReady, setMapReady] = useState(false);
@@ -47,39 +44,40 @@ export default function BikeMap() {
   const [error, setError] = useState<string | null>(null);
   const [visibleMarkers, setVisibleMarkers] = useState<number[]>([]);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
-
+  const t = useTranslations("BikeMap");
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
-  
   useEffect(() => {
     let isMounted = true;
-    
+
     const fetchStations = async () => {
       setError(null);
       try {
-        const response = await api.get<Array<{
-          id: number;
-          nombre: string;
-          latitud: string;
-          longitud: string;
-          bicicletas: number;
-          capacidad_max: number;  
-          estado: string;
-        }>>("/stations/getStations");
-        
+        const response = await api.get<
+          Array<{
+            id: number;
+            nombre: string;
+            latitud: string;
+            longitud: string;
+            bicicletas: number;
+            capacidad_max: number;
+            estado: string;
+          }>
+        >("/stations/getStations");
+
         if (!isMounted) return;
-        
+
         if (
           response.data &&
           Array.isArray(response.data) &&
@@ -87,24 +85,26 @@ export default function BikeMap() {
         ) {
           const transformedStations = response.data.map((station) => ({
             id: station.id,
-            position: [parseFloat(station.latitud), parseFloat(station.longitud)] as [number, number],
+            position: [
+              parseFloat(station.latitud),
+              parseFloat(station.longitud),
+            ] as [number, number],
             nombre: station.nombre,
             bicicletas: station.bicicletas,
             capacidad_max: station.capacidad_max,
             estado: station.estado,
           }));
-          
+
           const uniqueStations = Array.from(
-            new Map(transformedStations.map(item => [item.id, item])).values()
+            new Map(transformedStations.map((item) => [item.id, item])).values()
           );
-          
+
           setBikeStations(uniqueStations);
         } else {
           setError("No se encontraron estaciones disponibles.");
         }
       } catch (err) {
         if (!isMounted) return;
-        console.error("Error al cargar estaciones:", err);
         setError(
           "Error al conectar con el servidor. Por favor, intenta de nuevo más tarde."
         );
@@ -112,7 +112,7 @@ export default function BikeMap() {
     };
 
     void fetchStations();
-    
+
     return () => {
       isMounted = false;
     };
@@ -194,7 +194,7 @@ export default function BikeMap() {
               </span>
             </div>
           </div>
-          <div className="text-white font-semibold">Cargando mapa...</div>
+          <div className="text-white font-semibold">{t("loadingTitle")}</div>
           <div className="w-64 h-2 bg-gray-700 rounded-full overflow-hidden mx-auto">
             <div
               className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-300 relative overflow-hidden"
@@ -229,7 +229,7 @@ export default function BikeMap() {
           <div className="text-red-500 text-6xl">⚠️</div>
           <div>
             <h3 className="text-white text-2xl font-bold mb-2">
-              Error al cargar el mapa
+              {t("errorTitle")}
             </h3>
             <p className="text-gray-300 text-lg">
               {error || "No se encontraron estaciones disponibles."}
@@ -239,7 +239,7 @@ export default function BikeMap() {
             onClick={() => window.location.reload()}
             className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-lg"
           >
-            Reintentar
+            {t("retry")}
           </button>
         </div>
       </div>
@@ -264,20 +264,29 @@ export default function BikeMap() {
           />
 
           {bikeStations.map((station, index) => {
-            const stationIsOffline = station.estado?.toLowerCase() === 'offline' || !isOnline;
-            
+            const stationIsOffline =
+              station.estado?.toLowerCase() === "offline" || !isOnline;
+
             return (
-              <Marker 
-                key={station.id} 
+              <Marker
+                key={station.id}
                 position={station.position}
-                icon={bikeIcon(L, bikeStations, station.id, visibleMarkers.includes(index), isOnline)}
+                icon={bikeIcon(
+                  L,
+                  bikeStations,
+                  station.id,
+                  visibleMarkers.includes(index),
+                  isOnline
+                )}
               >
                 <Popup className="font-sans min-w-[220px]">
                   <div className="space-y-2">
                     {stationIsOffline ? (
                       <>
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-600 font-medium">Bicicletas:</span>
+                          <span className="text-gray-600 font-medium">
+                            {t("offlineBadge")}:
+                          </span>
                           <span className="font-bold text-gray-600 text-lg">
                             0 / {station.capacidad_max}
                           </span>
@@ -286,16 +295,20 @@ export default function BikeMap() {
                           <div className="h-3 rounded-full bg-gray-400"></div>
                         </div>
                         <div className="pt-2 flex items-center justify-between text-sm">
-                          <span className="text-gray-500">ID: {station.id}</span>
+                          <span className="text-gray-500">
+                            ID: {station.id}
+                          </span>
                           <span className="font-semibold text-gray-600">
-                            🔴 Sin conexión
+                            {t("offlineBadge")}
                           </span>
                         </div>
                       </>
                     ) : (
                       <>
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-600 font-medium">Bicicletas:</span>
+                          <span className="text-gray-600 font-medium">
+                            {t("bikesLabel")}
+                          </span>
                           <span className="font-bold text-blue-600 text-lg">
                             {station.bicicletas} / {station.capacidad_max}
                           </span>
@@ -304,20 +317,29 @@ export default function BikeMap() {
                           <div
                             className="h-3 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500 relative overflow-hidden"
                             style={{
-                              width: `${(station.bicicletas / station.capacidad_max) * 100}%`,
+                              width: `${
+                                (station.bicicletas / station.capacidad_max) *
+                                100
+                              }%`,
                             }}
                           >
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer"></div>
                           </div>
                         </div>
                         <div className="pt-2 flex items-center justify-between text-sm">
-                          <span className="text-gray-500">ID: {station.id}</span>
+                          <span className="text-gray-500">
+                            ID: {station.id}
+                          </span>
                           <span
                             className={`font-semibold ${
-                              station.bicicletas > 0 ? "text-green-600" : "text-red-600"
+                              station.bicicletas > 0
+                                ? "text-green-600"
+                                : "text-red-600"
                             }`}
                           >
-                            {station.bicicletas > 0 ? "✓ Disponible" : "✗ Sin bicicletas"}
+                            {station.bicicletas > 0
+                              ? t("availableYes")
+                              : t("availableNo")}
                           </span>
                         </div>
                       </>

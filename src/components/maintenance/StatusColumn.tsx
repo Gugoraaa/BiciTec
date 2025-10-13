@@ -9,7 +9,7 @@ export default function StatusColumn({
   onManage,
   loading,
 }: {
-  title: Status;
+  title: string;
   tickets: Ticket[];
   onManage: (t: Ticket) => void;
   loading: boolean;

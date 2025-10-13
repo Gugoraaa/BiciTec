@@ -1,6 +1,8 @@
 "use client";
+
 import { Bike } from "@/types/bike";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslations } from "next-intl";
 
 type BikeCardProps = Bike & {
   onViewTrips?: (bikeId: string) => void;
@@ -15,6 +17,8 @@ export default function BikeCard({
   onViewTrips
 }: BikeCardProps) {
   const { isAdmin } = useAuth();
+  const t = useTranslations("BikeCard");
+
   const statusColors: Record<string, string> = {
     Available:
       "bg-emerald-500/10 text-emerald-400 border border-emerald-600/30",
@@ -34,25 +38,33 @@ export default function BikeCard({
           estado
         )}`}
       >
-        {estado}
+        {t(`status.${estado}`)} {/* 👈 traducimos el estado */}
       </div>
 
       <div className="flex flex-col justify-between space-y-3 mt-4">
         <div>
-          <h2 className="text-lg font-semibold text-white">Bike {id}</h2>
+          <h2 className="text-lg font-semibold text-white">
+            {t("title", { id })} {/* 👈 “Bike {id}” traducido */}
+          </h2>
         </div>
 
         <div className="grid grid-cols-2 gap-y-2 text-sm text-slate-300">
           <div>
-            <span className="block text-slate-500 text-xs">Station</span>
+            <span className="block text-slate-500 text-xs">
+              {t("station")}
+            </span>
             <span className="font-medium">{estacion}</span>
           </div>
           <div className="text-right">
-            <span className="block text-slate-500 text-xs">Avg. Speed</span>
+            <span className="block text-slate-500 text-xs">
+              {t("avgSpeed")}
+            </span>
             <span className="font-medium">{vel_prom} km/h</span>
           </div>
           <div>
-            <span className="block text-slate-500 text-xs">Total Km</span>
+            <span className="block text-slate-500 text-xs">
+              {t("totalKm")}
+            </span>
             <span className="font-medium">{(total_km ?? 0).toLocaleString()}</span>
           </div>
           <div className="text-right">
@@ -63,10 +75,9 @@ export default function BikeCard({
                   onViewTrips(id);
                 }}
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-slate-800/50 text-blue-400 hover:bg-slate-700/50 hover:text-blue-300 transition-colors border border-slate-700/50"
-                title="Ver viajes de esta bicicleta"
+                title={t("logsTooltip")}
               >
-              
-                <span>Logs</span>
+                <span>{t("logsButton")}</span>
               </button>
             )}
           </div>
