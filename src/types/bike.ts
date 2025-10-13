@@ -1,4 +1,5 @@
 export type BikeStatus = "Available" | "InUse" | "Maintenance";
+import type { LatLngExpression } from "leaflet";
 
 export interface Bike {
   id: string;
@@ -21,3 +22,12 @@ export interface Trip  {
   endStation: string;
   status: string;
 };
+
+export interface BikeStation {
+  id: number;
+  position: LatLngExpression;
+  nombre: string;
+  bicicletas: number;
+  capacidad_max: number;
+  estado: string;
+}
