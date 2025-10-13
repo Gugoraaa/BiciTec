@@ -1,6 +1,7 @@
 import { Ticket, type Status } from "@/types/maintenance";
 import {useState,useEffect} from "react"
 
+type Priority = "High" | "Medium" | "Low";
 
 export default function ManageModal({
     open,
@@ -12,13 +13,17 @@ export default function ManageModal({
     open: boolean;
     ticket: Ticket | null;
     onClose: () => void;
-    onSave: (id: number, newStatus: Status) => void;
+    onSave: (id: number, newStatus: Status, newPriority: Priority) => void;
     onDelete: (id: number) => void;
   }) {
     const [value, setValue] = useState<Status>(ticket?.status ?? "Open");
+    const [priority, setPriority] = useState<Priority>(ticket?.priority ?? "Medium");
   
     useEffect(() => {
-      if (ticket) setValue(ticket.status);
+      if (ticket) {
+        setValue(ticket.status);
+        setPriority(ticket.priority);
+      }
     }, [ticket]);
   
     if (!open || !ticket) return null;
@@ -37,8 +42,19 @@ export default function ManageModal({
             className="mt-1 w-full rounded-lg bg-slate-900/60 px-3 py-2 text-slate-100 ring-1 ring-slate-700 focus:outline-none focus:ring-sky-500"
           >
             <option>Open</option>
-            <option>In Progress</option>
+            <option>InProgress</option>
             <option>Done</option>
+          </select>
+
+          <label className="mt-4 block text-sm text-slate-300">Priority</label>
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value as Priority)}
+            className="mt-1 w-full rounded-lg bg-slate-900/60 px-3 py-2 text-slate-100 ring-1 ring-slate-700 focus:outline-none focus:ring-sky-500"
+          >
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
           </select>
   
           <div className="mt-6 flex items-center justify-between">
@@ -61,7 +77,7 @@ export default function ManageModal({
               </button>
               <button
                 onClick={() => {
-                  onSave(ticket.id, value);
+                  onSave(ticket.id, value, priority);
                   onClose();
                 }}
                 className="rounded-lg bg-sky-600 px-3 py-2 text-sm font-medium text-white hover:bg-sky-500"

@@ -1,6 +1,6 @@
 
 type Priority = "High" | "Medium" | "Low";
-export type Status = "Open" | "In Progress" | "Done";
+export type Status = "Open" | "InProgress" | "Done";
 
 export interface Ticket {
   id: number;

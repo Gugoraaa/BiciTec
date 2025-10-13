@@ -8,7 +8,6 @@ type BikeCardProps = Bike & {
 
 export default function BikeCard({
   id,
-  lastSeen,
   estacion,
   vel_prom,
   total_km,
@@ -41,7 +40,6 @@ export default function BikeCard({
       <div className="flex flex-col justify-between space-y-3 mt-4">
         <div>
           <h2 className="text-lg font-semibold text-white">Bike {id}</h2>
-          <p className="text-sm text-slate-400">Last seen: {lastSeen}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-y-2 text-sm text-slate-300">
