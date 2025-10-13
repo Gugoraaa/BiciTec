@@ -1,17 +1,30 @@
 "use client";
 import { useState, useEffect, useMemo, useRef } from "react";
-import BikeCard from "@/components/BikeCard";
+import BikeCard from "@/components/bikes/BikeCard";
 import ReportModal from "@/components/bikes/ReportModal";
 import BikeTripsModal from "@/components/bikes/BikeTripsModal";
 import { FaExclamationTriangle, FaSpinner } from "react-icons/fa";
 import { Bike, BikeStatus, Trip } from "@/types/bike";
 import api from "@/lib/api";
+import { useTranslations } from "next-intl";
 
 export default function Bikes() {
   const [bikes, setBikes] = useState<Bike[]>([]);
+  const [selectedBikeId, setSelectedBikeId] = useState<string | null>(null);
+  const t = useTranslations("BikesPage");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState<BikeStatus | "All">("All");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
+  const [bikeTrips, setBikeTrips] = useState<Trip[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedBikeId, setSelectedBikeId] = useState<string | null>(null);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isTripsModalOpen, setIsTripsModalOpen] = useState(false);
+  const [visibleCards, setVisibleCards] = useState<string[]>([]);
+  const [isLoadingTrips, setIsLoadingTrips] = useState(false);
+  const [tripsError, setTripsError] = useState<string | null>(null);
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
     const fetchBikes = async () => {
@@ -29,17 +42,7 @@ export default function Bikes() {
 
     fetchBikes();
   }, []);
-  const [isTripsModalOpen, setIsTripsModalOpen] = useState(false);
-  const [bikeTrips, setBikeTrips] = useState<Trip[]>([]);
 
-  const [filter, setFilter] = useState<"All" | BikeStatus>("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<string[]>([]);
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
-
-  // Limpiar timeouts al desmontar
   useEffect(() => {
     return () => {
       timeoutsRef.current.forEach(clearTimeout);
@@ -47,7 +50,6 @@ export default function Bikes() {
     };
   }, []);
 
-  // Efecto para la animación de carga inicial
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
 
@@ -57,26 +59,22 @@ export default function Bikes() {
       }, 200 + index * 80);
     });
 
-    // Limpiar timeouts
     return () => {
       clearTimeout(timer);
       timeouts.forEach(clearTimeout);
     };
   }, [bikes]);
 
-  // Efecto para filtrar bicicletas
   useEffect(() => {
     setVisibleCards([]);
     const filtered =
       filter === "All" ? bikes : bikes.filter((b) => b.estado === filter);
-    // Get bike IDs for filtered bikes
     const bikeIds = filtered.map((bike) => bike.id);
     console.log("Filtered bike IDs:", bikeIds);
 
     const timeouts = filtered.map((bike, index) => {
       return setTimeout(() => {
         setVisibleCards((prev) => {
-          // Prevent duplicate bike IDs
           if (!prev.includes(bike.id)) {
             return [...prev, bike.id];
           }
@@ -92,7 +90,7 @@ export default function Bikes() {
 
   const filteredBikes = useMemo(() => {
     return bikes.filter((bike) => {
-      const bikeId = String(bike.id || ""); // Ensure bike.id is a string
+      const bikeId = String(bike.id || "");
       const matchesSearch = bikeId
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
@@ -111,29 +109,26 @@ export default function Bikes() {
 
   const handleReportSubmit = async (bikeId: string, description: string) => {
     try {
-      const userData = localStorage.getItem('user');
+      const userData = localStorage.getItem("user");
       if (!userData) {
-        throw new Error('User not authenticated');
+        throw new Error("User not authenticated");
       }
-      
+
       const user = JSON.parse(userData);
-      const userId = user.id; 
-      
-      await api.post('/reports/createReport', {
+      const userId = user.id;
+
+      await api.post("/reports/createReport", {
         id_usuario: userId,
         id_bici: parseInt(bikeId, 10),
-        descripcion: description
+        descripcion: description,
       });
-      
+
       return true;
     } catch (error) {
-      console.error('Error submitting report:', error);
+      console.error("Error submitting report:", error);
       throw error;
     }
   };
-
-  const [isLoadingTrips, setIsLoadingTrips] = useState(false);
-  const [tripsError, setTripsError] = useState<string | null>(null);
 
   const handleViewTrips = async (bikeId: string) => {
     try {
@@ -141,14 +136,11 @@ export default function Bikes() {
       setTripsError(null);
       setSelectedBikeId(bikeId);
 
-      // Fetch trip logs for the selected bike
       const response = await api.get(`/bikes/${bikeId}/logs`);
       setBikeTrips(response.data || []);
       setIsTripsModalOpen(true);
     } catch (err) {
-      console.error("Error fetching bike trips:", err);
-      setTripsError("Failed to load trip logs. Please try again.");
-      // Optionally show a toast notification here
+      setTripsError(t("trips.error"));
     } finally {
       setIsLoadingTrips(false);
     }
@@ -159,7 +151,7 @@ export default function Bikes() {
       <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
         <div className="flex items-center gap-2 text-blue-400">
           <FaSpinner className="animate-spin text-2xl" />
-          <span>Loading bikes...</span>
+          <span>{t("loading")}</span>
         </div>
       </div>
     );
@@ -186,7 +178,7 @@ export default function Bikes() {
                 : "opacity-0 -translate-y-4"
             }`}
           >
-            Bikes
+            {t("title")}
           </h1>
           <button
             onClick={() => setIsReportModalOpen(true)}
@@ -195,7 +187,7 @@ export default function Bikes() {
             }`}
           >
             <FaExclamationTriangle />
-            <span>Report Issue</span>
+            <span>{t("report")}</span>
           </button>
         </div>
 
@@ -218,7 +210,7 @@ export default function Bikes() {
             </div>
             <input
               type="text"
-              placeholder="Search bikes..."
+              placeholder={t("searchPlaceholder")}
               className={`w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ${
                 isLoaded
                   ? "opacity-100 translate-x-0"
@@ -236,25 +228,24 @@ export default function Bikes() {
                 : "opacity-0 -translate-x-8"
             }`}
           >
-            {(["All", "Available", "InUse", "Maintenance"] as const).map(
-              (s) => (
-                <button
-                  key={s}
-                  onClick={() => setFilter(s)}
-                  className={`px-3 py-1 text-sm font-medium rounded-full transition-all ${
-                    filter === s
-                      ? statusColors[s]
-                      : "bg-slate-800/50 text-slate-400 border border-slate-700 hover:bg-slate-700/50"
-                  }`}
-                >
-                  {s}
-                </button>
-              )
-            )}
+            {["All", "Available", "InUse", "Maintenance"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setFilter(s as any)}
+                className={`px-3 py-1 text-sm font-medium rounded-full transition-all ${
+                  filter === s
+                    ? statusColors[s as keyof typeof statusColors] ||
+                      "bg-slate-700/50"
+                    : "bg-slate-800/50 text-slate-400 border border-slate-700 hover:bg-slate-700/50"
+                }`}
+              >
+                {s === "All" ? t("filters.All") : t(`filters.${s}`)}
+              </button>
+            ))}
           </div>
           {filteredBikes.length === 0 ? (
             <div className="text-center py-8 text-slate-400">
-              No bikes found matching your search.
+              {t("noResults")}
             </div>
           ) : (
             <div className="mt-2 grid gap-4 grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { FaSpinner } from "react-icons/fa";
 import api from "@/lib/api";
+import { useTranslations } from "next-intl";
 
 interface BikeUsageData {
   hour: string;
@@ -13,7 +14,7 @@ export default function LiveUtilizationChart() {
   const [bikeData, setBikeData] = useState<BikeUsageData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const t = useTranslations("LiveUtilizationChart"); 
   useEffect(() => {
     const fetchBikeUsage = async () => {
       try {
@@ -30,19 +31,16 @@ export default function LiveUtilizationChart() {
     fetchBikeUsage();
   }, []);
 
-  // Process the API data for the chart
   const chartData = Array.isArray(bikeData) 
     ? bikeData.map(item => ({
         hour: item?.hour || '00:00',
-        hourValue: item?.hour || '00:00', // Keep as string for display
-        sortValue: parseInt((item?.hour || '00:00').split(':')[0]), // For sorting
+        hourValue: item?.hour || '00:00', 
+        sortValue: parseInt((item?.hour || '00:00').split(':')[0]), 
         count: typeof item?.count === 'number' ? item.count : 0
       }))
     : [];
   
-  // Sort by hour to ensure correct order (11:00, 12:00, ..., 23:00, 00:00, 01:00, ..., 10:00)
   const sortedChartData = [...chartData].sort((a, b) => {
-    // Convert hour to 24-hour number, handling the 24-hour cycle
     const hourA = a.sortValue;
     const hourB = b.sortValue;
     return (hourA < 11 ? hourA + 24 : hourA) - (hourB < 11 ? hourB + 24 : hourB);
@@ -56,7 +54,7 @@ export default function LiveUtilizationChart() {
       <div className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg flex items-center justify-center" style={{ height: '500px' }}>
         <div className="flex items-center gap-2 text-blue-400">
           <FaSpinner className="animate-spin text-2xl" />
-          <span>Cargando datos de uso...</span>
+          <span>{t("loading")}</span>
         </div>
       </div>
     );
@@ -76,7 +74,7 @@ export default function LiveUtilizationChart() {
     <div className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold tracking-tight">
-          Uso de bicicletas (Últimas 24h)
+          {t("title")}
         </h3>
       </div>
 
@@ -84,10 +82,9 @@ export default function LiveUtilizationChart() {
         <LineChart
           xAxis={[{
 data: hours,
-            label: "Hora del día",
+            label: t("xAxisLabel"),
             tickInterval: (value: number, index: number) => index % 2 === 0,
             valueFormatter: (value: string) => {
-              // Value is already in 'HH:00' format from the API
               return value;
             },
             scaleType: "point",
@@ -95,7 +92,7 @@ data: hours,
             tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
           }]}
           yAxis={[{
-            label: "Bicicletas en uso",
+            label: t("yAxisLabel"),
             labelStyle: { fill: "#ffffff", fontSize: 12 },
             tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
           }]}

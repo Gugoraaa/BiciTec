@@ -1,0 +1,155 @@
+{
+  "BikeCard": {
+    "title": "Bicicleta {id}",
+    "station": "Estación",
+    "avgSpeed": "Vel. Promedio",
+    "totalKm": "Total Km",
+    "logsButton": "Viajes",
+    "logsTooltip": "Ver viajes de esta bicicleta",
+    "status": {
+      "Available": "Disponible",
+      "InUse": "En uso",
+      "Maintenance": "Mantenimiento",
+      "default": "Desconocido"
+    }
+  },
+  "Overview": {
+    "title": "Resumen general",
+    "loading": "Cargando resumen...",
+    "error": "Error al cargar los datos del resumen",
+    "totalBikes": "Bicicletas totales",
+    "available": "Disponibles",
+    "inUse": "En uso",
+    "inMaintenance": "En mantenimiento",
+    "activeStations": "Estaciones activas"
+  },
+  "LiveUtilizationChart": {
+    "title": "Uso de bicicletas (Últimas 24h)",
+    "loading": "Cargando datos de uso...",
+    "error": "Error al cargar los datos de uso",
+    "xAxisLabel": "Hora del día",
+    "yAxisLabel": "Bicicletas en uso"
+    
+  },
+  "StationCapacityCard": {
+    "title": "Capacidad de estaciones",
+    "loading": "Cargando datos de estaciones...",
+    "error": "Error al cargar los datos de las estaciones",
+    "noData": "No hay datos de estaciones disponibles",
+    "offline": "Sin servicio",
+    "status": {
+      "Operational": "Operativa",
+      "Offline": "Sin servicio",
+      "Unknown": "Desconocida"
+    },
+    "capacityLabel": "Capacidad de {name}"
+  },
+  "StationTable": {
+    "title": "Estaciones",
+    "loading": "Cargando estaciones...",
+    "errorTitle": "⚠️ Error",
+    "errorMessage": "Error al cargar las estaciones.",
+    "noData": "No se encontraron estaciones.",
+    "columns": {
+      "station": "Estación",
+      "capacity": "Capacidad",
+      "bikesDocked": "Bicicletas acopladas",
+      "available": "Disponibles",
+      "status": "Estado"
+    },
+    "status": {
+      "Operational": "Operativa",
+      "Maintenance": "Mantenimiento",
+      "Offline": "Sin servicio"
+    }
+  },
+  "BikeMap": {
+    "loadingTitle": "Cargando mapa...",
+    "errorTitle": "Error al cargar el mapa",
+    "retry": "Reintentar",
+    "noStations": "No se encontraron estaciones disponibles.",
+    "fetchErrorServer": "Error al conectar con el servidor. Por favor, intenta de nuevo más tarde.",
+    "bikesLabel": "Bicicletas:",
+    "idLabel": "ID:",
+    "offlineBadge": "Sin servicio",
+    "availableYes": "✓ Disponible",
+    "availableNo": "✗ Sin bicicletas",
+    "connectionLost": "Sin servicio",
+    "popup": {
+      "capacity": "{bikes} / {capacity}"
+    }
+  },
+   "BikesPage": {
+    "title": "Bicicletas",
+    "loading": "Cargando bicicletas...",
+    "loadError": "Error al cargar las bicicletas. Intenta nuevamente más tarde.",
+    "report": "Reportar problema",
+    "searchPlaceholder": "Buscar bicicletas...",
+    "noResults": "No se encontraron bicicletas que coincidan con tu búsqueda.",
+    "filters": {
+      "All": "Todas",
+      "Available": "Disponibles",
+      "InUse": "En uso",
+      "Maintenance": "Mantenimiento"
+    },
+    "trips": {
+      "error": "Error al cargar los registros de viajes. Intenta nuevamente."
+    }
+  },
+  "Sidebar": {
+    "brand": {
+      "name": "BiciTec",
+      "alt": "Logo del Tec"
+    },
+    "menu": {
+      "overview": "Resumen",
+      "stations": "Estaciones",
+      "bikes": "Bicicletas",
+      "maintenance": "Mantenimiento"
+    },
+    "auth": {
+      "login": "Iniciar sesión",
+      "logout": "Cerrar sesión"
+    }
+  },
+  "Maintenance": {
+    "title": "Mantenimiento",
+    "table": {
+      "loading": "Cargando reportes...",
+      "empty": "No se encontraron reportes",
+      "columns": {
+        "id": "ID",
+        "bike": "Bici",
+        "description": "Descripción",
+        "date": "Fecha",
+        "priority": "Prioridad",
+        "status": "Estado",
+        "actions": "Acción"
+      },
+      "manage": "Gestionar"
+    },
+    "status": {
+      "Open": "Abierto",
+      "InProgress": "En progreso",
+      "Done": "Finalizado"
+    },
+    "priority": {
+      "High": "Alta",
+      "Medium": "Media",
+      "Low": "Baja"
+    }
+  },
+  "StatusFilter": {
+    "label": "Filtrar por estado",
+    "options": {
+      "All": "Todos",
+      "Open": "Abierto",
+      "InProgress": "En progreso",
+      "Done": "Completado"
+    },
+    "tooltip": "Selecciona un estado de mantenimiento para filtrar los reportes"
+  }
+  
+}
+
+

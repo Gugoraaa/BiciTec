@@ -1,0 +1,156 @@
+{
+  "BikeCard": {
+    "title": "Bike {id}",
+    "station": "Station",
+    "avgSpeed": "Avg. Speed",
+    "totalKm": "Total Km",
+    "logsButton": "Logs",
+    "logsTooltip": "View trips for this bike",
+    "status": {
+      "Available": "Available",
+      "InUse": "In use",
+      "Maintenance": "Maintenance",
+      "default": "Unknown"
+    }
+  },
+  "Overview": {
+    "title": "Overview",
+    "loading": "Loading overview...",
+    "error": "Failed to load overview data",
+    "totalBikes": "Total Bikes",
+    "available": "Available",
+    "inUse": "In Use",
+    "inMaintenance": "In Maintenance",
+    "activeStations": "Active Stations"
+  },
+  "LiveUtilizationChart": {
+    "title": "Bicycle use (Last 24h)",
+    "loading": "Loading live utilization chart...",
+    "error": "Failed to load live utilization chart",
+    "xAxisLabel": "Hour of the day",
+    "yAxisLabel": "Bikes in use"
+
+  },
+  "StationCapacityCard": {
+    "title": "Station Capacity",
+    "loading": "Loading station data...",
+    "error": "Failed to load station data",
+    "noData": "No station data available",
+    "offline": "Offline",
+    "status": {
+      "Operational": "Operational",
+      "Offline": "Offline",
+      "Unknown": "Unknown"
+    },
+    "capacityLabel": "{name} capacity"
+  },
+  "StationTable": {
+    "title": "Stations",
+    "loading": "Loading stations...",
+    "errorTitle": "⚠️ Error",
+    "errorMessage": "Failed to load stations.",
+    "noData": "No stations found.",
+    "columns": {
+      "station": "Station",
+      "capacity": "Capacity",
+      "bikesDocked": "Bikes Docked",
+      "available": "Available",
+      "status": "Status"
+    },
+    "status": {
+      "Operational": "Operational",
+      "Maintenance": "Maintenance",
+      "Offline": "Offline"
+    }
+  },
+  "BikeMap": {
+    "loadingTitle": "Loading map...",
+    "errorTitle": "Failed to load the map",
+    "retry": "Retry",
+    "noStations": "No stations available.",
+    "fetchErrorServer": "Failed to connect to the server. Please try again later.",
+    "bikesLabel": "Bikes:",
+    "idLabel": "ID:",
+    "offlineBadge": "Offline",
+    "availableYes": "✓ Available",
+    "availableNo": "✗ No bikes",
+    "connectionLost": "No connection",
+    "popup": {
+      "capacity": "{bikes} / {capacity}"
+    }
+  },
+  "BikesPage": {
+    "title": "Bikes",
+    "loading": "Loading bikes...",
+    "loadError": "Failed to load bikes. Please try again later.",
+    "report": "Report Issue",
+    "searchPlaceholder": "Search bikes...",
+    "noResults": "No bikes found matching your search.",
+    "filters": {
+      "All": "All",
+      "Available": "Available",
+      "InUse": "In Use",
+      "Maintenance": "Maintenance"
+    },
+    "trips": {
+      "error": "Failed to load trip logs. Please try again."
+    }
+  },
+  "Sidebar": {
+    "brand": {
+      "name": "BiciTec",
+      "alt": "Tec logo"
+    },
+    "menu": {
+      "overview": "Overview",
+      "stations": "Stations",
+      "bikes": "Bikes",
+      "maintenance": "Maintenance"
+    },
+    "auth": {
+      "login": "Sign in",
+      "logout": "Logout"
+    }
+  },
+  "Maintenance": {
+    "title": "Maintenance",
+    "table": {
+      "loading": "Loading reports...",
+      "empty": "No reports found",
+      "columns": {
+        "id": "ID",
+        "bike": "Bike",
+        "description": "Description",
+        "date": "Date",
+        "priority": "Priority",
+        "status": "Status",
+        "actions": "Action"
+      },
+      "manage": "Manage"
+    },
+    "status": {
+      "Open": "Open",
+      "InProgress": "In Progress",
+      "Done": "Done"
+    },
+    "priority": {
+      "High": "High",
+      "Medium": "Medium",
+      "Low": "Low"
+    }
+  },
+   "StatusFilter": {
+    "label": "Filter by status",
+    "options": {
+      "All": "All",
+      "Open": "Open",
+      "InProgress": "In Progress",
+      "Done": "Done"
+    },
+    "tooltip": "Select a maintenance status to filter the reports"
+  }
+  
+
+}
+
+

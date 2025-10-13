@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import api from "@/lib/api";
+import { useTranslations } from "next-intl";
 
 type Status = "Operational" | "Maintenance" | "Offline";
 
@@ -29,6 +30,7 @@ const statusStyles: Record<Status, { dot: string; pill: string }> = {
 };
 
 function StatusBadge({ status }: { status?: Status }) {
+  const t = useTranslations("StationTable.status");
   // Default to 'Offline' if status is undefined or not in statusStyles
   const safeStatus = status && status in statusStyles ? status : 'Offline';
   const s = statusStyles[safeStatus];
@@ -36,23 +38,19 @@ function StatusBadge({ status }: { status?: Status }) {
   return (
     <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${s.pill}`}>
       <span className={`h-2.5 w-2.5 rounded-full ${s.dot}`} />
-      {safeStatus}
+      {t(safeStatus)}
     </span>
   );
 }
 
-export default function StationTable({
-  title = "Stations",
-}: {
-  title?: string;
-}) {
+export default function StationTable() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [data, setData] = useState<StationRow[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [visibleRows, setVisibleRows] = useState<number[]>([]);
+  const t = useTranslations("StationTable"); 
 
-  // Cargar datos de la API y manejar animación
   useEffect(() => {
     let isMounted = true;
     
@@ -99,12 +97,12 @@ export default function StationTable({
             }
           }, 100);
         } else {
-          setError("No se encontraron estaciones.");
+          setError(t("noData"));
         }
       } catch (err) {
         if (!isMounted) return;
         console.error("Error al cargar estaciones:", err);
-        setError("Error al cargar las estaciones.");
+        setError(t("error"));
       } finally {
         if (isMounted) {
           setIsLoadingData(false);
@@ -124,7 +122,7 @@ export default function StationTable({
       <div className="w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-lg p-8">
         <div className="flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-          <span className="ml-3 text-slate-400">Cargando estaciones...</span>
+          <span className="ml-3 text-slate-400">{t("loading")}</span>
         </div>
       </div>
     );
@@ -149,7 +147,7 @@ export default function StationTable({
         <h3 className={`text-slate-200 font-semibold transition-all duration-500 delay-100 ${
           isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
         }`}>
-          {title}
+          {t("title")}
         </h3>
       </div>
 
@@ -160,27 +158,27 @@ export default function StationTable({
               <th className={`w-40 transition-all duration-500 delay-200 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
               }`}>
-                Station
+                  {t("columns.station")}
               </th>
               <th className={`text-right transition-all duration-500 delay-[350ms] ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
               }`}>
-                Capacity
+                {t("columns.capacity")}
               </th>
               <th className={`text-right transition-all duration-500 delay-[400ms] ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
               }`}>
-                Bikes Docked
+                {t("columns.bikesDocked")}
               </th>
               <th className={`text-right transition-all duration-500 delay-[450ms] ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
               }`}>
-                Available
+                {t("columns.available")}
               </th>
               <th className={`w-40 transition-all duration-500 delay-500 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
               }`}>
-                Status
+                  {t("columns.status")}
               </th>
             </tr>
           </thead>

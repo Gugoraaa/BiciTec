@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
+import { NextIntlClientProvider } from "next-intl";
 
 export const metadata: Metadata = {
   title: "BiciTec",
@@ -18,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex bg-[#0f172a]" suppressHydrationWarning>
-        <ClientLayout>{children}</ClientLayout>
+        <NextIntlClientProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

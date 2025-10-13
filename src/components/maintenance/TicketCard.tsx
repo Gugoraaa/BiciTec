@@ -1,10 +1,13 @@
 import Card from "./Card";
 import Badge from "./Badge";
 import { Ticket } from "@/types/maintenance";
+import { useTranslations } from "next-intl";
 
 export default function TicketCard({ t, onManage }: { t: Ticket; onManage: (t: Ticket) => void }) {
   const tone: "danger" | "warning" | "success" =
     t.priority === "High" ? "danger" : t.priority === "Medium" ? "warning" : "success";
+
+  const p = useTranslations("Maintenance");
 
   return (
     <Card>
@@ -12,12 +15,12 @@ export default function TicketCard({ t, onManage }: { t: Ticket; onManage: (t: T
         <p className="font-semibold text-slate-100">#{t.id}</p>
         <div className="flex items-center gap-2">
           <Badge label={t.priority} tone={tone} />
-          <button
+          <button 
             onClick={() => onManage(t)}
             className="rounded-lg bg-slate-700/70 px-2.5 py-1 text-xs text-slate-100 hover:bg-slate-700"
             title="Manage"
           >
-            Manage
+            {p("table.manage")}
           </button>
         </div>
       </div>

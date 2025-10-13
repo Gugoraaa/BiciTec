@@ -11,6 +11,7 @@ import TicketsTable from "@/components/maintenance/TicketsTable";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import api from "@/lib/api";
 import { Report } from "@/types/report";
+import { useTranslations } from "next-intl";
 
 const mapApiResponseToTickets = (reports: Report[]): Ticket[] => {
   return reports.map((report) => {
@@ -23,11 +24,7 @@ const mapApiResponseToTickets = (reports: Report[]): Ticket[] => {
         break;
       default:
         status = 'Open';
-    }
-
-    // Set priority based on status
-    
-
+    }    
     return {
       id: report.id,
       bike: `Bike ${report.id_bici || 'N/A'}`,
@@ -45,6 +42,7 @@ function BikeMaintenanceDashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
+  const t = useTranslations("Maintenance");
 
   const [manageOpen, setManageOpen] = useState(false);
   const [selected, setSelected] = useState<Ticket | null>(null);
@@ -84,10 +82,13 @@ function BikeMaintenanceDashboard() {
     return by;
   }, [tickets]);
 
-  const visibleColumns: Array<Status> = useMemo(() => {
-    if (filter === "All") return ["Open", "InProgress", "Done"];
-    return [filter];
-  }, [filter]);
+  const visibleColumns: Array<{id: Status, label: string}> = useMemo(() => {
+    const statuses: Status[] = filter === "All" ? ["Open", "InProgress", "Done"] : [filter];
+    return statuses.map(status => ({
+      id: status,
+      label: t(`status.${status}`)
+    }));
+  }, [filter, t]);
 
   const visibleTickets = useMemo(() => {
     if (filter === "All") return tickets;
@@ -102,7 +103,6 @@ function BikeMaintenanceDashboard() {
       await api.patch(`/reports/${id}/status`, { status: newStatus });
       await api.patch(`/reports/${id}/priority`, { priority: newPriority });
     } catch (error) {
-      console.error('Error updating report:', error);
     }
   };
 
@@ -112,7 +112,6 @@ function BikeMaintenanceDashboard() {
       
       await api.delete(`/reports/deleteReport/${id}`);
     } catch (error) {
-      console.error('Error deleting report:', error);
     }
   };
 
@@ -122,7 +121,7 @@ function BikeMaintenanceDashboard() {
     <div className="min-h-screen w-full bg-slate-900 text-slate-100">
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-xl font-semibold tracking-tight">Reports</h1>
+          <h1 className="text-xl font-semibold tracking-tight">{t("title")}</h1>
           <div className="flex items-center gap-3">
             <StatusFilter active={filter} onChange={setFilter} />
             <ViewToggle value={view} onChange={setView} />
@@ -135,11 +134,11 @@ function BikeMaintenanceDashboard() {
               visibleColumns.length === 3 ? "md:grid-cols-3" : "grid-cols-1"
             }`}
           >
-            {visibleColumns.map((col) => (
+            {visibleColumns.map(({id, label}) => (
               <StatusColumn
-                key={col}
-                title={col}
-                tickets={grouped[col]}
+                key={id}
+                title={label}
+                tickets={grouped[id]}
                 onManage={(t) => {
                   setSelected(t);
                   setManageOpen(true);
