@@ -57,9 +57,9 @@ export default function BikeTripsModal({
             </button>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-h-[60vh] overflow-y-auto">
             <table className="min-w-full divide-y divide-slate-700">
-              <thead className="bg-slate-700/50">
+              <thead className="sticky top-0 bg-slate-800 z-10">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     ID
