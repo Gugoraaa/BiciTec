@@ -15,6 +15,7 @@ export default function LiveUtilizationChart() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const t = useTranslations("LiveUtilizationChart"); 
+  
   useEffect(() => {
     const fetchBikeUsage = async () => {
       try {
@@ -31,23 +32,21 @@ export default function LiveUtilizationChart() {
     fetchBikeUsage();
   }, []);
 
-  const chartData = Array.isArray(bikeData) 
-    ? bikeData.map(item => ({
-        hour: item?.hour || '00:00',
-        hourValue: item?.hour || '00:00', 
-        sortValue: parseInt((item?.hour || '00:00').split(':')[0]), 
-        count: typeof item?.count === 'number' ? item.count : 0
-      }))
-    : [];
-  
-  const sortedChartData = [...chartData].sort((a, b) => {
-    const hourA = a.sortValue;
-    const hourB = b.sortValue;
-    return (hourA < 11 ? hourA + 24 : hourA) - (hourB < 11 ? hourB + 24 : hourB);
-  });
-  
-  const hours = sortedChartData.map(item => item.hourValue);
-  const bikes = sortedChartData.map(item => item.count);
+  const dataMap = new Map(bikeData.map(item => [item.hour, item.count]));
+
+  const hours: string[] = [];
+  const bikes: number[] = [];
+  for (let i = 18; i < 24; i++) {
+    const hour = `${String(i).padStart(2, '0')}:00`;
+    hours.push(hour);
+    bikes.push(dataMap.get(hour) || 0);
+  }
+
+  for (let i = 0; i <= 17; i++) {
+    const hour = `${String(i).padStart(2, '0')}:00`;
+    hours.push(hour);
+    bikes.push(dataMap.get(hour) || 0);
+  }
 
   if (isLoading) {
     return (
@@ -81,12 +80,10 @@ export default function LiveUtilizationChart() {
       <div style={{ height: "400px" }}>
         <LineChart
           xAxis={[{
-data: hours,
+            data: hours,
             label: t("xAxisLabel"),
             tickInterval: (value: number, index: number) => index % 2 === 0,
-            valueFormatter: (value: string) => {
-              return value;
-            },
+            valueFormatter: (value: string) => value,
             scaleType: "point",
             labelStyle: { fill: "#ffffff", fontSize: 12 },
             tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
