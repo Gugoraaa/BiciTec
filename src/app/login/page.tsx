@@ -13,7 +13,6 @@ export default function LoginPage() {
   const router = useRouter();
   const { user, login, isLoading: authLoading } = useAuth();
 
-  // Redirigir si ya está autenticado
   useEffect(() => {
     if (!authLoading && user) {
       const returnUrl = new URLSearchParams(window.location.search).get('returnUrl') || '/bikes';
