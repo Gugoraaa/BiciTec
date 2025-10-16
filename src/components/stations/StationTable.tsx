@@ -2,46 +2,9 @@
 import React, { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useTranslations } from "next-intl";
-
-type Status = "Operational" | "Maintenance" | "Offline";
-
-export type StationRow = {
-  id: string;
-  nombre: string;
-  capacidad_max: number;
-  bicicletas: number;
-  available: number;
-  estado: Status;
-};
-
-const statusStyles: Record<Status, { dot: string; pill: string }> = {
-  Operational: {
-    dot: "bg-emerald-500",
-    pill: "bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/20",
-  },
-  Maintenance: {
-    dot: "bg-amber-500",
-    pill: "bg-amber-500/10 text-amber-300 ring-1 ring-amber-500/20",
-  },
-  Offline: {
-    dot: "bg-rose-500",
-    pill: "bg-rose-500/10 text-rose-300 ring-1 ring-rose-500/20",
-  },
-};
-
-function StatusBadge({ status }: { status?: Status }) {
-  const t = useTranslations("StationTable.status");
-  // Default to 'Offline' if status is undefined or not in statusStyles
-  const safeStatus = status && status in statusStyles ? status : 'Offline';
-  const s = statusStyles[safeStatus];
-  
-  return (
-    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${s.pill}`}>
-      <span className={`h-2.5 w-2.5 rounded-full ${s.dot}`} />
-      {t(safeStatus)}
-    </span>
-  );
-}
+import type { Status } from "@/types/stations";
+import { StationRow } from "@/types/stations";
+import StatusBadge from "./StatusBadge";
 
 export default function StationTable() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -69,7 +32,6 @@ export default function StationTable() {
         if (!isMounted) return;
         
         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-          // Transformar datos de la API
           const transformedData: StationRow[] = response.data.map((station) => ({
             id: String(station.id),
             nombre: station.nombre,
@@ -81,18 +43,15 @@ export default function StationTable() {
             estado: station.estado,
           }));
           
-          // Eliminar duplicados basados en ID
           const uniqueData = Array.from(
             new Map(transformedData.map(item => [item.id, item])).values()
           );
           
           setData(uniqueData);
           
-          // Iniciar animación después de cargar los datos
           setTimeout(() => {
             if (isMounted) {
               setIsLoaded(true);
-              // Inicializar todas las filas como visibles
               setVisibleRows(Array.from({length: uniqueData.length}, (_, i) => i));
             }
           }, 100);
@@ -231,22 +190,7 @@ export default function StationTable() {
         </table>
       </div>
       
-      <style jsx>{`
-        .overflow-y-auto::-webkit-scrollbar {
-          width: 8px;
-        }
-        .overflow-y-auto::-webkit-scrollbar-track {
-          background: rgba(15, 23, 42, 0.5);
-          border-radius: 10px;
-        }
-        .overflow-y-auto::-webkit-scrollbar-thumb {
-          background: rgb(51, 65, 85);
-          border-radius: 10px;
-        }
-        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-          background: rgb(71, 85, 105);
-        }
-      `}</style>
+      
     </div>
   );
 }

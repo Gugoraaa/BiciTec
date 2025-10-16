@@ -10,31 +10,8 @@ import ViewToggle from "@/components/maintenance/ViewToggle";
 import TicketsTable from "@/components/maintenance/TicketsTable";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import api from "@/lib/api";
-import { Report } from "@/types/report";
 import { useTranslations } from "next-intl";
-
-const mapApiResponseToTickets = (reports: Report[]): Ticket[] => {
-  return reports.map((report) => {
-    let status: Status;
-    switch (report.estado) {
-      case 'Open':
-      case 'InProgress':
-      case 'Done':
-        status = report.estado === 'InProgress' ? 'InProgress' : report.estado;
-        break;
-      default:
-        status = 'Open';
-    }    
-    return {
-      id: report.id,
-      bike: `Bike ${report.id_bici || 'N/A'}`,
-      description: report.descripcion || 'No description provided',
-      date: report.fecha_reporte ? new Date(report.fecha_reporte).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-      priority: report.prioridad,
-      status: report.estado,
-    };
-  });
-};
+import { mapApiResponseToTickets } from "@/components/maintenance/mapApiResponseToTickets";
 
 function BikeMaintenanceDashboard() {
   const [filter, setFilter] = useState<Status | "All">("All");

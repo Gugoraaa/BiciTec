@@ -18,12 +18,9 @@ export default function TicketsTable({
   
   const sorted = useMemo(() => {
     const priorityOrder: Record<string, number> = { High: 1, Medium: 2, Low: 3 };
-    return [...tickets].sort((a, b) => {
-      // First sort by date (newest first)
+      return [...tickets].sort((a, b) => {
       const dateDiff = new Date(b.date).getTime() - new Date(a.date).getTime();
       if (dateDiff !== 0) return dateDiff > 0 ? 1 : -1;
-      
-      // If dates are equal, sort by priority (High to Low)
       return priorityOrder[a.priority] - priorityOrder[b.priority];
     });
   }, [tickets]);

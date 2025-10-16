@@ -4,11 +4,8 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { FaSpinner } from "react-icons/fa";
 import api from "@/lib/api";
 import { useTranslations } from "next-intl";
+import { BikeUsageData } from "@/types/bike";
 
-interface BikeUsageData {
-  hour: string;
-  count: number;
-}
 
 export default function LiveUtilizationChart() {
   const [bikeData, setBikeData] = useState<BikeUsageData[]>([]);
