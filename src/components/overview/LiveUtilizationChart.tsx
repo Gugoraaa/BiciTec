@@ -32,21 +32,10 @@ export default function LiveUtilizationChart() {
     fetchBikeUsage();
   }, []);
 
-  const dataMap = new Map(bikeData.map(item => [item.hour, item.count]));
+  const reversedData = [...bikeData].reverse();
+  const hours = reversedData.map(item => item.hour);
+  const bikes = reversedData.map(item => item.count);
 
-  const hours: string[] = [];
-  const bikes: number[] = [];
-  for (let i = 18; i < 24; i++) {
-    const hour = `${String(i).padStart(2, '0')}:00`;
-    hours.push(hour);
-    bikes.push(dataMap.get(hour) || 0);
-  }
-
-  for (let i = 0; i <= 17; i++) {
-    const hour = `${String(i).padStart(2, '0')}:00`;
-    hours.push(hour);
-    bikes.push(dataMap.get(hour) || 0);
-  }
 
   if (isLoading) {
     return (
@@ -82,8 +71,6 @@ export default function LiveUtilizationChart() {
           xAxis={[{
             data: hours,
             label: t("xAxisLabel"),
-            tickInterval: (value: number, index: number) => index % 2 === 0,
-            valueFormatter: (value: string) => value,
             scaleType: "point",
             labelStyle: { fill: "#ffffff", fontSize: 12 },
             tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
