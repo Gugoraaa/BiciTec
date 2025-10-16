@@ -38,13 +38,13 @@ export default function BikeCard({
           estado
         )}`}
       >
-        {t(`status.${estado}`)} {/* 👈 traducimos el estado */}
+        {t(`status.${estado}`)}
       </div>
 
       <div className="flex flex-col justify-between space-y-3 mt-4">
         <div>
           <h2 className="text-lg font-semibold text-white">
-            {t("title", { id })} {/* 👈 “Bike {id}” traducido */}
+            {t("title", { id })}
           </h2>
         </div>
 

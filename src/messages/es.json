@@ -131,7 +131,7 @@
     "status": {
       "Open": "Abierto",
       "InProgress": "En progreso",
-      "Done": "Finalizado"
+      "Done": "Resuelto"
     },
     "priority": {
       "High": "Alta",
@@ -148,7 +148,55 @@
       "Done": "Completado"
     },
     "tooltip": "Selecciona un estado de mantenimiento para filtrar los reportes"
-  }
+  },
+  "ReportModal": {
+  "title": "Reportar un problema",
+  "submited": "¡Reporte enviado!",
+  "submitedText": "Gracias por tu reporte. Lo revisaremos pronto.",
+  "searchPlaceholder": "Buscar bicicletas",
+  "bikeSelect": "Selecciona una bicicleta",
+  "authError": "Autenticación",
+  "authErrorText": "Por favor, inicia sesión para enviar un reporte.",
+  "description": "Descripción del problema",
+  "describeIssue": "Por favor, describe el problema...",
+  "submitReport": "Enviar reporte",
+  "submitting": "Enviando..."
+},
+"ManageModal": {
+  "title": "Gestionar reporte",
+
+  "status": "Estado",
+  "statusOptions": {
+    "Open": "Abierto",
+    "InProgress": "En progreso",
+    "Done": "Resuelto"
+  },
+
+  "priority": "Prioridad",
+  "priorityOptions": {
+    "High": "Alta",
+    "Medium": "Media",
+    "Low": "Baja"
+  },
+
+  "delete": "Eliminar reporte",
+  "cancel": "Cancelar",
+  "save": "Guardar"
+},
+"BikeTripsModal": {
+  "title": "Viajes de la bicicleta",
+  "columns": {
+    "id": "ID",
+    "user": "Usuario",
+    "date": "Fecha",
+    "duration": "Duración (MIN)",
+    "distance": "Distancia (km)"
+  },
+  "noTrips": "No hay viajes registrados para esta bicicleta."
+}
+
+
+
   
 }
 

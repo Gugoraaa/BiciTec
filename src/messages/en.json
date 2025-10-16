@@ -148,9 +148,62 @@
       "Done": "Done"
     },
     "tooltip": "Select a maintenance status to filter the reports"
+  },
+  "ReportModal": {
+    "title": "Report an Issue",
+    "submited": "Report Submited!",
+    "submitedText": "Thank you for your report. We&apos;ll look into it soon.",
+    "searchPlaceholder": "Search bikes",
+    "bikeSelect": "Select a bike",
+    "authError": "Authentication",
+    "authErrorText": "Please log in to submit a report.",
+    "description": "Issue Description",
+    "describeIssue": "Please describe the issue...",
+    "submitReport": "Submit Report",
+    "submitting": "Submitting..."
+  },
+  "ManageModal": {
+      "title": "Manage Report ",
+
+      "status": "Status",
+      "statusOptions": {
+        "Open": "Open",
+        "InProgress": "In Progress",
+        "Done": "Done"
+      },
+
+      "priority": "Priority",
+      "priorityOptions": {
+        "High": "High",
+        "Medium": "Medium",
+        "Low": "Low"
+      },
+
+      "delete": "Delete report",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "BikeTripsModal": {
+     "title": "Bike Trips",
+     "columns": {
+       "id": "ID",
+       "user": "User",
+       "date": "Date",
+       "duration": "Duration (MINS)",
+       "distance": "Distance (km)"
+     },
+     "noTrips": "No trips recorded for this bike."
+
+
+}
   }
   
 
-}
+
+
+
+  
+
+
 
 

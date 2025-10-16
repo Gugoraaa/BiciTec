@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Trip } from "@/types/bike";
+import { useTranslations } from "next-intl";
 
 type BikeTripsModalProps = {
   isOpen: boolean;
@@ -14,8 +15,8 @@ export default function BikeTripsModal({
   bikeId,
   trips,
 }: BikeTripsModalProps) {
-  const [isVisible, setIsVisible] = useState(false);
-
+    const [isVisible, setIsVisible] = useState(false);
+    const t = useTranslations("BikeTripsModal");
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => setIsVisible(true), 10);
@@ -46,7 +47,7 @@ export default function BikeTripsModal({
         >
           <div className="p-4 border-b border-slate-700 flex justify-between items-center">
             <h3 className="text-lg font-medium text-white">
-              Bike {bikeId} Trips
+              {t("title")}
             </h3>
             <button
               onClick={onClose}
@@ -62,19 +63,19 @@ export default function BikeTripsModal({
               <thead className="sticky top-0 bg-slate-800 z-10">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    ID
+                    {t("columns.id")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    User
+                    {t("columns.user")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Date
+                    {t("columns.date")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Duration (MINS)
+                    {t("columns.duration")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                    Distance (km)
+                    {t("columns.distance")}
                   </th>
                 </tr>
               </thead>
@@ -113,7 +114,7 @@ export default function BikeTripsModal({
                       colSpan={7}
                       className="px-6 py-4 text-center text-sm text-slate-400"
                     >
-                      No trips recorded for this bike.
+                      {t("noTrips")}
                     </td>
                   </tr>
                 )}

@@ -110,24 +110,27 @@ export default function Bikes() {
     Maintenance: "bg-amber-500/10 text-amber-400 border border-amber-500/30",
   };
 
- const handleReportSubmit = async (bikeId: string, description: string) => {
+  const handleReportSubmit = async (bikeId: string, description: string): Promise<boolean> => {
     try {
       const token = localStorage.getItem('token');
-        if (!token) {
-          setIsLoading(false);
-          return;
-        }
+      if (!token) {
+        return false;
+      }
 
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        
-        const { data } = await api.get('/auth/me');
-        
-        const user = {
-          id: data.user.id,
-          matricula: data.user.matricula,
-          nombre: data.user.nombre,
-          apellido: data.user.apellido,
-          role: data.user.rol
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
+      const { data } = await api.get('/auth/me');
+      
+      if (!data?.user) {
+        return false;
+      }
+
+      const user = {
+        id: data.user.id,
+        matricula: data.user.matricula,
+        nombre: data.user.nombre,
+        apellido: data.user.apellido,
+        role: data.user.rol
       };
 
       await api.post("/reports/createReport", {
@@ -139,8 +142,8 @@ export default function Bikes() {
       return true;
     } catch (error) {
       console.error("Error submitting report:", error);
-      throw error;
-     }
+      return false;
+    }
   };
 
   const handleViewTrips = async (bikeId: string) => {
