@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { FaTimes, FaCheck } from 'react-icons/fa';
+import { FaTimes, FaCheck, FaExclamationCircle } from 'react-icons/fa';
+import { useTranslations } from "next-intl";
 
 export default function ReportModal({ 
   isOpen, 
@@ -12,12 +13,14 @@ export default function ReportModal({
   isOpen: boolean; 
   onClose: () => void;
   bikes: { id: string }[];
-  onSubmit: (bikeId: string, description: string) => void;
+  onSubmit: (bikeId: string, description: string) => Promise<boolean>;
 }) {
   const [selectedBike, setSelectedBike] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showAuthError, setShowAuthError] = useState(false);
+  const t = useTranslations("ReportModal");
 
   if (!isOpen) return null;
 
@@ -28,18 +31,19 @@ export default function ReportModal({
     setIsSubmitting(true);
     
     try {
-      await Promise.resolve(onSubmit(selectedBike, description));
+      const result = await Promise.resolve(onSubmit(selectedBike, description));
       
-      // Show success state
-      setShowSuccess(true);
+      if (result === false) {
+        setShowAuthError(true);
+        setTimeout(() => setShowAuthError(false), 3000);
+      } else {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          onClose();
+        }, 2000);
+      }
       
-      // Close after delay
-      setTimeout(() => {
-        setShowSuccess(false);
-        onClose();
-      }, 2000);
-      
-      // Reset form
       setSelectedBike('');
       setDescription('');
     } catch (error) {
@@ -59,21 +63,29 @@ export default function ReportModal({
           <FaTimes className="h-5 w-5" />
         </button>
         
-        <h2 className="text-xl font-semibold text-white mb-4">Report an Issue</h2>
+        <h2 className="text-xl font-semibold text-white mb-4">{t("title")}</h2>
         
         {showSuccess ? (
           <div className="text-center py-8">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 mb-4">
               <FaCheck className="h-8 w-8 text-green-400" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Report Submitted!</h3>
-            <p className="text-slate-300">Thank you for your report. We&apos;ll look into it soon.</p>
+            <h3 className="text-xl font-semibold text-white mb-2">{t("submited")}</h3>
+            <p className="text-slate-300">{t("submitedText")}</p>
+          </div>
+        ) : showAuthError ? (
+          <div className="text-center py-8">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20 mb-4">
+              <FaExclamationCircle className="h-8 w-8 text-red-400" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">{t("authError")} </h3>
+            <p className="text-slate-300">{t("authErrorText")}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="bike-select" className="block text-sm font-medium text-gray-300 mb-1">
-              Select Bike
+              {t("bikeSelect")}
             </label>
             <select
               id="bike-select"
@@ -82,7 +94,7 @@ export default function ReportModal({
               className="w-full rounded-lg border border-gray-600 bg-slate-700 p-2.5 text-sm text-white focus:border-blue-500 focus:ring-blue-500"
               required
             >
-              <option value="">Select a bike</option>
+              <option value="">{t("bikeSelect")}</option>
               {bikes.map((bike) => (
                 <option key={bike.id} value={bike.id}>
                   {bike.id}
@@ -93,7 +105,7 @@ export default function ReportModal({
           
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-1">
-              Issue Description
+              {t("description")}
             </label>
             <textarea
               id="description"
@@ -101,7 +113,7 @@ export default function ReportModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full rounded-lg border border-gray-600 bg-slate-700 p-2.5 text-sm text-white focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Please describe the issue..."
+              placeholder={t("describeIssue")}
               required
             />
           </div>
@@ -120,7 +132,7 @@ export default function ReportModal({
               className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Report'}
+              {isSubmitting ? t("submitting") : t("submitReport")}
             </button>
           </div>
         </form>

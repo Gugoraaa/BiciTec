@@ -148,6 +148,19 @@
       "Done": "Done"
     },
     "tooltip": "Select a maintenance status to filter the reports"
+  },
+  "ReportModal": {
+    "title": "Report an Issue",
+    "submited": "Report Submited!",
+    "submitedText": "Thank you for your report. We&apos;ll look into it soon.",
+    "searchPlaceholder": "Search bikes",
+    "bikeSelect": "Select a bike",
+    "authError": "Authentication",
+    "authErrorText": "Please log in to submit a report.",
+    "description": "Issue Description",
+    "describeIssue": "Please describe the issue...",
+    "submitReport": "Submit Report",
+    "submitting": "Submitting..."
   }
   
 
