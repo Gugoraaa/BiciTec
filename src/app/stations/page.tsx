@@ -1,4 +1,4 @@
-import BikeMap from "@/components/bikes/BikeMap";
+import BikeMap from "@/components/stations/BikeMap";
 import StationTable from "@/components/stations/StationTable";
 import { useTranslations } from "next-intl";
 

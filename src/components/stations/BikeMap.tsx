@@ -3,37 +3,12 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import api from "@/lib/api";
-import type { LatLngExpression } from "leaflet";
 import type * as LeafletTypes from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { BikeStation } from "@/types/bike";
 import { bikeIcon } from "./BikeIcon";
 import { useTranslations } from "next-intl";
-
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
-);
-
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
-);
-
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
-);
-const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
-  ssr: false,
-});
-
-const ScaleControl = dynamic(
-  () => import("react-leaflet").then((mod) => mod.ScaleControl),
-  { ssr: false }
-);
-
-const center: LatLngExpression = [25.6515, -100.2905];
+import * as dynamicVariables from "./dynamicVariables";
 
 export default function BikeMap() {
   const [mounted, setMounted] = useState(false);
@@ -105,7 +80,7 @@ export default function BikeMap() {
         }
       } catch (error) {
         if (!isMounted) return;
-        console.error('Error fetching stations:', error);
+        console.error("Error fetching stations:", error);
         setError(
           "Error al conectar con el servidor. Por favor, intenta de nuevo más tarde."
         );
@@ -205,19 +180,6 @@ export default function BikeMap() {
             </div>
           </div>
         </div>
-        <style jsx>{`
-          @keyframes shimmer {
-            0% {
-              transform: translateX(-100%);
-            }
-            100% {
-              transform: translateX(200%);
-            }
-          }
-          .animate-shimmer {
-            animation: shimmer 2s infinite;
-          }
-        `}</style>
       </div>
     );
   }
@@ -250,15 +212,15 @@ export default function BikeMap() {
   return (
     <>
       <div className="h-[600px] w-full rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl relative animate-fadeIn">
-        <MapContainer
-          center={center}
+        <dynamicVariables.MapContainer
+          center={dynamicVariables.center}
           zoom={17}
           style={{ height: "100%", width: "100%" }}
           zoomControl={true}
           maxZoom={50}
           minZoom={14}
         >
-          <TileLayer
+          <dynamicVariables.TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             maxZoom={50}
@@ -269,7 +231,7 @@ export default function BikeMap() {
               station.estado?.toLowerCase() === "offline" || !isOnline;
 
             return (
-              <Marker
+              <dynamicVariables.Marker
                 key={station.id}
                 position={station.position}
                 icon={bikeIcon(
@@ -280,7 +242,7 @@ export default function BikeMap() {
                   isOnline
                 )}
               >
-                <Popup className="font-sans min-w-[220px]">
+                <dynamicVariables.Popup className="font-sans min-w-[220px]">
                   <div className="space-y-2">
                     {stationIsOffline ? (
                       <>
@@ -346,39 +308,12 @@ export default function BikeMap() {
                       </>
                     )}
                   </div>
-                </Popup>
-              </Marker>
+                </dynamicVariables.Popup>
+              </dynamicVariables.Marker>
             );
           })}
-          <ScaleControl position="bottomleft" />
-        </MapContainer>
-
-        <style jsx global>{`
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: scale(0.95);
-            }
-            to {
-              opacity: 1;
-              transform: scale(1);
-            }
-          }
-          .animate-fadeIn {
-            animation: fadeIn 0.5s ease-out;
-          }
-          @keyframes shimmer {
-            0% {
-              transform: translateX(-100%);
-            }
-            100% {
-              transform: translateX(200%);
-            }
-          }
-          .animate-shimmer {
-            animation: shimmer 2s infinite;
-          }
-        `}</style>
+          <dynamicVariables.ScaleControl position="bottomleft" />
+        </dynamicVariables.MapContainer>
       </div>
     </>
   );

@@ -31,3 +31,8 @@ export interface BikeStation {
   capacidad_max: number;
   estado: string;
 }
+
+export interface BikeUsageData {
+  hour: string;
+  count: number;
+}
