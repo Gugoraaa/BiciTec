@@ -2,10 +2,17 @@ import Card from "./Card";
 import Badge from "./Badge";
 import { Ticket } from "@/types/maintenance";
 import { useTranslations } from "next-intl";
+import { priorityMap } from "./maps";
+
+
 
 export default function TicketCard({ t, onManage }: { t: Ticket; onManage: (t: Ticket) => void }) {
+  const normalizedPriority = priorityMap[t.priority] || t.priority;
+  
   const tone: "danger" | "warning" | "success" =
-    t.priority === "High" ? "danger" : t.priority === "Medium" ? "warning" : "success";
+    normalizedPriority === "High" ? "danger" 
+    : normalizedPriority === "Medium" ? "warning" 
+    : "success";
 
   const p = useTranslations("Maintenance");
 
@@ -14,7 +21,7 @@ export default function TicketCard({ t, onManage }: { t: Ticket; onManage: (t: T
       <div className="flex items-center justify-between">
         <p className="font-semibold text-slate-100">#{t.id}</p>
         <div className="flex items-center gap-2">
-          <Badge label={t.priority} tone={tone} />
+          <Badge label={p("priorityOptions." + normalizedPriority)} tone={tone} />
           <button 
             onClick={() => onManage(t)}
             className="rounded-lg bg-slate-700/70 px-2.5 py-1 text-xs text-slate-100 hover:bg-slate-700"

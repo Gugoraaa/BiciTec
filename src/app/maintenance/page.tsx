@@ -27,18 +27,18 @@ function BikeMaintenanceDashboard() {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await api.get('/reports/getReports');
+        const response = await api.get("/reports/getReports");
         const { data: responseData, success } = response.data;
-        
+
         if (success && Array.isArray(responseData)) {
           const mappedTickets = mapApiResponseToTickets(responseData);
           setTickets(mappedTickets);
         } else {
-          console.error('Unexpected response format:', response.data);
+          console.error("Unexpected response format:", response.data);
           setTickets([]);
         }
       } catch (error) {
-        console.error('Error fetching reports:', error);
+        console.error("Error fetching reports:", error);
         setTickets([]);
       } finally {
         setInitialLoad(false);
@@ -55,15 +55,22 @@ function BikeMaintenanceDashboard() {
       InProgress: [],
       Done: [],
     };
-    tickets.forEach((t) => by[t.status].push(t));
+    tickets.forEach((t) => {
+      if (by[t.status]) {
+        by[t.status].push(t);
+      } else {
+        console.warn(`Encountered ticket with unknown status: ${t.status}`);
+      }
+    });
     return by;
   }, [tickets]);
 
-  const visibleColumns: Array<{id: Status, label: string}> = useMemo(() => {
-    const statuses: Status[] = filter === "All" ? ["Open", "InProgress", "Done"] : [filter];
-    return statuses.map(status => ({
+  const visibleColumns: Array<{ id: Status; label: string }> = useMemo(() => {
+    const statuses: Status[] =
+      filter === "All" ? ["Open", "InProgress", "Done"] : [filter];
+    return statuses.map((status) => ({
       id: status,
-      label: t(`status.${status}`)
+      label: t(`status.${status}`),
     }));
   }, [filter, t]);
 
@@ -72,15 +79,21 @@ function BikeMaintenanceDashboard() {
     return tickets.filter((t) => t.status === filter);
   }, [tickets, filter]);
 
-  const onSave = async (id: number, newStatus: Status, newPriority: 'High' | 'Medium' | 'Low') => {
+  const onSave = async (
+    id: number,
+    newStatus: Status,
+    newPriority: "High" | "Medium" | "Low"
+  ) => {
     try {
       setTickets((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, status: newStatus, priority: newPriority } : t))
+        prev.map((t) =>
+          t.id === id ? { ...t, status: newStatus, priority: newPriority } : t
+        )
       );
       await api.patch(`/reports/${id}/status`, { status: newStatus });
       await api.patch(`/reports/${id}/priority`, { priority: newPriority });
     } catch (err) {
-      console.error('Error updating ticket:', err);
+      console.error("Error updating ticket:", err);
     }
   };
 
@@ -89,7 +102,7 @@ function BikeMaintenanceDashboard() {
       setTickets((prev) => prev.filter((t) => t.id !== id));
       await api.delete(`/reports/deleteReport/${id}`);
     } catch (err) {
-      console.error('Error deleting ticket:', err);
+      console.error("Error deleting ticket:", err);
     }
   };
 
@@ -112,7 +125,7 @@ function BikeMaintenanceDashboard() {
               visibleColumns.length === 3 ? "md:grid-cols-3" : "grid-cols-1"
             }`}
           >
-            {visibleColumns.map(({id, label}) => (
+            {visibleColumns.map(({ id, label }) => (
               <StatusColumn
                 key={id}
                 title={label}

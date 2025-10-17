@@ -133,12 +133,13 @@
       "InProgress": "En progreso",
       "Done": "Resuelto"
     },
-    "priority": {
+    "priorityOptions": {
       "High": "Alta",
       "Medium": "Media",
       "Low": "Baja"
     }
   },
+   
   "StatusFilter": {
     "label": "Filtrar por estado",
     "options": {
