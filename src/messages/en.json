@@ -11,7 +11,8 @@
       "InUse": "In use",
       "Maintenance": "Maintenance",
       "default": "Unknown"
-    }
+    },
+    "stationUnknown": "Moving"
   },
   "Overview": {
     "title": "Overview",

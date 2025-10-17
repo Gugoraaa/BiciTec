@@ -48,7 +48,11 @@ export default function BikeCard({
             <span className="block text-slate-500 text-xs">
               {t("station")}
             </span>
-            <span className="font-medium">{estacion}</span>
+            {estacion ? (
+              <span className="font-medium">{estacion}</span>
+            ) : (
+              <span className="font-medium">{t("stationUnknown")}</span>
+            )}
           </div>
           <div className="text-right">
             <span className="block text-slate-500 text-xs">

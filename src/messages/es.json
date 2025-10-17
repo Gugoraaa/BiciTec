@@ -11,7 +11,8 @@
       "InUse": "En uso",
       "Maintenance": "Mantenimiento",
       "default": "Desconocido"
-    }
+    },
+    "stationUnknown": "Moviendose"
   },
   "Overview": {
     "title": "Resumen general",
