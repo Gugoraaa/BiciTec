@@ -2,6 +2,7 @@
 import React, { useMemo } from "react";
 import type { Ticket } from "@/types/maintenance"
 import { useTranslations } from "next-intl";
+import { priorityMap, statusMap } from "./maps";
 
 export default function TicketsTable({
   tickets,
@@ -14,14 +15,16 @@ export default function TicketsTable({
 }) {
   const t = useTranslations("Maintenance");
   const tStatus = useTranslations("Maintenance.status");
-  const tPriority = useTranslations("Maintenance.priority");
+  const tPriority = useTranslations("Maintenance.priorityOptions");
   
   const sorted = useMemo(() => {
     const priorityOrder: Record<string, number> = { High: 1, Medium: 2, Low: 3 };
-      return [...tickets].sort((a, b) => {
+    return [...tickets].sort((a, b) => {
       const dateDiff = new Date(b.date).getTime() - new Date(a.date).getTime();
       if (dateDiff !== 0) return dateDiff > 0 ? 1 : -1;
-      return priorityOrder[a.priority] - priorityOrder[b.priority];
+      const aPriority = priorityMap[a.priority] || a.priority;
+      const bPriority = priorityMap[b.priority] || b.priority;
+      return priorityOrder[aPriority] - priorityOrder[bPriority];
     });
   }, [tickets]);
 
@@ -76,44 +79,49 @@ export default function TicketsTable({
               </td>
             </tr>
           ) : (
-            sorted.map((ticket) => (
-              <tr key={ticket.id} className="hover:bg-slate-800/50 transition">
-                <td className="px-3 py-3 text-slate-200 font-medium">{ticket.id}</td>
-                <td className="px-3 py-3 text-slate-300">{ticket.bike}</td>
-                <td className="px-3 py-3 text-slate-300">{ticket.description}</td>
-                <td className="px-3 py-3 text-slate-400">{ticket.date}</td>
-                <td className="px-3 py-3">
-                  <span
-                    className={`px-2 py-0.5 text-xs rounded-full ${
-                      ticket.priority === "High"
-                        ? "bg-rose-900/40 text-rose-300"
-                        : ticket.priority === "Medium"
-                        ? "bg-amber-900/40 text-amber-300"
-                        : "bg-emerald-900/40 text-emerald-300"
-                    }`}
-                  >
-                    {tPriority(ticket.priority)}
-                  </span>
-                </td>
-                <td className="px-3 py-3 text-slate-300">
-                  <span className="inline-flex items-center">
-                    <span className={`inline-block w-2 h-2 rounded-full mr-2 ${
-                      ticket.status === 'Open' ? 'bg-rose-500' : 
-                      ticket.status === 'InProgress' ? 'bg-amber-500' : 'bg-emerald-500'
-                    }`}></span>
-                    {tStatus(ticket.status)}
-                  </span>
-                </td>
-                <td className="px-3 py-3 text-center">
-                  <button
-                    onClick={() => onManage(ticket)}
-                    className="rounded-lg bg-slate-700/70 px-3 py-1 text-xs text-slate-100 hover:bg-slate-600 transition-colors"
-                  >
-                    {t("table.manage")}
-                  </button>
-                </td>
-              </tr>
-            ))
+            sorted.map((ticket) => {
+              const normalizedPriority = priorityMap[ticket.priority] || ticket.priority;
+              const normalizedStatus = statusMap[ticket.status] || ticket.status;
+              
+              return (
+                <tr key={ticket.id} className="hover:bg-slate-800/50 transition">
+                  <td className="px-3 py-3 text-slate-200 font-medium">{ticket.id}</td>
+                  <td className="px-3 py-3 text-slate-300">{ticket.bike}</td>
+                  <td className="px-3 py-3 text-slate-300">{ticket.description}</td>
+                  <td className="px-3 py-3 text-slate-400">{ticket.date}</td>
+                  <td className="px-3 py-3">
+                    <span
+                      className={`px-2 py-0.5 text-xs rounded-full ${
+                        normalizedPriority === "High"
+                          ? "bg-rose-900/40 text-rose-300"
+                          : normalizedPriority === "Medium"
+                          ? "bg-amber-900/40 text-amber-300"
+                          : "bg-emerald-900/40 text-emerald-300"
+                      }`}
+                    >
+                      {tPriority(normalizedPriority)}
+                    </span>
+                  </td>
+                  <td className="px-3 py-3 text-slate-300">
+                    <span className="inline-flex items-center">
+                      <span className={`inline-block w-2 h-2 rounded-full mr-2 ${
+                        normalizedStatus === 'Open' ? 'bg-rose-500' : 
+                        normalizedStatus === 'InProgress' ? 'bg-amber-500' : 'bg-emerald-500'
+                      }`}></span>
+                      {tStatus(normalizedStatus)}
+                    </span>
+                  </td>
+                  <td className="px-3 py-3 text-center">
+                    <button
+                      onClick={() => onManage(ticket)}
+                      className="rounded-lg bg-slate-700/70 px-3 py-1 text-xs text-slate-100 hover:bg-slate-600 transition-colors"
+                    >
+                      {t("table.manage")}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>

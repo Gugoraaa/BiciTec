@@ -25,23 +25,27 @@ export default function StatusColumn({
     .slice(0, 5); 
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-slate-200 font-semibold mb-2">
-        {title}
+    <div className="flex flex-col h-full">
+      <h3 className="text-slate-200 font-semibold mb-3 px-2">
+        {title} <span className="text-slate-400 text-sm font-normal">({sortedTickets.length})</span>
       </h3>
-      <div className="grid gap-3">
-        {loading ? (
-          <>
-            <SkeletonCard />
-            <SkeletonCard />
-          </>
-        ) : sortedTickets.length === 0 ? (
-          <div className="text-sm text-slate-500">No tickets</div>
-        ) : (
-          sortedTickets.map((t) => (
-            <TicketCard key={t.id} t={t} onManage={onManage} />
-          ))
-        )}
+      <div className="flex-1 overflow-y-auto pr-2 -mr-2">
+        <div className="grid gap-3 pb-2">
+          {loading ? (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          ) : sortedTickets.length === 0 ? (
+            <div className="text-sm text-slate-500 p-2 bg-slate-800/30 rounded-lg text-center">
+              No tickets in this status
+            </div>
+          ) : (
+            sortedTickets.map((t) => (
+              <TicketCard key={t.id} t={t} onManage={onManage} />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
