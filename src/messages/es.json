@@ -1,4 +1,15 @@
 {
+  "BikeForm": {
+    "addBike": "Agregar Bicicleta",
+    "station": "Estación",
+    "selectStation": "Seleccionar Estación",
+    "cancel": "Cancelar",
+    "adding": "Agregando...",
+    "small": "Pequeña (S)",
+    "medium": "Mediana (M)",
+    "large": "Grande (L)",
+    "size": "Tamaño"
+  },
   "BikeCard": {
     "title": "Bicicleta {id}",
     "station": "Estación",
@@ -95,7 +106,8 @@
     },
     "trips": {
       "error": "Error al cargar los registros de viajes. Intenta nuevamente."
-    }
+    },
+    "addBike": "Agregar Bicicleta"
   },
   "Sidebar": {
     "brand": {

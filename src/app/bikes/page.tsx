@@ -3,15 +3,16 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import BikeCard from "@/components/bikes/BikeCard";
 import ReportModal from "@/components/bikes/ReportModal";
 import BikeTripsModal from "@/components/bikes/BikeTripsModal";
-import { FaExclamationTriangle, FaSpinner } from "react-icons/fa";
-import { Bike, BikeStatus, Trip } from "@/types/bike";
+import { FaPlus, FaExclamationTriangle, FaSpinner } from "react-icons/fa";
+import { Bike, BikeStatus, Trip, BikeStation } from "@/types/bike";
 import api from "@/lib/api";
 import { useTranslations } from "next-intl";
+import { useAuth } from "@/contexts/AuthContext";
+import AddBikeModal from "@/components/bikes/AddBikeModal";
 
 export default function Bikes() {
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [selectedBikeId, setSelectedBikeId] = useState<string | null>(null);
-  const t = useTranslations("BikesPage");
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<BikeStatus | "All">("All");
   const [isLoaded, setIsLoaded] = useState(false);
@@ -20,14 +21,45 @@ export default function Bikes() {
   const [error, setError] = useState<string | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isTripsModalOpen, setIsTripsModalOpen] = useState(false);
+  const [isAddBikeModalOpen, setIsAddBikeModalOpen] = useState(false);
   const [visibleCards, setVisibleCards] = useState<string[]>([]);
   const [isLoadingTrips, setIsLoadingTrips] = useState(false);
   const [tripsError, setTripsError] = useState<string | null>(null);
+  const [stations, setStations] = useState<BikeStation[]>([]);
   const selectedBike = useMemo(() => 
     selectedBikeId ? bikes.find(b => b.id === selectedBikeId) || null : null, 
     [selectedBikeId, bikes]
   );
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const t = useTranslations("BikesPage");
+  const { isAdmin } = useAuth();
+
+  const handleAddBike = async (bikeData: { station: number; size: string }) => {
+    try {
+      const response = await api.post('/bikes/addBike', {
+        station: bikeData.station,
+        size: bikeData.size,
+      });
+      setBikes(prevBikes => [...prevBikes, response.data]);
+      setIsAddBikeModalOpen(false);
+      window.location.reload(); 
+    } catch (error) {
+      console.error('Error adding bike:', error);
+    }
+  };
+
+  const fetchStations = async () => {
+    try {
+      const response = await api.get('/stations/getStations');
+      setStations(response.data);
+    } catch (error) {
+      console.error('Error fetching stations:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStations();
+  }, []);
 
   useEffect(() => {
     const fetchBikes = async () => {
@@ -186,6 +218,8 @@ export default function Bikes() {
   return (
     <main className="min-h-screen bg-[#0f172a] text-white">
       <div className="max-w-6xl mx-auto p-6">
+        
+
         <div className="flex justify-between items-center mb-6">
           <h1
             className={`text-2xl font-bold transition-all duration-700 ${
@@ -205,6 +239,17 @@ export default function Bikes() {
             <FaExclamationTriangle />
             <span>{t("report")}</span>
           </button>
+          {isAdmin && (
+          <button
+            onClick={() => setIsAddBikeModalOpen(true)}
+            className={`flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 ${
+              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
+            <FaPlus />
+            <span>{t("addBike")}</span>
+          </button>
+        )}
         </div>
 
         <div className="flex flex-col gap-4 mb-6">
@@ -292,6 +337,12 @@ export default function Bikes() {
         onSubmit={handleReportSubmit}
       />
 
+      <AddBikeModal
+        isOpen={isAddBikeModalOpen}
+        onClose={() => setIsAddBikeModalOpen(false)}
+        onAddBike={handleAddBike}
+        stations={stations}
+      />
       <BikeTripsModal
         isOpen={isTripsModalOpen}
         onClose={() => setIsTripsModalOpen(false)}
