@@ -1,4 +1,15 @@
 {
+  "BikeForm": {
+    "addBike": "Add Bike",
+    "station": "Station",
+    "selectStation": "Select Station",
+    "cancel": "Cancel",
+    "adding": "Adding...",
+    "small": "Small (S)",
+    "medium": "Medium (M)",
+    "large": "Large (L)",
+    "size": "Size"
+  },
   "BikeCard": {
     "title": "Bike {id}",
     "station": "Station",
@@ -11,7 +22,8 @@
       "InUse": "In use",
       "Maintenance": "Maintenance",
       "default": "Unknown"
-    }
+    },
+    "stationUnknown": "Moving"
   },
   "Overview": {
     "title": "Overview",
@@ -94,7 +106,8 @@
     },
     "trips": {
       "error": "Failed to load trip logs. Please try again."
-    }
+    },
+    "addBike": "Add Bike"
   },
   "Sidebar": {
     "brand": {

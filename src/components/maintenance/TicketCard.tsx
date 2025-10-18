@@ -2,8 +2,7 @@ import Card from "./Card";
 import Badge from "./Badge";
 import { Ticket } from "@/types/maintenance";
 import { useTranslations } from "next-intl";
-import { priorityMap } from "./maps";
-
+import { priorityMap } from "./maps"; 
 
 
 export default function TicketCard({ t, onManage }: { t: Ticket; onManage: (t: Ticket) => void }) {
