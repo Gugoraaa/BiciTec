@@ -12,47 +12,59 @@ export default function StationTable() {
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [visibleRows, setVisibleRows] = useState<number[]>([]);
-  const t = useTranslations("StationTable"); 
+  const t = useTranslations("StationTable");
 
   useEffect(() => {
     let isMounted = true;
-    
+
     const fetchStations = async () => {
       setIsLoadingData(true);
       setError(null);
       try {
-        const response = await api.get<Array<{
-          id: number;
-          nombre: string;
-          capacidad_max: number;
-          bicicletas: number;
-          estado: Status;
-        }>>("/stations/getStations");
-          
+        const response = await api.get<
+          Array<{
+            id: number;
+            nombre: string;
+            capacidad_max: number;
+            bicicletas: number;
+            estado: Status;
+          }>
+        >("/stations/getStations");
+
         if (!isMounted) return;
-        
-        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-          const transformedData: StationRow[] = response.data.map((station) => ({
-            id: String(station.id),
-            nombre: station.nombre,
-            capacidad_max: station.capacidad_max,
-            bicicletas: station.bicicletas,
-            available: (typeof station.capacidad_max === 'number' && typeof station.bicicletas === 'number') 
-              ? Math.max(0, station.capacidad_max - station.bicicletas) 
-              : 0,
-            estado: station.estado,
-          }));
-          
-          const uniqueData = Array.from(
-            new Map(transformedData.map(item => [item.id, item])).values()
+
+        if (
+          response.data &&
+          Array.isArray(response.data) &&
+          response.data.length > 0
+        ) {
+          const transformedData: StationRow[] = response.data.map(
+            (station) => ({
+              id: String(station.id),
+              nombre: station.nombre,
+              capacidad_max: station.capacidad_max,
+              bicicletas: station.bicicletas,
+              available:
+                typeof station.capacidad_max === "number" &&
+                typeof station.bicicletas === "number"
+                  ? Math.max(0, station.capacidad_max - station.bicicletas)
+                  : 0,
+              estado: station.estado,
+            })
           );
-          
+
+          const uniqueData = Array.from(
+            new Map(transformedData.map((item) => [item.id, item])).values()
+          );
+
           setData(uniqueData);
-          
+
           setTimeout(() => {
             if (isMounted) {
               setIsLoaded(true);
-              setVisibleRows(Array.from({length: uniqueData.length}, (_, i) => i));
+              setVisibleRows(
+                Array.from({ length: uniqueData.length }, (_, i) => i)
+              );
             }
           }, 100);
         } else {
@@ -70,7 +82,7 @@ export default function StationTable() {
     };
 
     void fetchStations();
-    
+
     return () => {
       isMounted = false;
     };
@@ -99,13 +111,17 @@ export default function StationTable() {
   }
 
   return (
-    <div className={`w-full h-[600px] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-lg transition-all duration-700 ${
-      isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-    }`}>
+    <div
+      className={`w-full h-[600px] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 shadow-lg transition-all duration-700 ${
+        isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      }`}
+    >
       <div className="px-4 py-3 border-b border-slate-800 flex-shrink-0">
-        <h3 className={`text-slate-200 font-semibold transition-all duration-500 delay-100 ${
-          isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-        }`}>
+        <h3
+          className={`text-slate-200 font-semibold transition-all duration-500 delay-100 ${
+            isLoaded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+          }`}
+        >
           {t("title")}
         </h3>
       </div>
@@ -114,30 +130,50 @@ export default function StationTable() {
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-900/80 sticky top-0 z-10">
             <tr className="[&>th]:py-3 [&>th]:px-4 text-slate-400 font-medium">
-              <th className={`w-40 transition-all duration-500 delay-200 ${
-                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-              }`}>
-                  {t("columns.station")}
+              <th
+                className={`w-40 transition-all duration-500 delay-200 ${
+                  isLoaded
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 -translate-y-2"
+                }`}
+              >
+                {t("columns.station")}
               </th>
-              <th className={`text-right transition-all duration-500 delay-[350ms] ${
-                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-              }`}>
+              <th
+                className={`text-right transition-all duration-500 delay-[350ms] ${
+                  isLoaded
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 -translate-y-2"
+                }`}
+              >
                 {t("columns.capacity")}
               </th>
-              <th className={`text-right transition-all duration-500 delay-[400ms] ${
-                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-              }`}>
+              <th
+                className={`text-right transition-all duration-500 delay-[400ms] ${
+                  isLoaded
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 -translate-y-2"
+                }`}
+              >
                 {t("columns.bikesDocked")}
               </th>
-              <th className={`text-right transition-all duration-500 delay-[450ms] ${
-                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-              }`}>
+              <th
+                className={`text-right transition-all duration-500 delay-[450ms] ${
+                  isLoaded
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 -translate-y-2"
+                }`}
+              >
                 {t("columns.available")}
               </th>
-              <th className={`w-40 transition-all duration-500 delay-500 ${
-                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-              }`}>
-                  {t("columns.status")}
+              <th
+                className={`w-40 transition-all duration-500 delay-500 ${
+                  isLoaded
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 -translate-y-2"
+                }`}
+              >
+                {t("columns.status")}
               </th>
             </tr>
           </thead>
@@ -149,10 +185,12 @@ export default function StationTable() {
                 <tr
                   key={row.id}
                   className={`hover:bg-slate-800/40 transition-all duration-500 ${
-                    isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+                    isVisible
+                      ? "opacity-100 translate-x-0"
+                      : "opacity-0 -translate-x-8"
                   }`}
                   style={{
-                    transitionDelay: `${150 + index * 50}ms`
+                    transitionDelay: `${150 + index * 50}ms`,
                   }}
                 >
                   <td className="py-3 px-4">
@@ -160,14 +198,11 @@ export default function StationTable() {
                       <span className="text-slate-200 font-semibold">
                         {row.nombre}
                       </span>
-                      
                     </div>
                   </td>
 
-                  
-
                   <td className="py-3 px-4 text-right text-slate-300">
-                    {row.capacidad_max} 
+                    {row.capacidad_max}
                   </td>
 
                   <td className="py-3 px-4 text-right text-slate-300">
@@ -176,7 +211,9 @@ export default function StationTable() {
 
                   <td className="py-3 px-4 text-right">
                     <span className="text-slate-200 font-medium">
-                      {typeof row.available === 'number' ? Math.max(0, row.available) : 0}
+                      {typeof row.available === "number"
+                        ? Math.max(0, row.available)
+                        : 0}
                     </span>
                   </td>
 
@@ -189,8 +226,6 @@ export default function StationTable() {
           </tbody>
         </table>
       </div>
-      
-      
     </div>
   );
 }

@@ -211,7 +211,7 @@ export default function BikeMap() {
 
   return (
     <>
-      <div className="h-[600px] w-full rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl relative animate-fadeIn">
+      <div className="h-[600px] w-full rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl relative animate-fadeIn z-0">
         <dynamicVariables.MapContainer
           center={dynamicVariables.center}
           zoom={17}

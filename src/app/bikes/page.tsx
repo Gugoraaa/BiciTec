@@ -10,6 +10,8 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/contexts/AuthContext";
 import AddBikeModal from "@/components/bikes/AddBikeModal";
 
+
+
 export default function Bikes() {
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [selectedBikeId, setSelectedBikeId] = useState<string | null>(null);
