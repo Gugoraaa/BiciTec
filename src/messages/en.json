@@ -1,4 +1,15 @@
 {
+  "StationsModal": {
+    "title": "Update station status",
+    "label1": "Select station",
+    "label2": "Select status",
+    "cancel": "Cancel",
+    "save": "Save",
+    "success": "Success",
+    "successText": "Station status updated successfully",
+    "Operational": "Operational",
+    "Offline": "Offline"
+  },
   "BikeForm": {
     "addBike": "Add Bike",
     "station": "Station",
@@ -73,7 +84,8 @@
       "Operational": "Operational",
       "Maintenance": "Maintenance",
       "Offline": "Offline"
-    }
+    },
+    "ManageStationButton":"Manage Station"
   },
   "BikeMap": {
     "loadingTitle": "Loading map...",

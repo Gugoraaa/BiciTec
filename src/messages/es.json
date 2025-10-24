@@ -1,4 +1,16 @@
 {
+
+  "StationsModal": {
+    "title": "Actualizar estado de la estación",
+    "label1": "Seleccionar estación",
+    "label2": "Seleccionar estado",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "success": "Éxito",
+    "successText": "Estado de la estación actualizado correctamente",
+    "Operational": "Operativa",
+    "Offline": "Sin servicio"
+  },
   "BikeForm": {
     "addBike": "Agregar Bicicleta",
     "station": "Estación",
@@ -73,7 +85,8 @@
       "Operational": "Operativa",
       "Maintenance": "Mantenimiento",
       "Offline": "Sin servicio"
-    }
+    },
+    "ManageStationButton":"Gestionar estación"
   },
   "BikeMap": {
     "loadingTitle": "Cargando mapa...",
