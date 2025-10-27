@@ -11,13 +11,11 @@ type StationStatus = "Operational" | "Offline";
 interface ManageStationsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (stationId: string, status: StationStatus) => void;
 }
 
 export default function ManageStationsModal({
   isOpen,
   onClose,
-  onSave,
 }: ManageStationsModalProps) {
   const [selectedStationId, setSelectedStationId] = useState<string>("");
   const [status, setStatus] = useState<StationStatus>("Operational");
@@ -67,7 +65,6 @@ export default function ManageStationsModal({
     if (!selectedStationId) return;
 
     try {
-      // Update the station status via API
       const response = await api.patch(
         `/stations/updateStatus/${selectedStationId}`,
         {
@@ -76,7 +73,6 @@ export default function ManageStationsModal({
       );
 
       if (response.status === 200) {
-        onSave(selectedStationId, status);
         setShowSuccess(true);
         setTimeout(() => {
           onClose();

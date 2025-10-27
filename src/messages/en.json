@@ -130,7 +130,8 @@
       "overview": "Overview",
       "stations": "Stations",
       "bikes": "Bikes",
-      "maintenance": "Maintenance"
+      "maintenance": "Maintenance",
+      "inbox": "Inbox"
     },
     "auth": {
       "login": "Sign in",
@@ -218,9 +219,48 @@
        "distance": "Distance (km)"
      },
      "noTrips": "No trips recorded for this bike."
-
-
-}
+    },
+    "Inbox": {
+      "Inbox": "Inbox",
+      "title": "Inbox",
+      "loading": "Loading inbox...",
+      "error": "Failed to load inbox",
+      "empty": "No messages found",
+      "columns": {
+        "sender": "Sender",
+        "subject": "Subject & Snippet",
+        "timestamp": "Timestamp"
+      },
+      "senderOptions":{
+        "News": "BiciTec News",
+        "AccountNotification": "Account Notification"
+      },
+      "sortBy":{
+        "Newest": "Newest",
+        "Oldest": "Oldest",
+        "Sender": "Sender"
+      },
+      "show":{
+        "AllMessages": "All Messages",
+        "Unread": "Unread",
+        "News": "News",
+        "AccountNotification": "Warnings" 
+      },
+      "SendNew": "Send a new",
+      "SendNewBox":{
+      "title":"Send a new",
+      "NewTitle":"Title",
+      "NewBody":"Body",
+      "NewSend":"Send",
+      "NewTitlePlaceholder":"Write the title of your news",
+      "NewBodyPlaceholder":"Write your news here",
+      "Cancel":"Cancel",
+      "send": "Send",
+      "sending": "Sending..."
+    }
+      
+    
+    }
   }
   
 

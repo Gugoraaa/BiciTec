@@ -15,34 +15,6 @@ export default function StationsPage() {
   const [isStationsModalOpen, setIsStationsModalOpen] = useState(false);
   const t = useTranslations("StationTable");
 
-  // TODO: Fetch stations from your API
-  // useEffect(() => {
-  //   const fetchStations = async () => {
-  //     const response = await fetch('/api/stations');
-  //     const data = await response.json();
-  //     setStations(data);
-  //   };
-  //   fetchStations();
-  // }, []);
-
-  const handleStatusUpdate = async (stationId: string, newStatus: 'Operational' | 'Offline' ) => {
-    try {
-      // TODO: Update station status via API
-      // await fetch(`/api/stations/${stationId}`, {
-      //   method: 'PATCH',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ status: newStatus }),
-      // });
-      
-      // Update local state
-      // setStations(stations.map(station => 
-      //   station.id === stationId ? { ...station, status: newStatus } : station
-      // ));
-    } catch (error) {
-      console.error('Failed to update station status:', error);
-      // TODO: Show error notification
-    }
-  };
   return (
     <main className="min-h-screen bg-[#0f172a] p-4 md:p-6">
       <div className="flex justify-between items-center mb-4">
@@ -65,7 +37,7 @@ export default function StationsPage() {
       <ManageStationsModal
         isOpen={isStationsModalOpen}
         onClose={() => setIsStationsModalOpen(false)}
-        onSave={handleStatusUpdate}
+        
         
 
       />
