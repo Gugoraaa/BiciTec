@@ -132,7 +132,8 @@
       "stations": "Estaciones",
       "bikes": "Bicicletas",
       "maintenance": "Mantenimiento",
-      "inbox":"Noticias"
+      "inbox":"Noticias",
+      "usersManagement": "Gestionar usuarios"
     },
     "auth": {
       "login": "Iniciar sesión",

@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { FaBiking, FaWrench } from "react-icons/fa";
+import { FaBiking, FaWrench, FaUserCog } from "react-icons/fa";
 import { MdOutlineLocationOn, MdOutlineFactory,MdOutlineMessage  } from "react-icons/md";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
@@ -50,6 +50,14 @@ export default function Sidebar() {
       path: "/maintenance",
       label: t("menu.maintenance"),
       icon: <FaWrench size={18} />,
+    });
+  }
+  if (isAdmin) {
+    menuItems.push({
+      id: "users",
+      path: "/usersManagement",
+      label: t("menu.usersManagement"),
+      icon: <FaUserCog size={18} />,
     });
   }
 

@@ -131,7 +131,8 @@
       "stations": "Stations",
       "bikes": "Bikes",
       "maintenance": "Maintenance",
-      "inbox": "Inbox"
+      "inbox": "Inbox",
+      "usersManagement": "Users Management"
     },
     "auth": {
       "login": "Sign in",

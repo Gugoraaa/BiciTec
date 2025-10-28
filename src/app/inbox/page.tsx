@@ -22,9 +22,6 @@ export default function MessagesPage() {
 
   const [messages, setMessages] = useState<MessageItemProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState("All Messages");
-  const [sortBy, setSortBy] = useState("Newest");
-  const [showUnreadOnly, setShowUnreadOnly] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<{
     remitente: string;
     titulo: string;
@@ -33,6 +30,9 @@ export default function MessagesPage() {
   } | null>(null);
 
   const [checkedMessages, setCheckedMessages] = useState<number[]>([]);
+  const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
+  const [filter, setFilter] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('newest');
 
   const handleCheckAll = (e: ChangeEvent<HTMLInputElement>) => {
     setMessages(messages.map((msg) => ({ ...msg, checked: e.target.checked })));
@@ -68,7 +68,17 @@ export default function MessagesPage() {
 
       const messagesData = Array.isArray(data) ? data : [];
 
-      const formattedMessages = messagesData.map((msg: any) => ({
+      interface MessageData {
+        id_mensaje: number;
+        remitente: string;
+        titulo: string;
+        cuerpo: string;
+        fecha: string;
+        tipo: string;
+        leido: number;
+      }
+
+      const formattedMessages = messagesData.map((msg: MessageData) => ({
         id: msg.id_mensaje,
         remitente: msg.tipo === 'news' 
           ? 'BiciTec News' 
@@ -98,17 +108,22 @@ export default function MessagesPage() {
   };
 
   useEffect(() => {
-    fetchMessages();
+    const loadMessages = async () => {
+      await fetchMessages();
+    };
+    loadMessages();
   }, []);
 
-  const allChecked =
-    messages.length > 0 &&
-    messages.every((msg) => checkedMessages.includes(msg.id));
+  const allChecked = messages.length > 0 && messages.every((msg) => checkedMessages.includes(msg.id));
 
   return (
     <>
+    
       <div className="min-h-screen bg-gray-900 text-white p-6">
         <div className="max-w-6xl mx-auto">
+          <h1 className="text-2xl font-bold mb-6">
+            {t("title")}
+          </h1>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
               <div className="relative">
