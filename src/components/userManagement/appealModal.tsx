@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IoClose, IoSearch } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 
 interface ReviewUserAppealProps {
   onClose: () => void;
@@ -35,7 +35,7 @@ export default function ReviewUserAppeal({ onClose }: ReviewUserAppealProps) {
             <div className="bg-gray-700 rounded-lg p-4 text-gray-300 text-sm leading-relaxed">
               My account was suspended for leaving a bike outside a designated
               zone. This was due to an emergency where I had to quickly get to
-              the health center. I've been a responsible user for two years and
+              the health center. I&apos;ve been a responsible user for two years and
               this is my first issue. I would appreciate it if you could
               reconsider the ban. Thank you.
             </div>

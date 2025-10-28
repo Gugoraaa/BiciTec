@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from "react";
-import { FaSearch, FaPlus, FaEllipsisV, FaExclamationTriangle, FaEnvelope, FaBan, FaCheckCircle } from "react-icons/fa";
+import { FaSearch, FaPlus, FaExclamationTriangle, FaBan, FaCheckCircle } from "react-icons/fa";
 import dynamic from 'next/dynamic';
 
 const IssueNewSanction = dynamic(() => import('@/components/userManagement/newSanction'), {
