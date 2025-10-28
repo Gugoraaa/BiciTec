@@ -30,7 +30,7 @@ export default function ReviewUserAppeal({ onClose }: ReviewUserAppealProps) {
           {/* User's Appeal Message */}
           <div>
             <h3 className="text-sm font-medium text-gray-300 mb-3">
-              User's Appeal Message
+              User&apos;s Appeal Message
             </h3>
             <div className="bg-gray-700 rounded-lg p-4 text-gray-300 text-sm leading-relaxed">
               My account was suspended for leaving a bike outside a designated
@@ -44,7 +44,7 @@ export default function ReviewUserAppeal({ onClose }: ReviewUserAppealProps) {
           {/* Administrator's Decision */}
           <div>
             <h3 className="text-sm font-medium text-gray-300 mb-3">
-              Administrator's Decision
+              Administrator&apos;s Decision
             </h3>
             <div className="flex bg-gray-700 border border-slate-800 rounded-xl mb-4 overflow-hidden">
               <button
