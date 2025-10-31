@@ -34,6 +34,6 @@ export interface AppealApiResponse {
   user?: {
     id: number;
   };
-  [key: string]: any; // For any additional properties that might come from the API
+  [key: string]: string | number | boolean | undefined | null | object; // More specific type for additional properties
 }
 

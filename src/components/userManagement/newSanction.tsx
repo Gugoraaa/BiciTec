@@ -105,12 +105,10 @@ export default function IssueNewSanction({
         }
       );
       
-      // Refresh the users list in the parent component
       if (onSanctionIssued) {
         onSanctionIssued();
       }
       onClose();
-      // Recargar la página después de un breve retraso para asegurar que el toast se muestre
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -130,7 +128,7 @@ export default function IssueNewSanction({
       );
     } finally {
       setIsSubmitting(false);
-    }
+    } 
   };
 
   return (
@@ -146,7 +144,6 @@ export default function IssueNewSanction({
           </button>
         </div>
 
-        {/* Select User */}
         <label className="block text-sm text-slate-400 mb-1">Select User</label>
         <div className="mb-4">
           <div className="relative">
@@ -213,7 +210,6 @@ export default function IssueNewSanction({
           )}
         </div>
 
-        {/* Type of Sanction */}
         <label className="block text-sm text-slate-400 mb-1">
           Type of Sanction
         </label>
@@ -240,7 +236,6 @@ export default function IssueNewSanction({
           </button>
         </div>
 
-        {/* Reason */}
         <label className="block text-sm text-slate-400 mb-1">
           Reason for Sanction
         </label>
@@ -252,7 +247,6 @@ export default function IssueNewSanction({
           className="w-full bg-gray-700 border border-slate-800 rounded-xl p-3 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[color:var(--bt-blue,#2563eb)]/40 mb-4"
         />
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}
