@@ -26,7 +26,6 @@ export default function MessageModal({ message, onClose }: MessageModalProps) {
     try {
       setIsSubmitting(true);
       await api.patch(`/messages/markAsRead/${message.id}`);
-      // Update the parent component that the message was read
       onClose();
     } catch (error) {
       console.error('Error marking message as read:', error);
@@ -40,7 +39,6 @@ export default function MessageModal({ message, onClose }: MessageModalProps) {
     
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-gray-800 rounded-lg max-w-lg w-full shadow-2xl relative">
-        {/* Header del modal */}
         <div className="flex items-start justify-between p-6 border-b border-gray-700">
           <div>
       

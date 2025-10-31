@@ -29,5 +29,11 @@ export interface AppealApiResponse {
   nombre: string;
   apellido: string;
   type?: string;
+  userId?: number;
+  usuarioId?: number;
+  user?: {
+    id: number;
+  };
+  [key: string]: any; // For any additional properties that might come from the API
 }
 

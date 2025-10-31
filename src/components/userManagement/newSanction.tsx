@@ -17,6 +17,7 @@ interface IssueNewSanctionProps {
   users: User[];
   onUserSelect: (userId: string) => void;
   adminId: string;
+  onSanctionIssued?: () => void;
 }
 
 export default function IssueNewSanction({
@@ -24,6 +25,7 @@ export default function IssueNewSanction({
   users,
   onUserSelect,
   adminId,
+  onSanctionIssued,
 }: IssueNewSanctionProps) {
   const [type, setType] = useState("Warning");
   const [reason, setReason] = useState("");
@@ -102,7 +104,16 @@ export default function IssueNewSanction({
           },
         }
       );
+      
+      // Refresh the users list in the parent component
+      if (onSanctionIssued) {
+        onSanctionIssued();
+      }
       onClose();
+      // Recargar la página después de un breve retraso para asegurar que el toast se muestre
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error("Error applying sanction:", error);
       toast.error(
@@ -218,7 +229,7 @@ export default function IssueNewSanction({
             Warning
           </button>
           <button
-            onClick={() => setType("Ban")}
+            onClick={() => setType("Banned")}
             className={`flex-1 py-2 text-sm font-medium ${
               type === "Ban"
                 ? "bg-[color:var(--bt-blue,#2563eb)] text-white"

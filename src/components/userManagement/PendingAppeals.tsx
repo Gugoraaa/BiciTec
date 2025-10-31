@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaSpinner } from "react-icons/fa";
 import api from "@/lib/api";
-import { Appeal } from "@/types/userManagement";
+import { Appeal, AppealApiResponse } from "@/types/userManagement";
 
 interface PendingAppealsProps {
   onReview: (appealId: number, appealText: string, appealerId: number) => void;
@@ -28,27 +28,30 @@ export default function PendingAppeals({
         const data = response.data;
         
         
-        const formattedAppeals = data.map((appeal: any) => {
+        const formattedAppeals = data.map((appeal: AppealApiResponse) => {
+          // Safely extract the user ID from various possible properties
+          const userId = appeal.userId || appeal.usuarioId || appeal.user?.id || 0;
           
-          console.log('Processing appeal:', appeal);
-          
-          const userId = appeal.userId || appeal.usuarioId || appeal.user?.id || appeal.userId;
-          
-          console.log(`Appeal ID: ${appeal.id}, Extracted User ID: ${userId}`);
-          
-          return {
-            ...appeal,
+          // Create a properly typed appeal object
+          const formattedAppeal: Appeal = {
+            id: appeal.id,
+            mensaje: appeal.mensaje,
+            fecha: appeal.fecha,
+            nombre: appeal.nombre,
+            apellido: appeal.apellido,
+            userId: userId,
+            type: appeal.type || "Appeal",
             who: `${appeal.nombre || ''} ${appeal.apellido || ''}`.trim() || 'Usuario desconocido',
             text: appeal.mensaje || '',
-            userId: userId || 0, // Default to 0 if no user ID found (shouldn't happen)
             when: new Date(appeal.fecha).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               hour: "2-digit",
               minute: "2-digit",
-            }),
-            type: appeal.type || "Appeal",
+            })
           };
+          
+          return formattedAppeal;
         });
         setAppeals(formattedAppeals);
       } catch (err) {

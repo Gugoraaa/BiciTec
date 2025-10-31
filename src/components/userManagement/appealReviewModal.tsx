@@ -6,7 +6,7 @@ interface ReviewUserAppealProps {
   onClose: () => void;
   appealId: number;
   appealText: string;
-  userId: number;  // Changed from string to number
+  userId: number;
   adminId: string;
   onSuccess?: () => void;
 }
@@ -31,12 +31,11 @@ export default function ReviewUserAppeal({
     try {
       setIsSubmitting(true);
       
-      // The appealId here is the ID of the appeal record, not the user ID
       const response = await api.patch(`/user/updateAppeal/${appealId}`, {
         description: message.trim(),
         state: type,
-        adminId: adminId,       // The ID of the admin making the decision
-        userId: userId,         // The ID of the user who made the appeal
+        adminId: adminId,       
+        userId: userId,         
       });
 
       alert('La decisión ha sido guardada exitosamente');
@@ -53,7 +52,6 @@ export default function ReviewUserAppeal({
   return (
     <div className="  flex items-center justify-center p-4">
       <div className="bg-gray-800 rounded-lg w-full max-w-md shadow-xl">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-700">
           <h2 className="text-xl font-semibold text-white">
             Revisar Apelación
@@ -66,9 +64,7 @@ export default function ReviewUserAppeal({
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6 space-y-6">
-          {/* User's Appeal Message */}
           <div>
             <h3 className="text-sm font-medium text-gray-300 mb-3">
               Mensaje de Apelación
@@ -81,7 +77,6 @@ export default function ReviewUserAppeal({
             </div>
           </div>
 
-          {/* Administrator's Decision */}
           <div>
             <h3 className="text-sm font-medium text-gray-300 mb-3">
               Decisión del Administrador
@@ -119,7 +114,6 @@ export default function ReviewUserAppeal({
               </button>
             </div>
 
-            {/* Message to User */}
             <div>
               <label className="block text-xs text-gray-400 mb-2">
                 Mensaje para el Usuario
@@ -135,7 +129,6 @@ export default function ReviewUserAppeal({
           </div>
         </div>
 
-        {/* Footer */}
         <div className="flex justify-end gap-3 p-6 border-t border-gray-700">
           <button
             onClick={onClose}
