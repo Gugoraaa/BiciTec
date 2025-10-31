@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent } from "react";
-import MessageItem from "@/components/inbox/messageItem";
+import { useState, useEffect } from "react";
 import MessageModal from "@/components/inbox/messageBox";
 import { MessageItemProps } from "@/types/inbox";
 import { FaBan, FaNewspaper } from "react-icons/fa";
@@ -39,16 +38,6 @@ export default function MessagesPage() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [sortBy, setSortBy] = useState<SortType>('newest');
 
-  const handleCheckAll = (e: ChangeEvent<HTMLInputElement>) => {
-    setMessages(messages.map((msg) => ({ ...msg, checked: e.target.checked })));
-  };
-
-  const handleCheckMessage = (id: number) => {
-    setCheckedMessages((prev) =>
-      prev.includes(id) ? prev.filter((msgId) => msgId !== id) : [...prev, id]
-    );
-  };
-
 
   const openMessage = (message: MessageItemProps) => {
     setSelectedMessage({
@@ -62,7 +51,6 @@ export default function MessagesPage() {
     });
   };
 
-  // Update message read status in the messages list
   const updateMessageReadStatus = (messageId: number) => {
     setMessages(prevMessages => 
       prevMessages.map(msg => 
@@ -129,7 +117,6 @@ export default function MessagesPage() {
     loadMessages();
   }, []);
 
-  const allChecked = messages.length > 0 && messages.every((msg) => checkedMessages.includes(msg.id));
 
   return (
     <>

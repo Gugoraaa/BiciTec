@@ -2,6 +2,7 @@ import { useState } from 'react';
 import api from '@/lib/api';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
+import toast from 'react-hot-toast';
 
 interface SendMessageModalProps {
   isOpen: boolean;
@@ -22,8 +23,12 @@ export default function SendMessageModal({ isOpen, onClose }: SendMessageModalPr
     setIsSending(true);
     try {     
       await api.post('/messages/sendMessage', { title, body, sender:user?.id,type: "news" });
-      handleClose();
+      toast.success("Mensaje enviado correctamente");
+      setTimeout(() => {
+        onClose();
+      }, 2000);
     } catch (error) {
+      toast.error("Error al enviar el mensaje");
       console.error('Failed to send message:', error);
     } finally {
       setIsSending(false);

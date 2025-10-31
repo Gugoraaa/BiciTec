@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import api from "@/lib/api";
+import toast from "react-hot-toast";
 
 interface ReviewUserAppealProps {
   onClose: () => void;
@@ -24,7 +25,7 @@ export default function ReviewUserAppeal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   async function handleSubmit() {
     if (!message.trim()) {
-      alert('Por favor ingresa un mensaje explicando tu decisión');
+      toast.error('Por favor ingresa un mensaje explicando tu decisión');
       return;
     }
 
@@ -38,13 +39,15 @@ export default function ReviewUserAppeal({
         userId: userId,         
       });
 
-      alert('La decisión ha sido guardada exitosamente');
+      toast.success('La decisión ha sido guardada exitosamente');
       onSuccess?.();
-      onClose();
+      setTimeout(() => {
+        onClose();
+      }, 2000);
     } catch (error) {
       console.error('Error al actualizar la apelación:', error);
       const errorMessage = error instanceof Error ? error.message : 'Error al guardar la decisión';
-      alert(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

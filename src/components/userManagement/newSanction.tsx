@@ -52,58 +52,28 @@ export default function IssueNewSanction({
     e.preventDefault();
 
     if (!selectedUser) {
-      toast.error("Por favor selecciona un usuario", {
-        style: {
-          background: "#1F2937",
-          color: "#F3F4F6",
-          border: "1px solid #374151",
-          borderRadius: "0.5rem",
-          padding: "0.75rem 1rem",
-        },
-      });
+      toast.error("Por favor selecciona un usuario");
       return;
     }
 
     if (!reason.trim()) {
-      toast.error("Por favor ingresa una razón para la sanción", {
-        style: {
-          background: "#1F2937",
-          color: "#F3F4F6",
-          border: "1px solid #374151",
-          borderRadius: "0.5rem",
-          padding: "0.75rem 1rem",
-        },
-      });
+      toast.error("Por favor ingresa una razón para la sanción");
       return;
     }
 
     try {
       setIsSubmitting(true);
-
       const sanctionData = {
         state: type.toLowerCase(),
         body: reason,
         adminId: adminId,
         type: "account_notification",
       };
-
       await api.patch(
         `/user/updateUserState/${selectedUser.id}`,
         sanctionData
       );
-
-      toast.success(
-        `Usuario ${type === "Warning" ? "advertido" : "baneado"} correctamente`,
-        {
-          style: {
-            background: "#1F2937",
-            color: "#F3F4F6",
-            border: "1px solid #374151",
-            borderRadius: "0.5rem",
-            padding: "0.75rem 1rem",
-          },
-        }
-      );
+      toast.success(`Usuario ${type === "Warning" ? "advertido" : "baneado"} correctamente`);
       
       if (onSanctionIssued) {
         onSanctionIssued();
@@ -114,21 +84,10 @@ export default function IssueNewSanction({
       }, 1000);
     } catch (error) {
       console.error("Error applying sanction:", error);
-      toast.error(
-        "Error al aplicar la sanción. Por favor, inténtalo de nuevo.",
-        {
-          style: {
-            background: "#1F2937",
-            color: "#F3F4F6",
-            border: "1px solid #374151",
-            borderRadius: "0.5rem",
-            padding: "0.75rem 1rem",
-          },
-        }
-      );
+      toast.error("Error al aplicar la sanción. Por favor, inténtalo de nuevo.");
     } finally {
       setIsSubmitting(false);
-    } 
+    }
   };
 
   return (
@@ -144,6 +103,7 @@ export default function IssueNewSanction({
           </button>
         </div>
 
+        {/* Select User */}
         <label className="block text-sm text-slate-400 mb-1">Select User</label>
         <div className="mb-4">
           <div className="relative">
@@ -210,11 +170,13 @@ export default function IssueNewSanction({
           )}
         </div>
 
+        {/* Type of Sanction */}
         <label className="block text-sm text-slate-400 mb-1">
           Type of Sanction
         </label>
         <div className="flex bg-gray-700 border border-slate-800 rounded-xl mb-4 overflow-hidden">
           <button
+            type="button"
             onClick={() => setType("Warning")}
             className={`flex-1 py-2 text-sm font-medium ${
               type === "Warning"
@@ -225,9 +187,10 @@ export default function IssueNewSanction({
             Warning
           </button>
           <button
+            type="button"
             onClick={() => setType("Banned")}
             className={`flex-1 py-2 text-sm font-medium ${
-              type === "Ban"
+              type === "Banned"
                 ? "bg-[color:var(--bt-blue,#2563eb)] text-white"
                 : "text-slate-300 hover:bg-slate-800"
             }`}
@@ -236,6 +199,7 @@ export default function IssueNewSanction({
           </button>
         </div>
 
+        {/* Reason */}
         <label className="block text-sm text-slate-400 mb-1">
           Reason for Sanction
         </label>
@@ -247,6 +211,7 @@ export default function IssueNewSanction({
           className="w-full bg-gray-700 border border-slate-800 rounded-xl p-3 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[color:var(--bt-blue,#2563eb)]/40 mb-4"
         />
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}

@@ -66,7 +66,7 @@ export default function MessageModal({ message, onClose }: MessageModalProps) {
             {message.fecha}
           </div>
           <div className="flex gap-3">
-            {message.tipo === 'sanction' && (
+            {message.tipo === 'account_notification' && (
               <button
                 onClick={() => setShowAppealModal(true)}
                 className="px-4 py-2 border border-amber-500 text-amber-500 rounded hover:bg-amber-500/10 transition-colors"

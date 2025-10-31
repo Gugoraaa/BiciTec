@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from "react";
 import { IoClose } from "react-icons/io5";
 import api from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
+import toast from "react-hot-toast";
 
 interface AppealModalProps {
   onClose: () => void;
@@ -19,7 +20,7 @@ export default function AppealModal({ onClose, appealId, appealText, userId }: A
     e.preventDefault();
     
     if (!message.trim()) {  
-      alert('Por favor ingresa un mensaje');
+      toast.error('Por favor ingresa un mensaje');
       return;
     }
 
@@ -32,12 +33,14 @@ export default function AppealModal({ onClose, appealId, appealText, userId }: A
         description: message.trim(),
       });
       
-      alert('Tu apelación ha sido enviada correctamente');
-      onClose();
+      toast.success('Tu apelación ha sido enviada correctamente');
+      setTimeout(() => {
+        onClose();
+      }, 2000);
       
     } catch (error) {
       console.error('Error al enviar la apelación:', error);
-      alert('Ocurrió un error al enviar la apelación. Por favor intenta de nuevo.');
+      toast.error('Ocurrió un error al enviar la apelación. Por favor intenta de nuevo.');
     } finally {
       setIsSubmitting(false);
     }

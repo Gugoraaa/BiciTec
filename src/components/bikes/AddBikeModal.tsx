@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { BikeStation } from '@/types/bike';
 import { ImCross } from 'react-icons/im';
+import toast from 'react-hot-toast';
 
 interface AddBikeModalProps {
   isOpen: boolean;
@@ -28,7 +29,13 @@ export default function AddBikeModal({ isOpen, onClose, onAddBike, stations }: A
         station: selectedStation,
         size: selectedSize
       });
-      onClose();
+      toast.success("Bicicleta agregada correctamente");
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } catch (error) {
+      toast.error("Error al agregar la bicicleta");
+      console.error('Error adding bike:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -45,7 +52,7 @@ export default function AddBikeModal({ isOpen, onClose, onAddBike, stations }: A
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-slate-800 rounded-lg w-full max-w-md p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-white">{t('addBike')}</h2>

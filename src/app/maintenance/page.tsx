@@ -12,6 +12,7 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import api from "@/lib/api";
 import { useTranslations } from "next-intl";
 import { mapApiResponseToTickets } from "@/components/maintenance/mapApiResponseToTickets";
+import toast from 'react-hot-toast';
 
 function BikeMaintenanceDashboard() {
   const [filter, setFilter] = useState<Status | "All">("All");
@@ -92,8 +93,10 @@ function BikeMaintenanceDashboard() {
       );
       await api.patch(`/reports/${id}/status`, { status: newStatus });
       await api.patch(`/reports/${id}/priority`, { priority: newPriority });
+      toast.success("Ticket actualizado correctamente");
     } catch (err) {
       console.error("Error updating ticket:", err);
+      toast.error("Error al actualizar el ticket");
     }
   };
 
@@ -101,7 +104,9 @@ function BikeMaintenanceDashboard() {
     try {
       setTickets((prev) => prev.filter((t) => t.id !== id));
       await api.delete(`/reports/deleteReport/${id}`);
+      toast.success("Ticket eliminado correctamente");
     } catch (err) {
+      toast.error("Error al eliminar el ticket");
       console.error("Error deleting ticket:", err);
     }
   };

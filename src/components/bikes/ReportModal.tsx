@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { FaTimes, FaCheck, FaExclamationCircle } from 'react-icons/fa';
 import { useTranslations } from "next-intl";
-
+import toast from 'react-hot-toast';
 export default function ReportModal({ 
   isOpen, 
   onClose,
@@ -18,8 +18,6 @@ export default function ReportModal({
   const [selectedBike, setSelectedBike] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showAuthError, setShowAuthError] = useState(false);
   const t = useTranslations("ReportModal");
 
   if (!isOpen) return null;
@@ -34,12 +32,10 @@ export default function ReportModal({
       const result = await Promise.resolve(onSubmit(selectedBike, description));
       
       if (result === false) {
-        setShowAuthError(true);
-        setTimeout(() => setShowAuthError(false), 3000);
+        toast.error("Error al enviar el reporte");
       } else {
-        setShowSuccess(true);
+        toast.success("Reporte enviado correctamente");
         setTimeout(() => {
-          setShowSuccess(false);
           onClose();
         }, 2000);
       }
@@ -65,24 +61,7 @@ export default function ReportModal({
         
         <h2 className="text-xl font-semibold text-white mb-4">{t("title")}</h2>
         
-        {showSuccess ? (
-          <div className="text-center py-8">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 mb-4">
-              <FaCheck className="h-8 w-8 text-green-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">{t("submited")}</h3>
-            <p className="text-slate-300">{t("submitedText")}</p>
-          </div>
-        ) : showAuthError ? (
-          <div className="text-center py-8">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20 mb-4">
-              <FaExclamationCircle className="h-8 w-8 text-red-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">{t("authError")} </h3>
-            <p className="text-slate-300">{t("authErrorText")}</p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="bike-select" className="block text-sm font-medium text-gray-300 mb-1">
               {t("bikeSelect")}
@@ -101,7 +80,6 @@ export default function ReportModal({
                 </option>
               ))}
             </select>
-          </div>
           
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-1">
@@ -135,9 +113,9 @@ export default function ReportModal({
               {isSubmitting ? t("submitting") : t("submitReport")}
             </button>
           </div>
-        </form>
-        )}
-      </div>
+        </div>
+      </form>
     </div>
+  </div>  
   );
 }
