@@ -37,6 +37,8 @@ export default function MessagesPage() {
   
   const [filter, setFilter] = useState<FilterType>('all');
   const [sortBy, setSortBy] = useState<SortType>('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const messagesPerPage = 10;
 
 
   const openMessage = (message: MessageItemProps) => {
@@ -117,6 +119,34 @@ export default function MessagesPage() {
     loadMessages();
   }, []);
 
+  const filteredAndSortedMessages = messages
+    .filter(msg => {
+      if (filter === 'all') return true;
+      if (filter === 'unread') return !msg.leido;
+      if (filter === 'news') return msg.tipo === 'news';
+      if (filter === 'notification') return msg.tipo === 'account_notification';
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'newest') return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+      if (sortBy === 'oldest') return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+      if (sortBy === 'sender') return a.remitente.localeCompare(b.remitente);
+      return 0;
+    });
+
+  // Get current messages
+  const indexOfLastMessage = currentPage * messagesPerPage;
+  const indexOfFirstMessage = indexOfLastMessage - messagesPerPage;
+  const currentMessages = filteredAndSortedMessages.slice(indexOfFirstMessage, indexOfLastMessage);
+  const totalPages = Math.ceil(filteredAndSortedMessages.length / messagesPerPage);
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Reset to first page when filter or sort changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, sortBy]);
 
   return (
     <>
@@ -188,21 +218,7 @@ export default function MessagesPage() {
               </div>
             ) : (
               <div className="divide-y divide-gray-700">
-                {messages
-              .filter(msg => {
-                if (filter === 'all') return true;
-                if (filter === 'unread') return !msg.leido;
-                if (filter === 'news') return msg.tipo === 'news';
-                if (filter === 'notification') return msg.tipo === 'account_notification';
-                return true;
-              })
-              .sort((a, b) => {
-                if (sortBy === 'newest') return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
-                if (sortBy === 'oldest') return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
-                if (sortBy === 'sender') return a.remitente.localeCompare(b.remitente);
-                return 0;
-              })
-              .map((msg) => (
+                {currentMessages.map((msg) => (
                   <div 
                     key={msg.id} 
                     className={`grid grid-cols-12 gap-4 p-4 hover:bg-gray-750 transition-colors cursor-pointer relative ${!msg.leido ? 'bg-gray-900/50' : ''}`}
@@ -233,6 +249,78 @@ export default function MessagesPage() {
                     </div>
                   </div>
                 ))}
+                
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-gray-700">
+                    <div className="mb-2 sm:mb-0 text-sm text-gray-400">
+                      Mostrando {Math.min(indexOfFirstMessage + 1, filteredAndSortedMessages.length)}-{Math.min(indexOfLastMessage, filteredAndSortedMessages.length)} de {filteredAndSortedMessages.length} mensajes
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <button
+                        onClick={() => paginate(1)}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                        aria-label="Primera página"
+                      >
+                        «
+                      </button>
+                      <button
+                        onClick={() => paginate(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                        aria-label="Página anterior"
+                      >
+                        ‹
+                      </button>
+                      
+                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                        let pageNum;
+                        if (totalPages <= 5) {
+                          pageNum = i + 1;
+                        } else if (currentPage <= 3) {
+                          pageNum = i + 1;
+                        } else if (currentPage >= totalPages - 2) {
+                          pageNum = totalPages - 4 + i;
+                        } else {
+                          pageNum = currentPage - 2 + i;
+                        }
+                        
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => paginate(pageNum)}
+                            className={`w-10 h-8 rounded-md ${
+                              currentPage === pageNum
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-800 text-white hover:bg-gray-700'
+                            }`}
+                            aria-current={currentPage === pageNum ? 'page' : undefined}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      })}
+                      
+                      <button
+                        onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                        aria-label="Siguiente página"
+                      >
+                        ›
+                      </button>
+                      <button
+                        onClick={() => paginate(totalPages)}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                        aria-label="Última página"
+                      >
+                        »
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
