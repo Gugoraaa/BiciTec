@@ -2,8 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { FaBiking, FaWrench } from "react-icons/fa";
-import { MdOutlineLocationOn, MdOutlineFactory } from "react-icons/md";
+import { FaBiking, FaWrench, FaUserCog } from "react-icons/fa";
+import { MdOutlineLocationOn, MdOutlineFactory,MdOutlineMessage  } from "react-icons/md";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import UserMenu from "./auth/UserMenu";
@@ -35,6 +35,12 @@ export default function Sidebar() {
       label: t("menu.bikes"),
       icon: <FaBiking size={18} />,
     },
+    {
+      id: "inbox",
+      path: "/inbox",
+      label: t("menu.inbox"),
+      icon: <MdOutlineMessage size={18} />,
+    },
   ];
 
   // Solo agregar mantenimiento si es admin
@@ -44,6 +50,14 @@ export default function Sidebar() {
       path: "/maintenance",
       label: t("menu.maintenance"),
       icon: <FaWrench size={18} />,
+    });
+  }
+  if (isAdmin) {
+    menuItems.push({
+      id: "users",
+      path: "/usersManagement",
+      label: t("menu.usersManagement"),
+      icon: <FaUserCog size={18} />,
     });
   }
 

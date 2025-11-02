@@ -5,24 +5,24 @@ import { StationRow } from "@/types/stations";
 import api from "@/lib/api";
 import { FaCheck } from "react-icons/fa";
 import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
+
 
 type StationStatus = "Operational" | "Offline";
 
 interface ManageStationsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (stationId: string, status: StationStatus) => void;
 }
 
 export default function ManageStationsModal({
   isOpen,
   onClose,
-  onSave,
 }: ManageStationsModalProps) {
   const [selectedStationId, setSelectedStationId] = useState<string>("");
   const [status, setStatus] = useState<StationStatus>("Operational");
   const [stations, setStations] = useState<StationRow[]>([]);
-  const [showSuccess, setShowSuccess] = useState(false);
+
   const t = useTranslations("StationsModal");
   const fetchStations = async () => {
     try {
@@ -67,7 +67,6 @@ export default function ManageStationsModal({
     if (!selectedStationId) return;
 
     try {
-      // Update the station status via API
       const response = await api.patch(
         `/stations/updateStatus/${selectedStationId}`,
         {
@@ -76,16 +75,17 @@ export default function ManageStationsModal({
       );
 
       if (response.status === 200) {
-        onSave(selectedStationId, status);
-        setShowSuccess(true);
+        toast.success("Estado de la estación actualizado correctamente");
         setTimeout(() => {
           onClose();
           window.location.reload();
         }, 2000);
       } else {
+        toast.error("Error al actualizar el estado de la estación");
         console.error("Failed to update station status:", response.data);
       }
     } catch (error) {
+      toast.error("Error al actualizar el estado de la estación");
       console.error("Error updating station status:", error);
     }
 
@@ -100,15 +100,7 @@ export default function ManageStationsModal({
         <h3 className="text-xl font-semibold text-white mb-4">
           {t("title")}
         </h3>
-        {showSuccess ? (
-          <div className="text-center py-8">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 mb-4">
-              <FaCheck className="h-8 w-8 text-green-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">{t("success")}</h3>
-            <p className="text-slate-300">{t("successText")}</p>
-          </div>
-        ) : (
+        
           <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             {/* Selector de estación + badge de estado actual */}
@@ -164,7 +156,6 @@ export default function ManageStationsModal({
             </button>
           </div>
         </form>
-        )}
       </div>
     </div>
   );

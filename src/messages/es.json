@@ -131,7 +131,9 @@
       "overview": "Resumen",
       "stations": "Estaciones",
       "bikes": "Bicicletas",
-      "maintenance": "Mantenimiento"
+      "maintenance": "Mantenimiento",
+      "inbox":"Noticias",
+      "usersManagement": "Gestionar usuarios"
     },
     "auth": {
       "login": "Iniciar sesión",
@@ -220,11 +222,48 @@
     "distance": "Distancia (km)"
   },
   "noTrips": "No hay viajes registrados para esta bicicleta."
-}
-
-
-
-  
+},
+  "Inbox": {
+    "Inbox": "Noticias",
+    "title": "Bandeja de entrada",
+    "loading": "Cargando bandeja de entrada...",
+    "error": "No se pudo cargar la bandeja de entrada",
+    "empty": "No se encontraron mensajes",
+    "columns": {
+      "sender": "Remitente",
+      "subject": "Asunto y resumen",
+      "timestamp": "Fecha"
+    },
+    "senderOptions": {
+      "BiciTec": "Administrador del sistema BiciTec",
+      "News": "Noticias de BiciTec",
+      "AccountNotification": "Notificación de cuenta"
+    },
+    "sortBy": {
+      "Newest": "Más recientes",
+      "Oldest": "Más antiguos",
+      "Sender": "Remitente"
+    },
+    "show": {
+      "AllMessages": "Todos los mensajes",
+      "Unread": "No leídos",
+      "News": "Noticias",
+      "AccountNotification": "Advertencias"
+    },
+    "SendNew": "Enviar noticia",
+    "SendNewBox":{
+      "title":"Enviar noticia",
+      "NewTitle":"Titulo",
+      "NewBody":"Cuerpo",
+      "NewSend":"Enviar",
+      "NewTitlePlaceholder":"Escribe el titulo de tu noticia",
+      "NewBodyPlaceholder":"Escribe tu noticia aqui",
+      "Cancel":"Cancelar",
+      "send": "Enviar",
+    "sending": "Enviando..."
+    }
+    
+  }
 }
 
 
