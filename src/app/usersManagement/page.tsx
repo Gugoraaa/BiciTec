@@ -1,6 +1,7 @@
 'use client'
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 import api from '@/lib/api';
 import { useAuth } from "@/contexts/AuthContext";
 import PendingAppeals from "@/components/userManagement/PendingAppeals";
@@ -24,6 +25,7 @@ export default function UserSanctionsBiciTecSkin() {
   const [users, setUsers] = useState<UserManagement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations("UserManagement");
   const [isNewSanctionOpen, setIsNewSanctionOpen] = useState(false);
   const [isAppealModalOpen, setIsAppealModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,8 +41,8 @@ export default function UserSanctionsBiciTecSkin() {
         const users = formattedUsers(response.data);
         setUsers(users);
       } catch (err) {
-        console.error('Error fetching users:', err);
-        setError('Failed to load users. Please try again later.');
+        console.error(t('errorFetchingUsers'), err);
+        setError(t('errorLoadingUsers'));
       } finally {
         setIsLoading(false);
       }
@@ -58,7 +60,7 @@ export default function UserSanctionsBiciTecSkin() {
       who: 'who' in appeal ? appeal.who : `${appeal.nombre} ${appeal.apellido}`,
       text: 'text' in appeal ? appeal.text : appeal.mensaje,
       userId: userIdNum, 
-      when: 'when' in appeal ? appeal.when : new Date(appeal.fecha).toLocaleDateString('en-US', {
+      when: 'when' in appeal ? appeal.when : new Date(appeal.fecha).toLocaleDateString(undefined, {
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
@@ -77,12 +79,12 @@ export default function UserSanctionsBiciTecSkin() {
     <div className="min-h-screen w-full text-slate-100">
       
       <header className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">User Sanctions Management</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">{t('title')}</h1>
         <button
           onClick={() => setIsNewSanctionOpen(true)}
           className="inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-[color:var(--bt-blue,#2563eb)] hover:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-[color:var(--bt-blue,#2563eb)]/40"
         >
-          <FaPlus className="w-4 h-4" /> New Sanction
+          <FaPlus className="w-4 h-4" /> {t('newSanctionButton')}
         </button>
       </header>
 

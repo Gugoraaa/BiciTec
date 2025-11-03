@@ -168,6 +168,27 @@
     }
   },
    
+  "AppealModal": {
+    "title": "Enviar Apelación",
+    "appealMessage": "Tu mensaje de apelación",
+    "explanationLabel": "Explica por qué deberíamos reconsiderar",
+    "messagePlaceholder": "Escribe tu mensaje aquí...",
+    "noMessage": "No se proporcionó un mensaje de apelación.",
+    "cancelButton": "Cancelar",
+    "submitButton": "Enviar Apelación",
+    "submitting": "Enviando...",
+    "success": "Tu apelación ha sido enviada correctamente",
+    "error": "Ocurrió un error al enviar la apelación. Por favor intenta de nuevo.",
+    "validationError": "Por favor ingresa un mensaje"
+  },
+  "MessageBox": {
+    "from": "De:",
+    "closeButton": "Cerrar",
+    "appealButton": "Apelar Sanción",
+    "markAsReadButton": "Marcar como Leído y Cerrar",
+    "marking": "Marcando...",
+    "errorMarkingAsRead": "Error al marcar el mensaje como leído:"
+  },
   "StatusFilter": {
     "label": "Filtrar por estado",
     "options": {
@@ -223,6 +244,101 @@
   },
   "noTrips": "No hay viajes registrados para esta bicicleta."
 },
+  "AppealReviewModal": {
+    "title": "Revisar Apelación",
+    "appealMessage": "Mensaje de Apelación",
+    "noMessage": "No se proporcionó mensaje de apelación.",
+    "appealId": "ID de Apelación",
+    "adminDecision": "Decisión del Administrador",
+    "decisionOptions": {
+      "ok": "Aprobar",
+      "warning": "Advertencia",
+      "ban": "Suspender"
+    },
+    "userMessageLabel": "Mensaje para el Usuario",
+    "userMessagePlaceholder": "Explica tu decisión al usuario...",
+    "cancelButton": "Cancelar",
+    "saveButton": "Guardar Decisión",
+    "savingButton": "Guardando...",
+    "errors": {
+      "emptyMessage": "Por favor ingresa un mensaje explicando tu decisión"
+    },
+    "success": "La decisión ha sido guardada exitosamente"
+  },
+  "PendingAppeals": {
+    "title": "Apelaciones Pendientes",
+    "noAppeals": "No hay apelaciones pendientes",
+    "reviewButton": "Revisar",
+    "loadingError": "Error al cargar las apelaciones. Por favor, inténtalo de nuevo más tarde.",
+    "unknownUser": "Usuario desconocido",
+    "loading": "Cargando..."
+  },
+  "NewSanction": {
+    "title": "Emitir Nueva Sanción",
+    "selectUser": "Seleccionar Usuario",
+    "searchPlaceholder": "Buscar por nombre o ID...",
+    "noUsersFound": "No se encontraron usuarios",
+    "typeOfSanction": "Tipo de Sanción",
+    "warning": "Advertencia",
+    "ban": "Suspensión",
+    "reasonLabel": "Razón de la Sanción",
+    "reasonPlaceholder": "Ingresa la razón de la sanción...",
+    "cancelButton": "Cancelar",
+    "submitButton": "Aplicar Sanción",
+    "submitting": "Procesando...",
+    "errors": {
+      "selectUser": "Por favor selecciona un usuario",
+      "enterReason": "Por favor ingresa una razón para la sanción"
+    },
+    "success": {
+      "warning": "Usuario advertido correctamente",
+      "banned": "Usuario suspendido correctamente"
+    },
+    "error": "Error al aplicar la sanción. Por favor, inténtalo de nuevo.",
+    "userInfo": {
+      "id": "ID"
+    }
+  },
+  "StatusPill": {
+    "ok": "Activo",
+    "warning": "Advertencia",
+    "banned": "Suspendido"
+  },
+  "UsersTable": {
+    "searchPlaceholder": "Buscar por ID de estudiante...",
+    "filterButtons": {
+      "all": "Todos",
+      "banned": "Suspendidos",
+      "warning": "Advertencia",
+      "ok": "Activos"
+    },
+    "columns": {
+      "userId": "ID de Usuario",
+      "name": "Nombre",
+      "lastName": "Apellido",
+      "status": "Estado",
+      "creationDate": "Fecha de Creación"
+    },
+    "loading": "Cargando...",
+    "noUsers": "No se encontraron usuarios"
+  },
+  "UserManagement": {
+    "title": "Gestión de Sanciones de Usuarios",
+    "newSanctionButton": "Nueva Sanción",
+    "errorLoadingUsers": "Error al cargar los usuarios. Por favor, inténtalo de nuevo más tarde.",
+    "errorFetchingUsers": "Error al obtener los usuarios:",
+    "appeal": {
+      "id": "ID",
+      "message": "Mensaje",
+      "date": "Fecha",
+      "user": "Usuario"
+    }
+  },
+  "SendMessageModal": {
+    "success": "Mensaje enviado correctamente",
+    "error": "Error al enviar el mensaje",
+    "validationError": "Por favor completa todos los campos"
+  },
   "Inbox": {
     "Inbox": "Noticias",
     "title": "Bandeja de entrada",

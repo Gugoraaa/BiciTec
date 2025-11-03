@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaSpinner } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 import api from "@/lib/api";
 import { Appeal, AppealApiResponse } from "@/types/userManagement";
 
@@ -15,6 +16,7 @@ export default function PendingAppeals({
   className = "",
 }: PendingAppealsProps) {
   const { user } = useAuth();
+  const t = useTranslations("PendingAppeals");
   const [appeals, setAppeals] = useState<Appeal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,9 +43,9 @@ export default function PendingAppeals({
             apellido: appeal.apellido,
             userId: userId,
             type: appeal.type || "Appeal",
-            who: `${appeal.nombre || ''} ${appeal.apellido || ''}`.trim() || 'Usuario desconocido',
+            who: `${appeal.nombre || ''} ${appeal.apellido || ''}`.trim() || t('unknownUser'),
             text: appeal.mensaje || '',
-            when: new Date(appeal.fecha).toLocaleDateString("en-US", {
+            when: new Date(appeal.fecha).toLocaleDateString(undefined, {
               month: "short",
               day: "numeric",
               hour: "2-digit",
@@ -56,7 +58,7 @@ export default function PendingAppeals({
         setAppeals(formattedAppeals);
       } catch (err) {
         console.error("Error fetching appeals:", err);
-        setError("Failed to load appeals. Please try again later.");
+        setError(t('loadingError'));
       } finally {
         setIsLoading(false);
       }
@@ -72,7 +74,7 @@ export default function PendingAppeals({
       className={`h-fit bg-slate-900/60 border border-slate-800 rounded-2xl p-4 lg:sticky lg:top-6 ${className}`}
     >
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-lg font-semibold">Pending Appeals</h2>
+        <h2 className="text-lg font-semibold">{t('title')}</h2>
         <span className="inline-flex items-center justify-center size-6 rounded-full text-xs font-medium bg-[color:var(--bt-blue,#2563eb)]/20 text-[color:var(--bt-blue,#2563eb)]">
           {appeals.length}
         </span>
@@ -80,8 +82,9 @@ export default function PendingAppeals({
 
       <div className="space-y-4">
         {isLoading ? (
-          <div className="flex justify-center py-4">
-            <FaSpinner className="animate-spin text-blue-500 text-xl" />
+          <div className="flex items-center justify-center gap-2 py-4 text-blue-500">
+            <FaSpinner className="animate-spin text-xl" />
+            <span>{t('loading')}</span>
           </div>
         ) : error ? (
           <div className="text-red-400 text-center p-4">{error}</div>
@@ -105,13 +108,13 @@ export default function PendingAppeals({
                 onClick={() => onReview(appeal.id, appeal.text, appeal.userId)}
                 className="mt-4 w-full rounded-xl bg-[color:var(--bt-blue,#2563eb)] py-2 text-sm font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[color:var(--bt-blue,#2563eb)]/40 transition-opacity"
               >
-                Review
+                {t('reviewButton')}
               </button>
             </div>
           ))
         ) : (
           <div className="text-center py-4 text-slate-400">
-            No pending appeals
+            {t('noAppeals')}
           </div>
         )}
       </div>
