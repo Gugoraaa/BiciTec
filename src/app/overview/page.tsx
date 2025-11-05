@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import StatCard from "@/components/overview/StatCard"; 
-import StationCapacityCard from "@/components/stations/StationCapacityCard";
+import StatCard from "@/components/overview/StatCard";
+import StationCapacityCard from "@/components/overview/StationCapacityCard";
 import LiveUtilizationChart from "@/components/overview/LiveUtilizationChart";
 import { FaSpinner } from "react-icons/fa";
 import api from "@/lib/api";
-import { useTranslations } from "next-intl"; 
-
+import { useTranslations } from "next-intl";
 
 interface OverviewData {
   totalBikes: number;
@@ -21,17 +20,17 @@ export default function Overview() {
   const [overview, setOverview] = useState<OverviewData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const t = useTranslations("Overview"); 
+  const t = useTranslations("Overview");
 
   useEffect(() => {
     const fetchOverview = async () => {
       try {
         setIsLoading(true);
-        const response = await api.get('/overview/cardsOverview');
+        const response = await api.get("/overview/cardsOverview");
         setOverview(response.data);
       } catch (err) {
-        console.error('Error fetching overview data:', err);
-        setError('Failed to load overview data');
+        console.error("Error fetching overview data:", err);
+        setError("Failed to load overview data");
       } finally {
         setIsLoading(false);
       }
@@ -62,46 +61,48 @@ export default function Overview() {
   }
   return (
     <main className="min-h-screen bg-[#0f172a] p-4 md:p-6">
-      <h1 className="text-2xl font-bold text-white mb-4">{t("title")}</h1>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">{t("title")}</h1>
+        <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
+      </div>
       <section className="grid grid-cols-5 my-4">
         <div className="p-1">
-          <StatCard 
-            title={t("totalBikes")} 
-            value={overview?.totalBikes || 0} 
-            color="text-white" 
+          <StatCard
+            title={t("totalBikes")}
+            value={overview?.totalBikes || 0}
+            color="text-white"
           />
         </div>
         <div className="p-1">
-          <StatCard 
-            title={t("available")} 
-            value={overview?.Available    || 0} 
-            color="text-emerald-400" 
+          <StatCard
+            title={t("available")}
+            value={overview?.Available || 0}
+            color="text-emerald-400"
           />
         </div>
         <div className="p-1">
-          <StatCard 
-            title={t("inUse")} 
-            value={overview?.InUse || 0} 
-            color="text-yellow-400" 
+          <StatCard
+            title={t("inUse")}
+            value={overview?.InUse || 0}
+            color="text-yellow-400"
           />
         </div>
         <div className="p-1">
-          <StatCard 
-            title={t("inMaintenance")} 
-            value={overview?.InMaintenance || 0} 
-            color="text-orange-400" 
+          <StatCard
+            title={t("inMaintenance")}
+            value={overview?.InMaintenance || 0}
+            color="text-orange-400"
           />
         </div>
         <div className="p-1">
-          <StatCard 
-            title={t("activeStations")} 
-            value={overview?.activeStation || 0} 
-            color="text-blue-300" 
+          <StatCard
+            title={t("activeStations")}
+            value={overview?.activeStation || 0}
+            color="text-blue-300"
           />
         </div>
       </section>
 
-    
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-8">
           <div className="rounded-2xl bg-[#0b1425] p-0 overflow-hidden">

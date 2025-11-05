@@ -220,38 +220,39 @@ export default function Bikes() {
   return (
     <main className="min-h-screen bg-[#0f172a] text-white">
       <div className="max-w-6xl mx-auto p-6">
-        
-
-        <div className="flex justify-between items-center mb-6">
-          <h1
-            className={`text-2xl font-bold transition-all duration-700 ${
-              isLoaded
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 -translate-y-4"
-            }`}
-          >
-            {t("title")}
-          </h1>
-          <button
-            onClick={() => setIsReportModalOpen(true)}
-            className={`flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 ${
-              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <FaExclamationTriangle />
-            <span>{t("report")}</span>
-          </button>
-          {isAdmin && (
-          <button
-            onClick={() => setIsAddBikeModalOpen(true)}
-            className={`flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 ${
-              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <FaPlus />
-            <span>{t("addBike")}</span>
-          </button>
-        )}
+        <div className="mb-6">
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className={`text-3xl font-bold text-white transition-all duration-700 mb-2 ${
+                isLoaded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+              }`}>
+                {t("title")}
+              </h1>
+              <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setIsReportModalOpen(true)}
+                className={`flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 ${
+                  isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}
+              >
+                <FaExclamationTriangle />
+                <span>{t("report")}</span>
+              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => setIsAddBikeModalOpen(true)}
+                  className={`flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 ${
+                    isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  }`}
+                >
+                  <FaPlus />
+                  <span>{t("addBike")}</span>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col gap-4 mb-6">

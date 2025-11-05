@@ -143,55 +143,52 @@ export default function MessagesPage() {
   // Change page
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  // Reset to first page when filter or sort changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filter, sortBy]);
-
   return (
-    <>
-    
-      <div className="min-h-screen bg-gray-900 text-white p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-2xl font-bold mb-6">
-            {t("title")}
-          </h1>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <select
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value as FilterType)}
-                  className="bg-gray-800 border border-gray-700 rounded px-4 py-2 pr-8 appearance-none cursor-pointer"
-                >
-                  <option value="all">{t("show.AllMessages")}</option>
-                  <option value="unread">{t("show.Unread")}</option>
-                  <option value="news">{t("show.News")}</option>
-                  <option value="notification">{t("show.AccountNotification")}</option>
-                </select>
-              </div>
+    <div className="min-h-screen bg-[#0f172a] text-white">
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="mb-6">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">
+                {t("title")}
+              </h1>
+              <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
+            </div>
+            {isAdmin && (
+              <button
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300"
+                onClick={() => setIsMessageModalOpen(true)}
+              >
+                <BsFillSendPlusFill />
+                <span>{t("SendNew")}</span>
+              </button>
+            )}
+          </div>
+          
+          <div className="flex items-center gap-4 mb-6">
+            <div className="relative">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value as FilterType)}
+                className="bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2 pr-8 appearance-none cursor-pointer text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">{t("show.AllMessages")}</option>
+                <option value="unread">{t("show.Unread")}</option>
+                <option value="news">{t("show.News")}</option>
+                <option value="notification">{t("show.AccountNotification")}</option>
+              </select>
+            </div>
 
-              <div className="relative">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortType)}
-                  className="bg-gray-800 border border-gray-700 rounded px-4 py-2 pr-8 appearance-none cursor-pointer"
-                >
-                  <option value="newest">{t("sortBy.Newest")}</option>
-                  <option value="oldest">{t("sortBy.Oldest")}</option>
-                  <option value="sender">{t("sortBy.Sender")}</option>
-                </select>
-              </div>
-              {isAdmin && (
-                <button
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300"
-                  onClick={() => setIsMessageModalOpen(true)}
-                >
-                  <span className="flex items-center gap-2">
-                    <BsFillSendPlusFill /> {t("SendNew")}
-                  </span>
-                </button>
-              )}
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortType)}
+                className="bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2 pr-8 appearance-none cursor-pointer text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="newest">{t("sortBy.Newest")}</option>
+                <option value="oldest">{t("sortBy.Oldest")}</option>
+                <option value="sender">{t("sortBy.Sender")}</option>
+              </select>
             </div>
           </div>
 
@@ -337,6 +334,6 @@ export default function MessagesPage() {
         }} 
       />
       <SendMessageModal isOpen={isMessageModalOpen} onClose={handleClose} />
-    </>
+    </div>
   );
 }

@@ -56,50 +56,72 @@ export default function LiveUtilizationChart() {
   }
 
   return (
-    <div className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold tracking-tight">
-          {t("title")}
-        </h3>
-      </div>
-
-      <div style={{ height: "400px" }}>
-        <LineChart
-          xAxis={[{
-            data: hours,
-            label: t("xAxisLabel"),
-            scaleType: "point",
-            labelStyle: { fill: "#ffffff", fontSize: 12 },
-            tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
-          }]}
-          yAxis={[{
-            label: t("yAxisLabel"),
-            labelStyle: { fill: "#ffffff", fontSize: 12 },
-            tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
-          }]}
-          series={[{
-            data: bikes,
-            color: "#3b82f6"
-          }]}
-          grid={{ vertical: false }}
-          sx={{
-            "& .MuiChartsAxis-line, & .MuiChartsAxis-tick": {
-              stroke: "#64748b",
-            },
-            "& .MuiChartsAxis-tickLabel, & .MuiChartsAxis-label": {
-              fill: "#ffffff", 
-            },
-            "& .MuiLineElement-root": {
-              strokeWidth: 2,
-            },
-            "& .MuiChartsAxis-root, & .MuiChartsGrid-root": {
-              "& line": {
-                stroke: "#334155",
-              },
-            },
-          }}
-        />
-      </div>
+    <div className="w-full rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 text-white shadow-lg border border-slate-700/50">
+  <div className="flex justify-between items-center mb-6">
+    <div>
+      <h3 className="text-xl font-bold tracking-tight text-blue-400">
+        {t("title")}
+      </h3>
+      <p className="text-sm text-gray-400 mt-1">Datos en tiempo real</p>
     </div>
+      
+  </div>
+
+  <div style={{ height: "400px" }}>
+    <LineChart
+      xAxis={[{
+        data: hours,
+        label: t("xAxisLabel"),
+        scaleType: "point",
+        labelStyle: { fill: "#94a3b8", fontSize: 13, fontWeight: 600 },
+        tickLabelStyle: { fill: "#cbd5e1", fontSize: 12 }
+      }]}
+      yAxis={[{
+        label: t("yAxisLabel"),
+        labelStyle: { fill: "#94a3b8", fontSize: 13, fontWeight: 600 },
+        tickLabelStyle: { fill: "#cbd5e1", fontSize: 12 }
+      }]}
+      series={[{
+        data: bikes,
+        color: "#3b82f6",
+        curve: "catmullRom",
+        showMark: true,
+      }]}
+      grid={{ 
+        vertical: true, 
+        horizontal: true 
+      }}
+      sx={{
+        "& .MuiChartsAxis-line": {
+          stroke: "#475569",
+          strokeWidth: 2,
+        },
+        "& .MuiChartsAxis-tick": {
+          stroke: "#64748b",
+        },
+        "& .MuiChartsAxis-tickLabel": {
+          fill: "#cbd5e1",
+        },
+        "& .MuiChartsAxis-label": {
+          fill: "#94a3b8",
+          fontWeight: 600,
+        },
+        "& .MuiLineElement-root": {
+          strokeWidth: 3,
+        },
+        "& .MuiChartsGrid-line": {
+          stroke: "#334155",
+          strokeWidth: 1,
+          strokeDasharray: "5 5",
+        },
+        "& .MuiMarkElement-root": {
+          fill: "#3b82f6",
+          stroke: "#1e293b",
+          strokeWidth: 2,
+        },
+      }}
+    />
+  </div>
+</div> 
   );
 }
