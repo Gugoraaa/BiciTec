@@ -1,9 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { FaBiking, FaWrench, FaUserCog } from "react-icons/fa";
-import { MdOutlineLocationOn, MdOutlineFactory,MdOutlineMessage  } from "react-icons/md";
+import { FaBiking, FaWrench, FaUserCog, FaBars, FaTimes } from "react-icons/fa";
+import { MdOutlineLocationOn, MdOutlineFactory, MdOutlineMessage } from "react-icons/md";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import UserMenu from "./auth/UserMenu";
@@ -11,10 +12,27 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslations } from "next-intl";
 
 export default function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { isAdmin, user, isLoading } = useAuth();
   const t = useTranslations("Sidebar");
   const isActive = (path: string) => pathname === path;
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isOpen && !target.closest('.sidebar') && !target.closest('.hamburger-button')) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
 
   const menuItems = [
     {
@@ -43,7 +61,6 @@ export default function Sidebar() {
     },
   ];
 
-  // Solo agregar mantenimiento si es admin
   if (isAdmin) {
     menuItems.push({
       id: "maintenance",
@@ -62,7 +79,25 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="bg-[#0f172a] text-gray-300 w-64 h-screen flex flex-col py-6 px-3 sticky top-0 border-r border-gray-700">
+    <>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed top-4 left-4 z-50 p-2 rounded-md text-gray-300 bg-[#0f172a] lg:hidden hamburger-button"
+        aria-label="Toggle menu"
+      >
+        {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+      </button>
+
+      {isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden" 
+             onClick={() => setIsOpen(false)}></div>
+      )}
+
+      <aside 
+        className={`fixed lg:sticky top-0 left-0 bg-[#0f172a] text-gray-300 w-64 h-screen flex flex-col py-6 px-3 z-40 border-r border-gray-700 transform transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        } sidebar`}
+      >
       <div className="flex items-center gap-2 mb-8 px-3">
         <div>
           <Image src="/tec.png" alt="tec logo" width={20} height={20} />
@@ -124,6 +159,7 @@ export default function Sidebar() {
           )}
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }
