@@ -237,10 +237,12 @@
        "id": "ID",
        "user": "User",
        "date": "Date",
-       "duration": "Duration (MINS)",
+       "duration": "Duration (MIN)",
        "distance": "Distance (km)"
      },
-     "noTrips": "No trips recorded for this bike."
+     "noTrips": "No trips found for this bike.",
+     "exportCSV": "Export CSV",
+     "close": "Close"
     },
     "AppealReviewModal": {
     "title": "Review Appeal",

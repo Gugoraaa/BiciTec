@@ -46,8 +46,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100 flex flex-col items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md flex flex-col items-center">
+    <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100 flex flex-col items-center justify-start pt-[20vh] sm:justify-center px-4 pb-10">
+      <div className="w-full max-w-md flex flex-col items-center mt-4 sm:mt-0">
         {/* Logo / Icon */}
         <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-slate-800/80 ring-1 ring-white/10 shadow-lg">
           <svg

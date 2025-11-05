@@ -242,7 +242,9 @@
     "duration": "Duración (MIN)",
     "distance": "Distancia (km)"
   },
-  "noTrips": "No hay viajes registrados para esta bicicleta."
+  "noTrips": "No hay viajes registrados para esta bicicleta.",
+  "exportCSV": "Exportar CSV",
+  "close": "Cerrar"
 },
   "AppealReviewModal": {
     "title": "Revisar Apelación",
