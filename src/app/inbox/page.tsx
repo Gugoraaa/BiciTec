@@ -145,32 +145,32 @@ export default function MessagesPage() {
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white">
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="mb-6">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-2">
+      <div className="max-w-6xl mx-auto p-3 sm:p-4 md:p-6">
+        <div className="mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 sm:mb-6">
+            <div className="w-full sm:w-auto">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">
                 {t("title")}
               </h1>
-              <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
+              <div className="h-1 w-16 sm:w-24 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
             </div>
             {isAdmin && (
               <button
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 text-sm sm:text-base"
                 onClick={() => setIsMessageModalOpen(true)}
               >
-                <BsFillSendPlusFill />
-                <span>{t("SendNew")}</span>
+                <BsFillSendPlusFill className="text-sm sm:text-base" />
+                <span className="whitespace-nowrap">{t("SendNew")}</span>
               </button>
             )}
           </div>
           
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div className="relative">
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value as FilterType)}
-                className="bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2 pr-8 appearance-none cursor-pointer text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full sm:w-auto bg-slate-800/50 border border-slate-700 rounded-lg px-3 sm:px-4 py-2 pr-8 appearance-none cursor-pointer text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
               >
                 <option value="all">{t("show.AllMessages")}</option>
                 <option value="unread">{t("show.Unread")}</option>
@@ -183,7 +183,7 @@ export default function MessagesPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortType)}
-                className="bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2 pr-8 appearance-none cursor-pointer text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full sm:w-auto bg-slate-800/50 border border-slate-700 rounded-lg px-3 sm:px-4 py-2 pr-8 appearance-none cursor-pointer text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
               >
                 <option value="newest">{t("sortBy.Newest")}</option>
                 <option value="oldest">{t("sortBy.Oldest")}</option>
@@ -193,15 +193,20 @@ export default function MessagesPage() {
           </div>
 
           <div className="bg-gray-800 rounded-lg overflow-hidden">
-            <div className="grid grid-cols-12 gap-4 p-4 bg-gray-750 border-b border-gray-700">
-              <div className="col-span-12 sm:col-span-4 md:col-span-3 font-medium">
+            <div className="hidden sm:grid grid-cols-12 gap-4 p-4 bg-gray-750 border-b border-gray-700">
+              <div className="col-span-4 md:col-span-3 font-medium text-sm sm:text-base">
                 {t("columns.sender")}
               </div>
-              <div className="col-span-8 sm:col-span-6 md:col-span-7 font-medium">
+              <div className="col-span-6 md:col-span-7 font-medium text-sm sm:text-base">
                 {t("columns.subject")}
               </div>
-              <div className="col-span-4 sm:col-span-2 text-right font-medium">
+              <div className="col-span-2 text-right font-medium text-sm sm:text-base">
                 {t("columns.timestamp")}
+              </div>
+            </div>
+            <div className="sm:hidden grid grid-cols-12 gap-2 p-3 bg-gray-750 border-b border-gray-700 text-sm">
+              <div className="col-span-12 font-medium">
+                {t("Inbox")}
               </div>
             </div>
 
@@ -218,27 +223,40 @@ export default function MessagesPage() {
                 {currentMessages.map((msg) => (
                   <div 
                     key={msg.id} 
-                    className={`grid grid-cols-12 gap-4 p-4 hover:bg-gray-750 transition-colors cursor-pointer relative ${!msg.leido ? 'bg-gray-900/50' : ''}`}
+                    className={`grid grid-cols-12 gap-2 sm:gap-4 p-3 sm:p-4 hover:bg-gray-750 transition-colors cursor-pointer relative ${!msg.leido ? 'bg-gray-900/50' : ''}`}
                     onClick={() => openMessage(msg)}
                   >
                     {!msg.leido && (
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r"></div>
                     )}
-                    <div className="col-span-12 sm:col-span-4 md:col-span-3 flex items-center gap-3">
-                      <span className={`${!msg.leido ? 'text-blue-400' : 'text-gray-500'}`}>{msg.icon}</span>
-                      <span className={`truncate ${!msg.leido ? 'font-semibold text-white' : 'text-gray-400'}`}>
-                        {msg.remitente}
-                      </span>
+                    <div className="col-span-12 sm:col-span-4 md:col-span-3 flex items-start sm:items-center gap-2 sm:gap-3">
+                      <span className={`mt-1 sm:mt-0 ${!msg.leido ? 'text-blue-400' : 'text-gray-500'}`}>{msg.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <div className={`text-sm sm:text-base truncate ${!msg.leido ? 'font-semibold text-white' : 'text-gray-400'}`}>
+                            {msg.remitente}
+                          </div>
+                          <div className="sm:hidden text-xs text-gray-500 whitespace-nowrap ml-2">
+                            {msg.fecha}
+                          </div>
+                        </div>
+                        {!msg.leido && (
+                          <div className="sm:hidden flex items-center gap-1 mt-1">
+                            <span className="inline-block w-2 h-2 rounded-full bg-blue-500"></span>
+                            <span className="text-xs text-blue-400">No leído</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="col-span-8 sm:col-span-6 md:col-span-7">
-                      <div className={`truncate ${!msg.leido ? 'font-semibold text-white' : 'text-gray-300'}`}>
+                    <div className="col-span-12 sm:col-span-6 md:col-span-7 mt-1 sm:mt-0">
+                      <div className={`text-sm sm:text-base truncate ${!msg.leido ? 'font-semibold text-white' : 'text-gray-300'}`}>
                         {msg.titulo}
                       </div>
-                      <div className={`text-sm truncate ${!msg.leido ? 'text-gray-300' : 'text-gray-500'}`}>
-                        {msg.cuerpo.substring(0, 60)}{msg.cuerpo.length > 60 ? '...' : ''}
+                      <div className={`text-xs sm:text-sm truncate ${!msg.leido ? 'text-gray-300' : 'text-gray-500'}`}>
+                        {msg.cuerpo.substring(0, 100)}{msg.cuerpo.length > 100 ? '...' : ''}
                       </div>
                     </div>
-                    <div className={`col-span-4 sm:col-span-2 text-right text-sm ${!msg.leido ? 'text-blue-400 font-medium' : 'text-gray-500'}`}>
+                    <div className={`hidden sm:block col-span-2 text-right text-sm ${!msg.leido ? 'text-blue-400 font-medium' : 'text-gray-500'}`}>
                       {msg.fecha}
                       {!msg.leido && (
                         <span className="ml-2 inline-block w-2 h-2 rounded-full bg-blue-500"></span>
@@ -249,15 +267,15 @@ export default function MessagesPage() {
                 
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
-                  <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-gray-700">
-                    <div className="mb-2 sm:mb-0 text-sm text-gray-400">
+                  <div className="flex flex-col sm:flex-row items-center justify-between p-3 sm:p-4 border-t border-gray-700">
+                    <div className="mb-2 sm:mb-0 text-xs sm:text-sm text-gray-400 text-center sm:text-left w-full sm:w-auto">
                       Mostrando {Math.min(indexOfFirstMessage + 1, filteredAndSortedMessages.length)}-{Math.min(indexOfLastMessage, filteredAndSortedMessages.length)} de {filteredAndSortedMessages.length} mensajes
                     </div>
-                    <div className="flex items-center space-x-1">
+                    <div className="flex flex-wrap justify-center sm:justify-start gap-1 sm:gap-1">
                       <button
                         onClick={() => paginate(1)}
                         disabled={currentPage === 1}
-                        className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                        className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 min-w-[32px]"
                         aria-label="Primera página"
                       >
                         «
@@ -265,7 +283,7 @@ export default function MessagesPage() {
                       <button
                         onClick={() => paginate(Math.max(1, currentPage - 1))}
                         disabled={currentPage === 1}
-                        className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                        className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 min-w-[32px]"
                         aria-label="Página anterior"
                       >
                         ‹
@@ -287,7 +305,7 @@ export default function MessagesPage() {
                           <button
                             key={pageNum}
                             onClick={() => paginate(pageNum)}
-                            className={`w-10 h-8 rounded-md ${
+                            className={`min-w-[32px] h-8 rounded-md text-xs sm:text-sm ${
                               currentPage === pageNum
                                 ? 'bg-blue-600 text-white'
                                 : 'bg-gray-800 text-white hover:bg-gray-700'
@@ -302,7 +320,7 @@ export default function MessagesPage() {
                       <button
                         onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
                         disabled={currentPage === totalPages}
-                        className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                        className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 min-w-[32px]"
                         aria-label="Siguiente página"
                       >
                         ›
@@ -310,7 +328,7 @@ export default function MessagesPage() {
                       <button
                         onClick={() => paginate(totalPages)}
                         disabled={currentPage === totalPages}
-                        className="px-3 py-1 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                        className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 min-w-[32px]"
                         aria-label="Última página"
                       >
                         »

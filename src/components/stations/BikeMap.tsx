@@ -186,21 +186,14 @@ export default function BikeMap() {
 
   if (error || bikeStations.length === 0) {
     return (
-      <div className="h-[600px] w-full rounded-lg overflow-hidden border-2 border-red-700 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center relative">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(239,68,68,0.1),transparent_50%)]"></div>
-        <div className="text-center z-10 space-y-6 px-6 max-w-md">
-          <div className="text-red-500 text-6xl">⚠️</div>
-          <div>
-            <h3 className="text-white text-2xl font-bold mb-2">
-              {t("errorTitle")}
-            </h3>
-            <p className="text-gray-300 text-lg">
-              {error || "No se encontraron estaciones disponibles."}
-            </p>
+      <div className="w-full h-[400px] sm:h-[500px] lg:h-[600px] rounded-xl overflow-hidden border border-slate-700/50 bg-gradient-to-br from-slate-800/50 to-slate-900/50 shadow-lg">
+        <div className="h-full flex flex-col items-center justify-center p-6 text-center space-y-4">
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg">
+            {error || t("mapError")}
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-lg"
+            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg transition-colors duration-200 shadow-lg text-sm sm:text-base"
           >
             {t("retry")}
           </button>
