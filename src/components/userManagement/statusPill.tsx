@@ -1,6 +1,8 @@
-import {FaCheckCircle, FaExclamationTriangle, FaBan} from "react-icons/fa";
+import { FaCheckCircle, FaExclamationTriangle, FaBan } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 export default function StatusPill({ status }: { status: "ok" | "warning" | "banned" }) {
+  const t = useTranslations("StatusPill");
   const cfg =
     status === "ok"
       ? { bg: "bg-emerald-500/10", dot: "bg-emerald-400", text: "text-emerald-300" }
@@ -16,7 +18,7 @@ export default function StatusPill({ status }: { status: "ok" | "warning" | "ban
       ) : (
         <FaBan className="w-4 h-4" />
       )}
-      {status}
+      {t(status)}
     </span>
   );
 };

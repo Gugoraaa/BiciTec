@@ -14,22 +14,26 @@ export default function SendMessageModal({ isOpen, onClose }: SendMessageModalPr
   const [body, setBody] = useState('');
   const [isSending, setIsSending] = useState(false);
   const t = useTranslations("Inbox.SendNewBox");
+  const toastT = useTranslations("SendMessageModal");
   const { user } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !body.trim()) return;
+    if (!title.trim() || !body.trim()) {
+      toast.error(toastT('validationError'));
+      return;
+    }
     
     setIsSending(true);
     try {     
-      await api.post('/messages/sendMessage', { title, body, sender:user?.id,type: "news" });
-      toast.success("Mensaje enviado correctamente");
+      await api.post('/messages/sendMessage', { title, body, sender:user?.id, type: "news" });
+      toast.success(toastT('success'));
       setTimeout(() => {
         onClose();
       }, 2000);
     } catch (error) {
-      toast.error("Error al enviar el mensaje");
       console.error('Failed to send message:', error);
+      toast.error(toastT('error'));
     } finally {
       setIsSending(false);
     }

@@ -115,43 +115,59 @@ function BikeMaintenanceDashboard() {
 
   return (
     <div className="min-h-screen w-full bg-slate-900 text-slate-100">
-      <div className="mx-auto max-w-6xl px-4 py-8">
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-xl font-semibold tracking-tight">{t("title")}</h1>
-          <div className="flex items-center gap-3">
-            <StatusFilter active={filter} onChange={setFilter} />
-            <ViewToggle value={view} onChange={setView} />
+      <div className="mx-auto max-w-6xl p-3 sm:p-4 md:p-6">
+        <div className="mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-white">{t("title")}</h1>
+              <div className="h-1 w-12 sm:w-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mt-1"></div>
+            </div>
+            <div className="flex flex-wrap gap-2 sm:gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+              <div className="flex-1 sm:flex-none">
+                <StatusFilter active={filter} onChange={setFilter} />
+              </div>
+              <div className="flex-1 sm:flex-none">
+                <ViewToggle value={view} onChange={setView} />
+              </div>
+            </div>
           </div>
         </div>
 
         {view === "cards" ? (
           <div
-            className={`grid gap-6 ${
-              visibleColumns.length === 3 ? "md:grid-cols-3" : "grid-cols-1"
+            className={`grid gap-4 sm:gap-5 md:gap-6 ${
+              visibleColumns.length === 3 
+                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" 
+                : "grid-cols-1"
             }`}
           >
             {visibleColumns.map(({ id, label }) => (
-              <StatusColumn
-                key={id}
-                title={label}
-                tickets={grouped[id]}
+              <div key={id} className="h-full">
+                <StatusColumn
+                  title={label}
+                  tickets={grouped[id]}
+                  onManage={(t) => {
+                    setSelected(t);
+                    setManageOpen(true);
+                  }}
+                  loading={loading}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
+            <div className="overflow-x-auto">
+              <TicketsTable
+                tickets={visibleTickets}
+                loading={loading}
                 onManage={(t) => {
                   setSelected(t);
                   setManageOpen(true);
                 }}
-                loading={loading}
               />
-            ))}
+            </div>
           </div>
-        ) : (
-          <TicketsTable
-            tickets={visibleTickets}
-            loading={loading}
-            onManage={(t) => {
-              setSelected(t);
-              setManageOpen(true);
-            }}
-          />
         )}
       </div>
 

@@ -176,6 +176,27 @@
     },
     "tooltip": "Select a maintenance status to filter the reports"
   },
+  "AppealModal": {
+    "title": "Submit Appeal",
+    "appealMessage": "Your appeal message",
+    "explanationLabel": "Explain why we should reconsider",
+    "messagePlaceholder": "Type your message here...",
+    "noMessage": "No appeal message provided.",
+    "cancelButton": "Cancel",
+    "submitButton": "Submit Appeal",
+    "submitting": "Submitting...",
+    "success": "Your appeal has been submitted successfully",
+    "error": "An error occurred while submitting the appeal. Please try again.",
+    "validationError": "Please enter a message"
+  },
+  "MessageBox": {
+    "from": "From:",
+    "closeButton": "Close",
+    "appealButton": "Appeal Sanction",
+    "markAsReadButton": "Mark as Read & Close",
+    "marking": "Marking...",
+    "errorMarkingAsRead": "Error marking message as read:"
+  },
   "ReportModal": {
     "title": "Report an Issue",
     "submited": "Report Submited!",
@@ -221,7 +242,102 @@
      },
      "noTrips": "No trips recorded for this bike."
     },
-    "Inbox": {
+    "AppealReviewModal": {
+    "title": "Review Appeal",
+    "appealMessage": "Appeal Message",
+    "noMessage": "No appeal message provided.",
+    "appealId": "Appeal ID",
+    "adminDecision": "Admin Decision",
+    "decisionOptions": {
+      "ok": "Approve",
+      "warning": "Warning",
+      "ban": "Ban"
+    },
+    "userMessageLabel": "Message for User",
+    "userMessagePlaceholder": "Explain your decision to the user...",
+    "cancelButton": "Cancel",
+    "saveButton": "Save Decision",
+    "savingButton": "Saving...",
+    "errors": {
+      "emptyMessage": "Please enter a message explaining your decision"
+    },
+    "success": "Decision has been saved successfully"
+  },
+  "PendingAppeals": {
+    "title": "Pending Appeals",
+    "noAppeals": "No pending appeals",
+    "reviewButton": "Review",
+    "loadingError": "Failed to load appeals. Please try again later.",
+    "unknownUser": "Unknown User",
+    "loading": "Loading..."
+  },
+  "NewSanction": {
+    "title": "Issue New Sanction",
+    "selectUser": "Select User",
+    "searchPlaceholder": "Search by name or ID...",
+    "noUsersFound": "No users found",
+    "typeOfSanction": "Type of Sanction",
+    "warning": "Warning",
+    "ban": "Ban",
+    "reasonLabel": "Reason for Sanction",
+    "reasonPlaceholder": "Enter the reason for the sanction...",
+    "cancelButton": "Cancel",
+    "submitButton": "Issue Sanction",
+    "submitting": "Processing...",
+    "errors": {
+      "selectUser": "Please select a user",
+      "enterReason": "Please enter a reason for the sanction"
+    },
+    "success": {
+      "warning": "User warned successfully",
+      "banned": "User banned successfully"
+    },
+    "error": "Error applying sanction. Please try again.",
+    "userInfo": {
+      "id": "ID"
+    }
+  },
+  "StatusPill": {
+    "ok": "Active",
+    "warning": "Warning",
+    "banned": "Banned"
+  },
+  "UsersTable": {
+    "searchPlaceholder": "Search by student ID...",
+    "filterButtons": {
+      "all": "All",
+      "banned": "Banned",
+      "warning": "Warning",
+      "ok": "Active"
+    },
+    "columns": {
+      "userId": "User ID",
+      "name": "Name",
+      "lastName": "Last Name",
+      "status": "Status",
+      "creationDate": "Creation Date"
+    },
+    "loading": "Loading...",
+    "noUsers": "No users found"
+  },
+  "UserManagement": {
+    "title": "User Sanctions Management",
+    "newSanctionButton": "New Sanction",
+    "errorLoadingUsers": "Failed to load users. Please try again later.",
+    "errorFetchingUsers": "Error fetching users:",
+    "appeal": {
+      "id": "ID",
+      "message": "Message",
+      "date": "Date",
+      "user": "User"
+    }
+  },
+  "SendMessageModal": {
+    "success": "Message sent successfully",
+    "error": "Failed to send message",
+    "validationError": "Please fill in all fields"
+  },
+  "Inbox": {
       "Inbox": "Inbox",
       "title": "Inbox",
       "loading": "Loading inbox...",

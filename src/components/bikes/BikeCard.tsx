@@ -27,7 +27,7 @@ export default function BikeCard({
   };
 
   return (
-    <div className="relative w-full rounded-2xl overflow-hidden shadow-lg bg-slate-900 border border-slate-800 p-4">
+    <div className="relative w-full rounded-2xl overflow-hidden shadow-lg bg-slate-800/50 backdrop-blur-sm border border-slate-800 p-4 hover:shadow-2xl hover:shadow-blue-900/10 hover:-translate-y-1 transition-all duration-300">
       <div
         className={`absolute top-3 right-3 px-3 py-1 text-xs font-medium rounded-full ${getStatusClass(
           estado

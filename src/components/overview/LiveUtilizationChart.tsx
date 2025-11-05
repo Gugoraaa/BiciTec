@@ -6,21 +6,20 @@ import api from "@/lib/api";
 import { useTranslations } from "next-intl";
 import { BikeUsageData } from "@/types/bike";
 
-
 export default function LiveUtilizationChart() {
   const [bikeData, setBikeData] = useState<BikeUsageData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const t = useTranslations("LiveUtilizationChart"); 
-  
+  const t = useTranslations("LiveUtilizationChart");
+
   useEffect(() => {
     const fetchBikeUsage = async () => {
       try {
-        const { data } = await api.get('/overview/bikes-used-24h');
+        const { data } = await api.get("/overview/bikes-used-24h");
         setBikeData(data);
       } catch (err) {
-        console.error('Error fetching bike usage data:', err);
-        setError('Error al cargar los datos de uso de bicicletas');
+        console.error("Error fetching bike usage data:", err);
+        setError("Error al cargar los datos de uso de bicicletas");
       } finally {
         setIsLoading(false);
       }
@@ -30,13 +29,15 @@ export default function LiveUtilizationChart() {
   }, []);
 
   const reversedData = [...bikeData].reverse();
-  const hours = reversedData.map(item => item.hour);
-  const bikes = reversedData.map(item => item.count);
-
+  const hours = reversedData.map((item) => item.hour);
+  const bikes = reversedData.map((item) => item.count);
 
   if (isLoading) {
     return (
-      <div className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg flex items-center justify-center" style={{ height: '500px' }}>
+      <div
+        className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg flex items-center justify-center"
+        style={{ height: "500px" }}
+      >
         <div className="flex items-center gap-2 text-blue-400">
           <FaSpinner className="animate-spin text-2xl" />
           <span>{t("loading")}</span>
@@ -47,7 +48,10 @@ export default function LiveUtilizationChart() {
 
   if (error) {
     return (
-      <div className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg flex items-center justify-center" style={{ height: '500px' }}>
+      <div
+        className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg flex items-center justify-center"
+        style={{ height: "500px" }}
+      >
         <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg">
           {error}
         </div>
@@ -56,46 +60,73 @@ export default function LiveUtilizationChart() {
   }
 
   return (
-    <div className="w-full rounded-2xl bg-[#1e293b] p-5 text-white shadow-lg">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold tracking-tight">
-          {t("title")}
-        </h3>
+    <div className="w-full rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 text-white shadow-lg border border-slate-700/50">
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h3 className="text-xl font-bold tracking-tight text-blue-400">
+            {t("title")}
+          </h3>
+          <p className="text-sm text-gray-400 mt-1">Datos en tiempo real</p>
+        </div>
       </div>
 
       <div style={{ height: "400px" }}>
         <LineChart
-          xAxis={[{
-            data: hours,
-            label: t("xAxisLabel"),
-            scaleType: "point",
-            labelStyle: { fill: "#ffffff", fontSize: 12 },
-            tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
-          }]}
-          yAxis={[{
-            label: t("yAxisLabel"),
-            labelStyle: { fill: "#ffffff", fontSize: 12 },
-            tickLabelStyle: { fill: "#ffffff", fontSize: 11 }
-          }]}
-          series={[{
-            data: bikes,
-            color: "#3b82f6"
-          }]}
-          grid={{ vertical: false }}
+          xAxis={[
+            {
+              data: hours,
+              label: t("xAxisLabel"),
+              scaleType: "point",
+              labelStyle: { fill: "#94a3b8", fontSize: 13, fontWeight: 600 },
+              tickLabelStyle: { fill: "#cbd5e1", fontSize: 12 },
+            },
+          ]}
+          yAxis={[
+            {
+              label: t("yAxisLabel"),
+              labelStyle: { fill: "#94a3b8", fontSize: 13, fontWeight: 600 },
+              tickLabelStyle: { fill: "#cbd5e1", fontSize: 12 },
+            },
+          ]}
+          series={[
+            {
+              data: bikes,
+              color: "#3b82f6",
+              curve: "catmullRom",
+              showMark: true,
+            },
+          ]}
+          grid={{
+            vertical: true,
+            horizontal: true,
+          }}
           sx={{
-            "& .MuiChartsAxis-line, & .MuiChartsAxis-tick": {
-              stroke: "#64748b",
-            },
-            "& .MuiChartsAxis-tickLabel, & .MuiChartsAxis-label": {
-              fill: "#ffffff", 
-            },
-            "& .MuiLineElement-root": {
+            "& .MuiChartsAxis-line": {
+              stroke: "#475569",
               strokeWidth: 2,
             },
-            "& .MuiChartsAxis-root, & .MuiChartsGrid-root": {
-              "& line": {
-                stroke: "#334155",
-              },
+            "& .MuiChartsAxis-tick": {
+              stroke: "#64748b",
+            },
+            "& .MuiChartsAxis-tickLabel": {
+              fill: "#cbd5e1",
+            },
+            "& .MuiChartsAxis-label": {
+              fill: "#94a3b8",
+              fontWeight: 600,
+            },
+            "& .MuiLineElement-root": {
+              strokeWidth: 3,
+            },
+            "& .MuiChartsGrid-line": {
+              stroke: "#334155",
+              strokeWidth: 1,
+              strokeDasharray: "5 5",
+            },
+            "& .MuiMarkElement-root": {
+              fill: "#3b82f6",
+              stroke: "#1e293b",
+              strokeWidth: 2,
             },
           }}
         />

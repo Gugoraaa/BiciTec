@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from "react";
 import { IoClose } from "react-icons/io5";
+import { useTranslations } from "next-intl";
 import api from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
@@ -15,32 +16,32 @@ export default function AppealModal({ onClose, appealId, appealText, userId }: A
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
+  const t = useTranslations("AppealModal");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
     if (!message.trim()) {  
-      toast.error('Por favor ingresa un mensaje');
+      toast.error(t('validationError'));
       return;
     }
 
     try {
       setIsSubmitting(true);
       
-      // Call the API to submit the appeal
       await api.post(`/user/CreateAppeal`, {
-        id: user?.id,    // The ID of the user making the appeal
+        id: user?.id,    
         description: message.trim(),
       });
       
-      toast.success('Tu apelación ha sido enviada correctamente');
+      toast.success(t('success'));
       setTimeout(() => {
         onClose();
       }, 2000);
       
     } catch (error) {
       console.error('Error al enviar la apelación:', error);
-      toast.error('Ocurrió un error al enviar la apelación. Por favor intenta de nuevo.');
+      toast.error(t('error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -52,7 +53,7 @@ export default function AppealModal({ onClose, appealId, appealText, userId }: A
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-700">
           <h2 className="text-xl font-semibold text-white">
-            Enviar Apelación
+            {t('title')}
           </h2>
           <button
             onClick={onClose}
@@ -68,21 +69,21 @@ export default function AppealModal({ onClose, appealId, appealText, userId }: A
           {/* Appeal Message */}
           <div>
             <h3 className="text-sm font-medium text-gray-300 mb-3">
-              Tu mensaje de apelación
+              {t('appealMessage')}
             </h3>
             <div className="bg-gray-700 rounded-lg p-4 text-gray-300 text-sm leading-relaxed whitespace-pre-wrap mb-4">
-              {appealText || 'No se proporcionó un mensaje de apelación.'}
+              {appealText || t('noMessage')}
             </div>
             
             <div className="mt-4">
               <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                Explica por qué deberíamos reconsiderar
+                {t('explanationLabel')}
               </label>
               <textarea
                 id="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Escribe tu mensaje aquí..."
+                placeholder={t('messagePlaceholder')}
                 className="w-full bg-gray-700 text-gray-300 rounded-lg p-3 text-sm border border-gray-600 focus:outline-none focus:border-blue-500 resize-none"
                 rows={4}
                 disabled={isSubmitting}
@@ -98,7 +99,7 @@ export default function AppealModal({ onClose, appealId, appealText, userId }: A
             disabled={isSubmitting}
             className="px-6 py-2.5 bg-gray-700 text-gray-300 rounded-lg font-medium hover:bg-gray-650 transition-colors disabled:opacity-50"
           >
-            Cancelar
+            {t('cancelButton')}
           </button>
           <button 
             type="submit"
@@ -108,7 +109,7 @@ export default function AppealModal({ onClose, appealId, appealText, userId }: A
               isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
-            {isSubmitting ? 'Enviando...' : 'Enviar Apelación'}
+            {isSubmitting ? t('submitting') : t('submitButton')}
           </button>
         </div>
       </div>

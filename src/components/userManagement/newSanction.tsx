@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaTimes, FaSearch, FaUser, FaSpinner } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
 
@@ -27,7 +28,8 @@ export default function IssueNewSanction({
   adminId,
   onSanctionIssued,
 }: IssueNewSanctionProps) {
-  const [type, setType] = useState("Warning");
+  const t = useTranslations("NewSanction");
+  const [type, setType] = useState("warning");
   const [reason, setReason] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -52,12 +54,12 @@ export default function IssueNewSanction({
     e.preventDefault();
 
     if (!selectedUser) {
-      toast.error("Por favor selecciona un usuario");
+      toast.error(t('errors.selectUser'));
       return;
     }
 
     if (!reason.trim()) {
-      toast.error("Por favor ingresa una razón para la sanción");
+      toast.error(t('errors.enterReason'));
       return;
     }
 
@@ -73,7 +75,7 @@ export default function IssueNewSanction({
         `/user/updateUserState/${selectedUser.id}`,
         sanctionData
       );
-      toast.success(`Usuario ${type === "Warning" ? "advertido" : "baneado"} correctamente`);
+      toast.success(type === "warning" ? t('success.warning') : t('success.banned'));
       
       if (onSanctionIssued) {
         onSanctionIssued();
@@ -84,7 +86,7 @@ export default function IssueNewSanction({
       }, 1000);
     } catch (error) {
       console.error("Error applying sanction:", error);
-      toast.error("Error al aplicar la sanción. Por favor, inténtalo de nuevo.");
+      toast.error(t('error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -94,17 +96,18 @@ export default function IssueNewSanction({
     <form onSubmit={handleSubmit}>
       <div className="bg-gray-800 border border-slate-800 rounded-2xl w-full max-w-md p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Issue New Sanction</h2>
+          <h2 className="text-xl font-semibold">{t('title')}</h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-700 text-slate-300 hover:bg-slate-600 transition-colors"
           >
-            <FaTimes />
+            
+            <FaTimes className="size-4" />
           </button>
         </div>
 
         {/* Select User */}
-        <label className="block text-sm text-slate-400 mb-1">Select User</label>
+        <label className="block text-sm text-slate-400 mb-1">{t('selectUser')}</label>
         <div className="mb-4">
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 size-4 pointer-events-none" />
@@ -120,7 +123,7 @@ export default function IssueNewSanction({
                 }
               }}
               onFocus={() => setShowDropdown(true)}
-              placeholder="Search by name or ID..."
+              placeholder={t('searchPlaceholder')}
               className="w-full bg-gray-700 border border-slate-800 rounded-xl py-2 pl-10 pr-4 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[color:var(--bt-blue,#2563eb)]/40"
             />
           </div>
@@ -141,13 +144,13 @@ export default function IssueNewSanction({
                         {user.name} {user.lastName}
                       </div>
                       <div className="text-sm text-slate-400">
-                        {user.studentId}
+                        {t('userInfo.id')}: {user.studentId}
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="p-3 text-slate-400">No users found</div>
+                <div className="p-3 text-slate-400">{t('noUsersFound')}</div>
               )}
             </div>
           )}
@@ -172,7 +175,7 @@ export default function IssueNewSanction({
 
         {/* Type of Sanction */}
         <label className="block text-sm text-slate-400 mb-1">
-          Type of Sanction
+          {t('typeOfSanction')}
         </label>
         <div className="flex bg-gray-700 border border-slate-800 rounded-xl mb-4 overflow-hidden">
           <button
@@ -184,29 +187,29 @@ export default function IssueNewSanction({
                 : "text-slate-300 hover:bg-slate-800"
             }`}
           >
-            Warning
+            {t('warning')}
           </button>
           <button
             type="button"
-            onClick={() => setType("Banned")}
+            onClick={() => setType("banned")}
             className={`flex-1 py-2 text-sm font-medium ${
-              type === "Banned"
+              type === "banned"
                 ? "bg-[color:var(--bt-blue,#2563eb)] text-white"
                 : "text-slate-300 hover:bg-slate-800"
             }`}
           >
-            Ban
+            {t('ban')}
           </button>
         </div>
 
         {/* Reason */}
         <label className="block text-sm text-slate-400 mb-1">
-          Reason for Sanction
+          {t('reasonLabel')}
         </label>
         <textarea
           value={reason}
           onChange={(e) => setReason(e.target.value)}
-          placeholder="e.g., Bike left outside designated area"
+          placeholder={t('reasonPlaceholder')}
           rows={4}
           className="w-full bg-gray-700 border border-slate-800 rounded-xl p-3 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[color:var(--bt-blue,#2563eb)]/40 mb-4"
         />
@@ -215,17 +218,14 @@ export default function IssueNewSanction({
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full py-2 rounded-xl bg-[color:var(--bt-blue,#2563eb)] text-white font-medium focus:outline-none focus:ring-2 focus:ring-[color:var(--bt-blue,#2563eb)]/40 flex items-center justify-center ${
-            isSubmitting ? "opacity-75 cursor-not-allowed" : "hover:opacity-90"
-          }`}
+          className="px-6 py-2 rounded-lg bg-[color:var(--bt-blue,#2563eb)] text-white hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {isSubmitting ? (
-            <>
-              <FaSpinner className="animate-spin mr-2" />
-              Processing...
-            </>
+            <span className="flex items-center justify-center gap-2">
+              <FaSpinner className="animate-spin" /> {t('submitting')}
+            </span>
           ) : (
-            "Submit Sanction"
+            t('submitButton')
           )}
         </button>
       </div>
