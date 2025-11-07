@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import api from "@/lib/api";
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaSync } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 
 interface StationData {
@@ -109,9 +109,18 @@ export default function StationCapacityCard() {
 
   return (
     <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 shadow-lg border border-slate-700/50 h-full flex flex-col">
-      <h3 className="text-xl font-bold tracking-tight text-blue-400 mb-6">
-        {t("title")}
-      </h3>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-bold tracking-tight text-blue-400">
+          {t("title")}
+        </h3>
+        <button
+          onClick={fetchStationData}
+          className="text-gray-400 hover:text-blue-400 transition-colors p-2 -mr-2"
+          aria-label="Refresh stations"
+        >
+          <FaSync className="w-5 h-5" />
+        </button>
+      </div>
 
       <div className="overflow-y-auto pr-2" style={{ maxHeight: "400px" }}>
         <div className="space-y-4">
