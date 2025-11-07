@@ -66,7 +66,6 @@ export default function LiveUtilizationChart() {
           <h3 className="text-xl font-bold tracking-tight text-blue-400">
             {t("title")}
           </h3>
-          <p className="text-sm text-gray-400 mt-1">Datos en tiempo real</p>
         </div>
       </div>
 
@@ -86,6 +85,8 @@ export default function LiveUtilizationChart() {
               label: t("yAxisLabel"),
               labelStyle: { fill: "#94a3b8", fontSize: 13, fontWeight: 600 },
               tickLabelStyle: { fill: "#cbd5e1", fontSize: 12 },
+              tickMinStep: 1,
+              valueFormatter: (value: number) => Number.isInteger(value) ? value.toString() : '',
             },
           ]}
           series={[
@@ -121,7 +122,7 @@ export default function LiveUtilizationChart() {
             "& .MuiChartsGrid-line": {
               stroke: "#334155",
               strokeWidth: 1,
-              strokeDasharray: "5 5",
+              strokeDasharray: "1 1",
             },
             "& .MuiMarkElement-root": {
               fill: "#3b82f6",
