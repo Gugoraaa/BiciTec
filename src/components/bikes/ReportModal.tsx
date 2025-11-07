@@ -31,10 +31,8 @@ export default function ReportModal({
     try {
       const result = await Promise.resolve(onSubmit(selectedBike, description));
       
-      if (result === false) {
-        toast.error("Error al enviar el reporte");
-      } else {
-        toast.success("Reporte enviado correctamente");
+      if (result === true) {
+        toast.success(t('toast.reportSubmitted'));
         setTimeout(() => {
           onClose();
         }, 2000);
@@ -43,7 +41,7 @@ export default function ReportModal({
       setSelectedBike('');
       setDescription('');
     } catch (error) {
-      console.error('Error submitting report:', error);
+      toast.error(t('toast.reportError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -97,14 +95,8 @@ export default function ReportModal({
           </div>
           
           <div className="flex justify-end space-x-3 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-gray-300 hover:bg-slate-700"
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
+            
+    
             <button
               type="submit"
               className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"

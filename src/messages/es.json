@@ -200,17 +200,22 @@
     "tooltip": "Selecciona un estado de mantenimiento para filtrar los reportes"
   },
   "ReportModal": {
-  "title": "Reportar un problema",
-  "submited": "¡Reporte enviado!",
-  "submitedText": "Gracias por tu reporte. Lo revisaremos pronto.",
-  "searchPlaceholder": "Buscar bicicletas",
-  "bikeSelect": "Selecciona una bicicleta",
-  "authError": "Autenticación",
-  "authErrorText": "Por favor, inicia sesión para enviar un reporte.",
-  "description": "Descripción del problema",
-  "describeIssue": "Por favor, describe el problema...",
-  "submitReport": "Enviar reporte",
-  "submitting": "Enviando..."
+    "title": "Reportar un problema",
+    "submited": "¡Reporte enviado!",
+    "submitedText": "Gracias por tu reporte. Lo revisaremos pronto.",
+    "searchPlaceholder": "Buscar bicicletas",
+    "bikeSelect": "Selecciona una bicicleta",
+    "authError": "Autenticación",
+    "authErrorText": "Por favor, inicia sesión para enviar un reporte.",
+    "description": "Descripción del problema",
+    "describeIssue": "Por favor, describe el problema...",
+    "submitReport": "Enviar reporte",
+    "submitting": "Enviando...",
+    "toast": {
+      "reportSubmitted": "Reporte enviado correctamente",
+      "reportError": "Error al enviar el reporte",
+      "loginRequired": "Necesitas iniciar sesión para reportar un problema"
+    }
 },
 "ManageModal": {
   "title": "Gestionar reporte",

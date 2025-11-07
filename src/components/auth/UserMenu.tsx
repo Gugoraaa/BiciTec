@@ -34,7 +34,7 @@ export default function UserMenu() {
   if (!user) return null;
 
   return (
-    <div className="relative w-full flex justify-center" ref={menuRef}>
+    <div className="relative w-full flex justify-center " ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 transition-colors text-white"
@@ -59,7 +59,7 @@ export default function UserMenu() {
       </button>
 
       {isOpen && (
-        <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-64 bg-slate-800 rounded-lg shadow-lg border border-slate-700 z-50">
+        <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-64 bg-slate-800 rounded-lg shadow-lg border border-slate-700 z-50  ">
           <div className="p-4 border-b border-slate-700">
             <p className="text-sm font-medium text-white">
               {user.nombre} {user.apellido}

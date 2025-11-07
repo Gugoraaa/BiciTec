@@ -208,7 +208,12 @@
     "description": "Issue Description",
     "describeIssue": "Please describe the issue...",
     "submitReport": "Submit Report",
-    "submitting": "Submitting..."
+    "submitting": "Submitting...",
+    "toast": {
+      "reportSubmitted": "Report submitted successfully",
+      "reportError": "Error submitting report",
+      "loginRequired": "You need to log in to report an issue"
+    }
   },
   "ManageModal": {
       "title": "Manage Report ",

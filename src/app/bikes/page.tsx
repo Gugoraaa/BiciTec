@@ -9,7 +9,7 @@ import api from "@/lib/api";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/contexts/AuthContext";
 import AddBikeModal from "@/components/bikes/AddBikeModal";
-
+import toast from "react-hot-toast";
 
 
 export default function Bikes() {
@@ -34,6 +34,7 @@ export default function Bikes() {
   );
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const t = useTranslations("BikesPage");
+  const tR = useTranslations("ReportModal");
   const { isAdmin } = useAuth();
 
   const handleAddBike = async (bikeData: { station: number; size: string }) => {
@@ -148,6 +149,7 @@ export default function Bikes() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
+        toast.error(tR('toast.loginRequired'));
         return false;
       }
 
@@ -156,6 +158,7 @@ export default function Bikes() {
       const { data } = await api.get('/auth/me');
       
       if (!data?.user) {
+        toast.error(tR('toast.loginRequired'));
         return false;
       }
 
@@ -175,8 +178,8 @@ export default function Bikes() {
 
       return true;
     } catch (error) {
-      console.error("Error submitting report:", error);
-      return false;
+     toast.error("Error al enviar el reporte");
+     return false;
     }
   };
 
