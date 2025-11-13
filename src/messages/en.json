@@ -7,8 +7,13 @@
     "save": "Save",
     "success": "Success",
     "successText": "Station status updated successfully",
+    "error": "Failed to update station status",
     "Operational": "Operational",
-    "Offline": "Offline"
+    "Offline": "Offline",
+    "toast": {
+      "success": "Station status updated successfully",
+      "error": "Error updating station status"
+    }
   },
   "BikeForm": {
     "addBike": "Add Bike",
@@ -119,7 +124,13 @@
     "trips": {
       "error": "Failed to load trip logs. Please try again."
     },
-    "addBike": "Add Bike"
+    "addBike": "Add Bike",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page",
+      "of": "of"
+    }
   },
   "Sidebar": {
     "brand": {

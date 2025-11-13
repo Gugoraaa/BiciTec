@@ -28,6 +28,8 @@ export default function Bikes() {
   const [isLoadingTrips, setIsLoadingTrips] = useState(false);
   const [tripsError, setTripsError] = useState<string | null>(null);
   const [stations, setStations] = useState<BikeStation[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const bikesPerPage = 16;
   const selectedBike = useMemo(() => 
     selectedBikeId ? bikes.find(b => b.id === selectedBikeId) || null : null, 
     [selectedBikeId, bikes]
@@ -35,6 +37,7 @@ export default function Bikes() {
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const t = useTranslations("BikesPage");
   const tR = useTranslations("ReportModal");
+  const tp = useTranslations("BikesPage.pagination");
   const { isAdmin } = useAuth();
 
   const handleAddBike = async (bikeData: { station: number; size: string }) => {
@@ -128,14 +131,22 @@ export default function Bikes() {
 
   const filteredBikes = useMemo(() => {
     return bikes.filter((bike) => {
-      const bikeId = String(bike.id || "");
-      const matchesSearch = bikeId
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      const matchesSearch = bike.id.toString().toLowerCase().includes(searchQuery.toLowerCase());
       const matchesFilter = filter === "All" || bike.estado === filter;
       return matchesSearch && matchesFilter;
     });
-  }, [bikes, filter, searchQuery]);
+  }, [bikes, searchQuery, filter]);
+
+  const totalPages = Math.ceil(filteredBikes.length / bikesPerPage);
+  const indexOfLastBike = currentPage * bikesPerPage;
+  const indexOfFirstBike = indexOfLastBike - bikesPerPage;
+  const currentBikes = filteredBikes.slice(indexOfFirstBike, indexOfLastBike);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, searchQuery]);
 
   const statusColors: Record<string, string> = {
     All: "bg-slate-700/40 text-slate-300 border border-slate-600",
@@ -147,40 +158,47 @@ export default function Bikes() {
 
   const handleReportSubmit = async (bikeId: string, description: string): Promise<boolean> => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        toast.error(tR('toast.loginRequired'));
-        return false;
-      }
+      // const token = localStorage.getItem('token');
+      // if (!token) {
+      //   toast.error(tR('toast.loginRequired'));
+      //   return false;
+      // }
 
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      // api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
       const { data } = await api.get('/auth/me');
-      
-      if (!data?.user) {
-        toast.error(tR('toast.loginRequired'));
-        return false;
-      }
 
-      const user = {
-        id: data.user.id,
-        matricula: data.user.matricula,
-        nombre: data.user.nombre,
-        apellido: data.user.apellido,
-        role: data.user.rol
-      };
-
-      await api.post("/reports/createReport", {
-        id_usuario: user.id,
-        id_bici: parseInt(bikeId, 10),
-        descripcion: description,
-      });
-
-      return true;
-    } catch (error) {
-     toast.error("Error al enviar el reporte");
-     return false;
+    if (!data?.user) {
+      toast.error(tR('toast.loginRequired'));
+      return false;
     }
+
+    const user = {
+      id: data.user.id,
+      matricula: data.user.matricula,
+      nombre: data.user.nombre,
+      apellido: data.user.apellido,
+      role: data.user.rol
+    };
+
+    await api.post("/reports/createReport", {
+      id_usuario: user.id,
+      id_bici: parseInt(bikeId, 10),
+      descripcion: description,
+    });
+
+    return true;
+  } catch (error: any) {
+    const status = error?.response?.status;
+
+    if (status === 401 ) {
+      toast.error(tR('toast.loginRequired'));
+    } else {
+      toast.error("Error al enviar el reporte");
+    }
+
+    return false;
+  }
   };
 
   const handleViewTrips = async (bikeId: string) => {
@@ -315,23 +333,85 @@ export default function Bikes() {
               {t("noResults")}
             </div>
           ) : (
-            <div className="mt-2 grid gap-3 sm:gap-4 grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filteredBikes.map((bike) => {
-                const isVisible = visibleCards.includes(bike.id);
-                return (
-                  <div
-                    key={bike.id}
-                    className={`transition-all duration-500 ${
-                      isVisible
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-8"
-                    }`}
+            <>
+              <div className="mt-2 grid gap-3 sm:gap-4 grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {currentBikes.map((bike) => {
+                  const isVisible = visibleCards.includes(bike.id);
+                  return (
+                    <div
+                      key={bike.id}
+                      className={`transition-all duration-500 ${
+                        isVisible
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 translate-y-8"
+                      }`}
+                    >
+                      <BikeCard {...bike} onViewTrips={handleViewTrips} />
+                    </div>
+                  );
+                })}
+              </div>
+              {totalPages > 1 && (
+                <div className="flex justify-center mt-6 space-x-2">
+                  <button
+                    onClick={() => paginate(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 rounded-md bg-slate-800/50 border border-slate-700 text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700/50 transition-colors flex items-center"
                   >
-                    <BikeCard {...bike} onViewTrips={handleViewTrips} />
-                  </div>
-                );
-              })}
-            </div>
+                    <span className="mr-1">&larr;</span> {tp('previous')}
+                  </button>
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    // Show first page, last page, current page, and pages around current page
+                    let pageNum: number;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => paginate(pageNum)}
+                        className={`px-3 py-1 rounded-md transition-colors ${
+                          currentPage === pageNum
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-slate-800/50 border border-slate-700 text-slate-300 hover:bg-slate-700/50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                  {totalPages > 5 && currentPage < totalPages - 2 && (
+                    <span className="px-2 py-1 text-slate-400">...</span>
+                  )}
+                  {totalPages > 5 && currentPage < totalPages - 1 && (
+                    <button
+                      onClick={() => paginate(totalPages)}
+                      className={`px-3 py-1 rounded-md ${
+                        currentPage === totalPages
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-slate-800/50 border border-slate-700 text-slate-300 hover:bg-slate-700/50'
+                      }`}
+                    >
+                      {totalPages}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 rounded-md bg-slate-800/50 border border-slate-700 text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700/50 transition-colors flex items-center"
+                  >
+                    {tp('next')} <span className="ml-1">&rarr;</span>
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

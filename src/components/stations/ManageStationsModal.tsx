@@ -75,17 +75,17 @@ export default function ManageStationsModal({
       );
 
       if (response.status === 200) {
-        toast.success("Estado de la estación actualizado correctamente");
+        toast.success(t('toast.success'));
         setTimeout(() => {
           onClose();
           window.location.reload();
         }, 2000);
       } else {
-        toast.error("Error al actualizar el estado de la estación");
+        toast.error(t('toast.error'));
         console.error("Failed to update station status:", response.data);
       }
     } catch (error) {
-      toast.error("Error al actualizar el estado de la estación");
+      toast.error(t('toast.error'));
       console.error("Error updating station status:", error);
     }
 

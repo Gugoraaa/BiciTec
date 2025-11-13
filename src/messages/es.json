@@ -8,8 +8,13 @@
     "save": "Guardar",
     "success": "Éxito",
     "successText": "Estado de la estación actualizado correctamente",
+    "error": "Error al actualizar el estado de la estación",
     "Operational": "Operativa",
-    "Offline": "Sin servicio"
+    "Offline": "Sin servicio",
+    "toast": {
+      "success": "Estado de la estación actualizado correctamente",
+      "error": "Error al actualizar el estado de la estación"
+    }
   },
   "BikeForm": {
     "addBike": "Agregar Bicicleta",
@@ -120,7 +125,13 @@
     "trips": {
       "error": "Error al cargar los registros de viajes. Intenta nuevamente."
     },
-    "addBike": "Agregar Bicicleta"
+    "addBike": "Agregar Bicicleta",
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página",
+      "of": "de"
+    }
   },
   "Sidebar": {
     "brand": {

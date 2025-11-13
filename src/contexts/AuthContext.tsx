@@ -30,14 +30,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          setIsLoading(false);
-          return;
-        }
-
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        
         const { data } = await api.get('/auth/me');
         
         const user = {
@@ -51,7 +43,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(user);
       } catch (error) {
         console.error('Error loading user:', error);
-        localStorage.removeItem('token');
       } finally {
         setIsLoading(false);
       }
@@ -62,11 +53,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (matricula: string, password: string) => {
     try {
-      const { data } = await api.post('/auth/login', { matricula, password });
-      localStorage.setItem('token', data.token);
+      await api.post('/auth/login', { matricula, password });
+      const { data } = await api.get('/auth/me');
       
-      api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
-      
+
       const userRole = (data.user.rol || 'user').toLowerCase();
       const user = {
         id: data.user.id,
@@ -84,10 +74,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    router.push('/login');
+  const logout = async() => {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }finally {
+      setUser(null);
+      router.push('/login');
+    }
   };
 
   return (
