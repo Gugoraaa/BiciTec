@@ -7,6 +7,7 @@ import { statusColors } from "./statusColors";
 
 type BikeCardProps = Bike & {
   onViewTrips?: (bikeId: string) => void;
+  onChangeStatus?: (bikeId: string, currentStatus: "Available" | "Maintenance" | null) => void;
 };
 
 export default function BikeCard({
@@ -15,7 +16,8 @@ export default function BikeCard({
   vel_prom,
   total_km,
   estado,
-  onViewTrips
+  onViewTrips,
+  onChangeStatus
 }: BikeCardProps) {
   const { isAdmin } = useAuth();
   const t = useTranslations("BikeCard");
@@ -66,7 +68,7 @@ export default function BikeCard({
             </span>
             <span className="font-medium">{(total_km ?? 0).toLocaleString()}</span>
           </div>
-          <div className="text-right">
+          <div className="text-right flex gap-2 justify-end">
             {isAdmin && onViewTrips && (
               <button
                 onClick={(e) => {
@@ -77,6 +79,19 @@ export default function BikeCard({
                 title={t("logsTooltip")}
               >
                 <span>{t("logsButton")}</span>
+              </button>
+            )}
+            {isAdmin && onChangeStatus && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const current = estado === "Available" || estado === "Maintenance" ? estado : null;
+                  onChangeStatus(id, current);
+                }}
+                className="inline-flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-lg bg-slate-800/50 text-cyan-400 hover:bg-slate-700/50 hover:text-cyan-300 transition-colors border border-slate-700/50"
+                title={t("changeStatusTooltip")}
+              >
+                {t("changeStatusButton")}
               </button>
             )}
           </div>

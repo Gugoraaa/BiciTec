@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/contexts/AuthContext";
 import AddBikeModal from "@/components/bikes/AddBikeModal";
 import toast from "react-hot-toast";
+import ManageBikeStatusModal from "@/components/bikes/ManageBikeStatusModal";
 
 
 export default function Bikes() {
@@ -29,6 +30,9 @@ export default function Bikes() {
   const [tripsError, setTripsError] = useState<string | null>(null);
   const [stations, setStations] = useState<BikeStation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isBikeStatusModalOpen, setIsBikeStatusModalOpen] = useState(false);
+  const [selectedBikeIdForStatus, setSelectedBikeIdForStatus] = useState<string | null>(null);
+  const [selectedBikeCurrentStatus, setSelectedBikeCurrentStatus] = useState<"Available" | "Maintenance" | null>(null);
   const bikesPerPage = 16;
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const t = useTranslations("BikesPage");
@@ -345,7 +349,7 @@ export default function Bikes() {
                           : "opacity-0 translate-y-8"
                       }`}
                     >
-                      <BikeCard {...bike} onViewTrips={handleViewTrips} />
+                      <BikeCard {...bike} onViewTrips={handleViewTrips} onChangeStatus={(id, current) => { setSelectedBikeIdForStatus(id); setSelectedBikeCurrentStatus(current); setIsBikeStatusModalOpen(true); }} />
                     </div>
                   );
                 })}
@@ -428,7 +432,13 @@ export default function Bikes() {
         onAddBike={handleAddBike}
         stations={stations}
       />
-<BikeTripsModal
+      <ManageBikeStatusModal
+        isOpen={isBikeStatusModalOpen}
+        onClose={() => { setIsBikeStatusModalOpen(false); setSelectedBikeIdForStatus(null); setSelectedBikeCurrentStatus(null); }}
+        bikeId={selectedBikeIdForStatus}
+        currentStatus={selectedBikeCurrentStatus}
+      />
+      <BikeTripsModal
         isOpen={isTripsModalOpen}
         onClose={() => {
           setIsTripsModalOpen(false);

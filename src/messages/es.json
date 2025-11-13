@@ -16,6 +16,21 @@
       "error": "Error al actualizar el estado de la estación"
     }
   },
+  "BikeStatusModal": {
+    "title": "Actualizar estado de la bicicleta",
+    "label": "Seleccionar estado",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "status": {
+      "Available": "Disponible",
+      "Maintenance": "Mantenimiento"
+    },
+    "toast": {
+      "success": "Estado de la bicicleta actualizado correctamente",
+      "error": "Error al actualizar el estado de la bicicleta"
+    }
+  },
   "BikeForm": {
     "addBike": "Agregar Bicicleta",
     "station": "Estación",
@@ -34,6 +49,8 @@
     "totalKm": "Total Km",
     "logsButton": "Viajes",
     "logsTooltip": "Ver viajes de esta bicicleta",
+    "changeStatusButton": "Cambiar estado",
+    "changeStatusTooltip": "Actualizar estado de la bicicleta",
     "status": {
       "Available": "Disponible",
       "InUse": "En uso",
