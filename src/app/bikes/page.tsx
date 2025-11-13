@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 export default function Bikes() {
   const [bikes, setBikes] = useState<Bike[]>([]);
-  const [selectedBikeId, setSelectedBikeId] = useState<string | null>(null);
+  const [selectedBikeId, setSelectedBikeId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<BikeStatus | "All">("All");
   const [isLoaded, setIsLoaded] = useState(false);
@@ -30,10 +30,6 @@ export default function Bikes() {
   const [stations, setStations] = useState<BikeStation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const bikesPerPage = 16;
-  const selectedBike = useMemo(() => 
-    selectedBikeId ? bikes.find(b => b.id === selectedBikeId) || null : null, 
-    [selectedBikeId, bikes]
-  );
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const t = useTranslations("BikesPage");
   const tR = useTranslations("ReportModal");
@@ -188,8 +184,10 @@ export default function Bikes() {
     });
 
     return true;
-  } catch (error: any) {
-    const status = error?.response?.status;
+  } catch (error: unknown) {
+    const status = error && typeof error === 'object' && 'response' in error
+      ? (error as { response?: { status?: number } })?.response?.status
+      : undefined;
 
     if (status === 401 ) {
       toast.error(tR('toast.loginRequired'));
@@ -202,6 +200,7 @@ export default function Bikes() {
   };
 
   const handleViewTrips = async (bikeId: string) => {
+    setSelectedBikeId(bikeId);
     try {
       setIsLoadingTrips(true);
       setTripsError(null);
@@ -429,11 +428,16 @@ export default function Bikes() {
         onAddBike={handleAddBike}
         stations={stations}
       />
-      <BikeTripsModal
+<BikeTripsModal
         isOpen={isTripsModalOpen}
-        onClose={() => setIsTripsModalOpen(false)}
-        bikeId={selectedBikeId || ""}
+        onClose={() => {
+          setIsTripsModalOpen(false);
+          setSelectedBikeId("");
+        }}
+        bikeId={selectedBikeId}
         trips={bikeTrips}
+        isLoading={isLoadingTrips}
+        error={tripsError}
       />
     </main>
   );

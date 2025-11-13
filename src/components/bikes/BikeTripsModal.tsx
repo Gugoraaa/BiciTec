@@ -16,6 +16,8 @@ type BikeTripsModalProps = {
   onClose: () => void;
   bikeId: string;
   trips: Trip[];
+  isLoading?: boolean;
+  error?: string | null;
 };
 
 export default function BikeTripsModal({
@@ -23,6 +25,8 @@ export default function BikeTripsModal({
   onClose,
   bikeId,
   trips,
+  isLoading = false,
+  error = null,
 }: BikeTripsModalProps) {
     const [isVisible, setIsVisible] = useState(false);
     const t = useTranslations("BikeTripsModal");
