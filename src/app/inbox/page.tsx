@@ -83,26 +83,29 @@ export default function MessagesPage() {
         leido: number;
       }
 
-      const formattedMessages = messagesData.map((msg: MessageData) => ({
-        id: msg.id,
-        id_mensaje: msg.id_mensaje,
-        remitente: msg.tipo === 'news' 
-          ? 'BiciTec News' 
-          : (msg.tipo === 'account_notification' || msg.tipo === 'warning')
-            ? 'Bicitec Account Manager'
-            : `Usuario ${msg.remitente}`,
-        titulo: msg.titulo,
-        cuerpo: msg.cuerpo,
-        fecha: msg.fecha ? new Date(msg.fecha).toLocaleDateString() : "",
-        icon:
-          msg.tipo === "account_notification" ? (
-            <FaBan className="text-red-500" />
-          ) : (
-            <FaNewspaper className="text-blue-500" />
-          ),
+      const formattedMessages = messagesData.map((msg: MessageData) => {
+        const fechaOriginal = msg.fecha ? new Date(msg.fecha) : new Date();
+        return {
+          id: msg.id,
+          id_mensaje: msg.id_mensaje,
+          remitente: msg.tipo === 'news' 
+            ? 'BiciTec News' 
+            : (msg.tipo === 'account_notification' || msg.tipo === 'warning')
+              ? 'Bicitec Account Manager'
+              : `Usuario ${msg.remitente}`,
+          titulo: msg.titulo,
+          cuerpo: msg.cuerpo,
+          fecha: fechaOriginal.toLocaleDateString(),
+        icon: msg.tipo === "account_notification" ? (
+          <FaBan className="text-red-500" />
+        ) : (
+          <FaNewspaper className="text-blue-500" />
+        ),
         leido: msg.leido === 1,
         tipo: msg.tipo,
-      }));
+        fechaCompleta: fechaOriginal
+      };
+    });
 
       setMessages(formattedMessages);
     } catch (error) {
@@ -128,8 +131,8 @@ export default function MessagesPage() {
       return true;
     })
     .sort((a, b) => {
-      if (sortBy === 'newest') return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
-      if (sortBy === 'oldest') return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+      if (sortBy === 'newest') return b.fechaCompleta.getTime() - a.fechaCompleta.getTime();
+      if (sortBy === 'oldest') return a.fechaCompleta.getTime() - b.fechaCompleta.getTime();
       if (sortBy === 'sender') return a.remitente.localeCompare(b.remitente);
       return 0;
     });

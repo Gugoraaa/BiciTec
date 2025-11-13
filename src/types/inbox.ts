@@ -5,6 +5,7 @@ export interface MessageItemProps {
   titulo: string;
   cuerpo: string;
   fecha: string;
+  fechaCompleta: Date;
   tipo: string;
   icon: React.ReactNode;
   leido: boolean;
