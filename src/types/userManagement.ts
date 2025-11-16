@@ -5,9 +5,10 @@ export interface UserManagement {
   lastName: string;
   status: "ok" | "warning" | "banned";
   creationDate: string;
+  creado_en: string;
 }
 
-export type UserStatus = 'All' | 'ok' | 'warning' | 'banned';
+export type UserStatus = "All" | "ok" | "warning" | "banned";
 
 export interface Appeal {
   id: number;
@@ -35,4 +36,3 @@ export interface AppealApiResponse {
     id: number;
   };
 }
-
