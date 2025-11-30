@@ -10,8 +10,7 @@ export interface Bike {
   estado: BikeStatus;
 }
 
-
-export interface Trip  {
+export interface Trip {
   id: string;
   fecha: string;
   tiempo: string;
@@ -21,7 +20,8 @@ export interface Trip  {
   startStation: string;
   endStation: string;
   status: string;
-};
+  viaje_seguro: boolean;
+}
 
 export interface BikeStation {
   id: number;

@@ -9,6 +9,7 @@ type CsvTrip = {
   fecha: string;
   tiempo: string;
   distancia: string;
+  viajeSeguro: string;
 };
 
 type BikeTripsModalProps = {
@@ -28,8 +29,8 @@ export default function BikeTripsModal({
   isLoading = false,
   error = null,
 }: BikeTripsModalProps) {
-    const [isVisible, setIsVisible] = useState(false);
-    const t = useTranslations("BikeTripsModal");
+  const [isVisible, setIsVisible] = useState(false);
+  const t = useTranslations("BikeTripsModal");
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => setIsVisible(true), 10);
@@ -59,9 +60,7 @@ export default function BikeTripsModal({
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-4 border-b border-slate-700 flex justify-between items-center">
-            <h3 className="text-lg font-medium text-white">
-              {t("title")}
-            </h3>
+            <h3 className="text-lg font-medium text-white">{t("title")}</h3>
             <button
               onClick={onClose}
               className="text-slate-400 hover:text-white"
@@ -89,6 +88,9 @@ export default function BikeTripsModal({
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     {t("columns.distance")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                    {t("columns.safeTrip")}
                   </th>
                 </tr>
               </thead>
@@ -119,6 +121,19 @@ export default function BikeTripsModal({
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                         {trip.distancia?.toFixed(2) || "0.00"}
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            trip.viaje_seguro
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {trip.viaje_seguro
+                            ? t("safeTrip.yes")
+                            : t("safeTrip.no")}
+                        </span>
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -139,16 +154,17 @@ export default function BikeTripsModal({
             <button
               onClick={() => {
                 const headers = {
-                  id: t('columns.id'),
-                  usuario: t('columns.user'),
-                  fecha: t('columns.date'),
-                  tiempo: t('columns.duration'),
-                  distancia: t('columns.distance')
+                  id: t("columns.id"),
+                  usuario: t("columns.user"),
+                  fecha: t("columns.date"),
+                  tiempo: t("columns.duration"),
+                  distancia: t("columns.distance"),
+                  viajeSeguro: t("columns.safeTrip"),
                 };
-                
-                const csvData = trips.map(trip => ({
+
+                const csvData = trips.map((trip) => ({
                   id: trip.id,
-                  usuario: trip.usuario || 'N/A',
+                  usuario: trip.usuario || "N/A",
                   fecha: new Date(trip.fecha).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "short",
@@ -157,22 +173,25 @@ export default function BikeTripsModal({
                     minute: "2-digit",
                     hour12: true,
                   }),
-                  tiempo: trip.tiempo || 'N/A',
-                  distancia: trip.distancia?.toFixed(2) || '0.00'
+                  tiempo: trip.tiempo || "N/A",
+                  distancia: trip.distancia?.toFixed(2) || "0.00",
+                  viajeSeguro: trip.viaje_seguro
+                    ? t("safeTrip.yes")
+                    : t("safeTrip.no"),
                 }));
-                
+
                 exportToCsv(csvData, `bike-${bikeId}-trips`, headers);
               }}
               className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 mr-2"
               disabled={trips.length === 0}
             >
-              {t('exportCSV')}
+              {t("exportCSV")}
             </button>
             <button
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
             >
-              {t('close')}
+              {t("close")}
             </button>
           </div>
         </div>

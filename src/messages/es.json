@@ -1,5 +1,4 @@
 {
-
   "StationsModal": {
     "title": "Actualizar estado de la estación",
     "label1": "Seleccionar estación",
@@ -75,7 +74,6 @@
     "error": "Error al cargar los datos de uso",
     "xAxisLabel": "Hora del día",
     "yAxisLabel": "Bicicletas en uso"
-    
   },
   "StationCapacityCard": {
     "title": "Capacidad de estaciones",
@@ -108,7 +106,7 @@
       "Maintenance": "Mantenimiento",
       "Offline": "Sin servicio"
     },
-    "ManageStationButton":"Gestionar estación"
+    "ManageStationButton": "Gestionar estación"
   },
   "BikeMap": {
     "loadingTitle": "Cargando mapa...",
@@ -126,7 +124,25 @@
       "capacity": "{bikes} / {capacity}"
     }
   },
-   "BikesPage": {
+  "BikeTripsModal": {
+    "title": "Historial de Viajes",
+    "columns": {
+      "id": "ID",
+      "user": "Usuario",
+      "date": "Fecha",
+      "duration": "Duración",
+      "distance": "Distancia (km)",
+      "safeTrip": "Viaje Seguro"
+    },
+    "safeTrip": {
+      "yes": "Sí",
+      "no": "No"
+    },
+    "noTrips": "No se encontraron viajes para esta bicicleta.",
+    "exportCSV": "Exportar a CSV",
+    "close": "Cerrar"
+  },
+  "BikesPage": {
     "title": "Bicicletas",
     "loading": "Cargando bicicletas...",
     "loadError": "Error al cargar las bicicletas. Intenta nuevamente más tarde.",
@@ -160,7 +176,7 @@
       "stations": "Estaciones",
       "bikes": "Bicicletas",
       "maintenance": "Mantenimiento",
-      "inbox":"Noticias",
+      "inbox": "Noticias",
       "usersManagement": "Gestionar usuarios"
     },
     "auth": {
@@ -195,7 +211,7 @@
       "Low": "Baja"
     }
   },
-   
+
   "AppealModal": {
     "title": "Enviar Apelación",
     "appealMessage": "Tu mensaje de apelación",
@@ -244,41 +260,28 @@
       "reportError": "Error al enviar el reporte",
       "loginRequired": "Necesitas iniciar sesión para reportar un problema"
     }
-},
-"ManageModal": {
-  "title": "Gestionar reporte",
-
-  "status": "Estado",
-  "statusOptions": {
-    "Open": "Abierto",
-    "InProgress": "En progreso",
-    "Done": "Resuelto"
   },
+  "ManageModal": {
+    "title": "Gestionar reporte",
 
-  "priority": "Prioridad",
-  "priorityOptions": {
-    "High": "Alta",
-    "Medium": "Media",
-    "Low": "Baja"
-  },
+    "status": "Estado",
+    "statusOptions": {
+      "Open": "Abierto",
+      "InProgress": "En progreso",
+      "Done": "Resuelto"
+    },
 
-  "delete": "Eliminar reporte",
-  "cancel": "Cancelar",
-  "save": "Guardar"
-},
-"BikeTripsModal": {
-  "title": "Viajes de la bicicleta",
-  "columns": {
-    "id": "ID",
-    "user": "Usuario",
-    "date": "Fecha",
-    "duration": "Duración (MIN)",
-    "distance": "Distancia (km)"
+    "priority": "Prioridad",
+    "priorityOptions": {
+      "High": "Alta",
+      "Medium": "Media",
+      "Low": "Baja"
+    },
+
+    "delete": "Eliminar reporte",
+    "cancel": "Cancelar",
+    "save": "Guardar"
   },
-  "noTrips": "No hay viajes registrados para esta bicicleta.",
-  "exportCSV": "Exportar CSV",
-  "close": "Cerrar"
-},
   "AppealReviewModal": {
     "title": "Revisar Apelación",
     "appealMessage": "Mensaje de Apelación",
@@ -402,19 +405,16 @@
       "AccountNotification": "Advertencias"
     },
     "SendNew": "Enviar noticia",
-    "SendNewBox":{
-      "title":"Enviar noticia",
-      "NewTitle":"Titulo",
-      "NewBody":"Cuerpo",
-      "NewSend":"Enviar",
-      "NewTitlePlaceholder":"Escribe el titulo de tu noticia",
-      "NewBodyPlaceholder":"Escribe tu noticia aqui",
-      "Cancel":"Cancelar",
+    "SendNewBox": {
+      "title": "Enviar noticia",
+      "NewTitle": "Titulo",
+      "NewBody": "Cuerpo",
+      "NewSend": "Enviar",
+      "NewTitlePlaceholder": "Escribe el titulo de tu noticia",
+      "NewBodyPlaceholder": "Escribe tu noticia aqui",
+      "Cancel": "Cancelar",
       "send": "Enviar",
-    "sending": "Enviando..."
+      "sending": "Enviando..."
     }
-    
   }
 }
-
-

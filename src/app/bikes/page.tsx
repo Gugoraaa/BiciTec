@@ -158,13 +158,6 @@ export default function Bikes() {
 
   const handleReportSubmit = async (bikeId: string, description: string): Promise<boolean> => {
     try {
-      // const token = localStorage.getItem('token');
-      // if (!token) {
-      //   toast.error(tR('toast.loginRequired'));
-      //   return false;
-      // }
-
-      // api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
       const { data } = await api.get('/auth/me');
 
